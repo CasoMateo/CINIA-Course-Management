@@ -10,20 +10,103 @@ function Users(props) {
     const navigate = useNavigate();
     const username = 'Mateo Caso';
     const rank = 'Admin.';
-    const [users, setUsers] = useState([{'username': 'Mateo Caso', 'rank': 'Admin.', 'area': 'Jardinería', 'courses': {}}, {'username': 'Mateo Caso', 'rank': 'Admin.', 'area': 'Jardinería', 'courses': {}}]); 
+    const [users, setUsers] = useState([]); 
+    const [verifyRef, setVerifyRef] = useState(false);
+    const [deletedUser, setDeletedUser] = useState();
+    const [retrievedUsers, setRetrievedUsers] = useState(false);
     const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
-    const [addUserAttributes, setAddUserAttributes] = useState({'username': '', 'rank': '', 'area': '', 'courses': {} })
+    const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'rank': false, 'area': '' })
 
-    const handleAddUser = (event) => {
-        event.preventDefault();
-        setUsers([...users, addUserAttributes]);
-        setAddUserAttributes({'username': '', 'rank': '', 'area': '', 'courses': {} });
+    const getUsersResource = async () => {
+        
+        if (retrievedUsers) {  
+          return;
+        }
+    
+        const promise = await fetch('http://127.0.0.1:8000/get-users', { 
+          method: 'GET',
+          credentials: 'include'
+        }); 
+        
+        if (promise.status !== 200) {
+          alert('Failed to retrieve users');
+        } 
+    
+        const response = await promise.json();
+      
+        
+        setUsers(response.users);
+    };  
+
+    if (!retrievedUsers) {
+        getUsersResource();
+        setRetrievedUsers(true);
+    }
+
+    const handleAddUser = () => {
+        const addUserResource = async () => {
+            const promise = await fetch('http://127.0.0.1:8000/add-user', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(addUserAttributes)
+            });
+      
+            
+            const response = await promise.json(); 
+            alert(response.addedUser);
+            if ((promise.status !== 200) || (!response.addedUser)) {
+                alert('Not properly added');
+            } else {
+                setRetrievedUsers(false);
+            }
+            
+      
+        };
+      
+        addUserResource();
+          
+        setAddUserAttributes();
+
         setAddUserForm(false);
     }
 
     const handleRemoveUser = (username) => {
-        setUsers(users.filter(user => user.username != username));
+        const deleteUserResource = async () => {
+            const promise = await fetch('http://127.0.0.1:8000/delete-user', {
+              method: 'DELETE',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 'username': username })
+            });
+      
+            
+            const response = await promise.json(); 
+
+            if ((promise.status != 200) || (!response.deletedUser)) {
+                alert('Not properly removed');
+            } else {
+                setRetrievedUsers(false);
+            }
+            
+      
+        };
+      
+        deleteUserResource();
+    }
+
+    const handleVerifyConfirm = () => {
+        if (deletedUser) {
+            handleRemoveUser(deletedUser); 
+            setDeletedUser();
+        }
+
+        setVerifyRef(false);
     }
 
     return (
@@ -63,7 +146,7 @@ function Users(props) {
 
                 <div className = 'access-retrieval'> 
                     {
-                        users.length == 0 
+                        users.length === 0 
                         ?
                         <div className = 'message-no-data'> 
                             No hay usuarios disponibles
@@ -73,11 +156,11 @@ function Users(props) {
                             
                             return (
                                 <div className = 'user-instance'> 
-                                    <p className = 'user-attribute'> { user.username } </p>
-                                    <p className = 'user-attribute'> { user.rank } </p>
+                                    <p className = 'user-attribute' onClick = { () => navigate('/usuario/'.concat(user.username)) }> { user.username } </p>
+                                    <p className = 'user-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
                                     <p className = 'user-attribute'> { user.area } </p>
                                     <p className = 'user-attribute'> { Object.keys(user.courses).length } </p>
-                                    <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => handleRemoveUser(user.username) }/> 
+                                    <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                 </div>
                             )
                         })
@@ -86,9 +169,9 @@ function Users(props) {
 
             </div>
 
-            <div className = { !hiddenChanges ? 'change-users' : 'display-false' }>
+            <div className = { !hiddenChanges ? 'change-instances' : 'display-false' }>
 
-                <div className = 'add-user'> 
+                <div className = 'add-instance'> 
                     <p onClick = { () => setAddUserForm(true) }> AÑADIR <br /> USUARIO </p>
                 </div> 
 
@@ -104,22 +187,27 @@ function Users(props) {
                     
                 </div>
 
-                <form onSubmit = { (event) => handleAddUser(event) }>
+                <form onSubmit = { () => handleAddUser() }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
+                    <br/>
+                    <br />
+                    <label className = 'form-label'> Contraseña </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Posición </label>
                     <form>
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
-                                    required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: 'Admin.'})) } />
+                                    required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: true })) } />
                             <label>Admin.</label>
                         </div>
 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: 'Operador'})) }/>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) }/>
                             <label >Operador</label>
                         </div>
                     </form>
@@ -142,7 +230,7 @@ function Users(props) {
                             <label >Textil</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Acondicionamiento'})) }/>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Acondi.'})) }/>
                             <label >Acondicionamiento</label>
                         </div> 
                         <div className = 'radio-option'>
@@ -155,6 +243,21 @@ function Users(props) {
                 
                 </form>
 
+            </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => handleVerifyConfirm() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => setVerifyRef(false) }>
+                        CANCELAR 
+                    </button>
+            
+                </div>
             </div>
 
         </div>
