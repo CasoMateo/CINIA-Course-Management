@@ -16,7 +16,7 @@ function Users(props) {
     const [retrievedUsers, setRetrievedUsers] = useState(false);
     const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
-    const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'rank': false, 'area': '' })
+    const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
 
     const getUsersResource = async () => {
         
@@ -57,7 +57,7 @@ function Users(props) {
       
             
             const response = await promise.json(); 
-            alert(response.addedUser);
+            
             if ((promise.status !== 200) || (!response.addedUser)) {
                 alert('Not properly added');
             } else {
@@ -139,6 +139,7 @@ function Users(props) {
                 <div className = 'user-instance'>
                     <p className = 'user-attribute-header'> Nombre </p>
                     <p className = 'user-attribute-header'> Posición </p>
+                    <p className = 'user-attribute-header'> # Empleado </p>
                     <p className = 'user-attribute-header'> Área </p>
                     <p className = 'user-attribute-header'> Cursos </p>
 
@@ -158,6 +159,7 @@ function Users(props) {
                                 <div key = { user._id.$oid } className = 'user-instance'> 
                                     <p className = 'user-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
                                     <p className = 'user-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
+                                    <p className = 'user-attribute'> { user.employee_number } </p>
                                     <p className = 'user-attribute'> { user.area } </p>
                                     <p className = 'user-attribute'> { Object.keys(user.courses).length } </p>
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
@@ -198,6 +200,11 @@ function Users(props) {
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
                     <br/>
                     <br />
+                    <label className = 'form-label'> Número de empleado </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el número de empleado' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, employee_number : e.target.value })) }/> 
+                    <br/>
+                    <br />
                     <label className = 'form-label'> Posición </label>
                     <form>
                         <div className = 'radio-option'>
@@ -236,6 +243,10 @@ function Users(props) {
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automoción'})) }/>
                             <label >Automoción</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Adminis.'})) }/>
+                            <label >Administrativo</label>
                         </div> 
                     </form>
                     <br />
