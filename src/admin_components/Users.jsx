@@ -134,14 +134,14 @@ function Users(props) {
                 </div> 
             </div>
 
-            <div className = 'users-main-page'>
+            <div className = 'main-page'>
                 
                 <div className = 'user-instance'>
-                    <p className = 'user-attribute-header'> Nombre </p>
-                    <p className = 'user-attribute-header'> Posición </p>
-                    <p className = 'user-attribute-header'> # Empleado </p>
-                    <p className = 'user-attribute-header'> Área </p>
-                    <p className = 'user-attribute-header'> Cursos </p>
+                    <p className = 'instance-attribute-header'> Nombre </p>
+                    <p className = 'instance-attribute-header'> Posición </p>
+                    <p className = 'instance-attribute-header'> # Empleado </p>
+                    <p className = 'instance-attribute-header'> Área </p>
+                    <p className = 'instance-attribute-header'> Cursos </p>
 
                 </div>
 
@@ -157,11 +157,11 @@ function Users(props) {
                             
                             return (
                                 <div key = { user._id.$oid } className = 'user-instance'> 
-                                    <p className = 'user-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
-                                    <p className = 'user-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
-                                    <p className = 'user-attribute'> { user.employee_number } </p>
-                                    <p className = 'user-attribute'> { user.area } </p>
-                                    <p className = 'user-attribute'> { Object.keys(user.courses).length } </p>
+                                    <p className = 'instance-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
+                                    <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
+                                    <p className = 'instance-attribute'> { user.employee_number } </p>
+                                    <p className = 'instance-attribute'> { user.area } </p>
+                                    <p className = 'instance-attribute'> { Object.keys(user.courses).length } </p>
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                 </div>
                             )
