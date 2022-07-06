@@ -155,8 +155,8 @@ function Users(props) {
                         : users.map(user => {
                             
                             return (
-                                <div className = 'user-instance'> 
-                                    <p className = 'user-attribute' onClick = { () => navigate('/usuario/'.concat(user.username)) }> { user.username } </p>
+                                <div key = { user._id.$oid } className = 'user-instance'> 
+                                    <p className = 'user-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
                                     <p className = 'user-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
                                     <p className = 'user-attribute'> { user.area } </p>
                                     <p className = 'user-attribute'> { Object.keys(user.courses).length } </p>
