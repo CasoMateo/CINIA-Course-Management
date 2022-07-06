@@ -179,7 +179,7 @@ function Users(props) {
 
             </div>
 
-            <div className = { addUserForm ? 'add-user-form' : 'display-false' }> 
+            <div className = { addUserForm ? 'pop-up-form' : 'display-false' }> 
                
                 <div className = 'title-close-form'>
                     <h5 className = 'form-title'> 
