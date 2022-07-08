@@ -70,7 +70,7 @@ function Courses(props) {
     }
 
     const handleAddCourse = (event) => {
-        event.preventDefault();
+        
         const properties = { 'name': name, 'area': area, 'resources': resources, 'questions': questions };
         const addCourseResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-course', {
