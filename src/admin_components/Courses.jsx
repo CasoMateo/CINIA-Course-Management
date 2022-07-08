@@ -70,7 +70,7 @@ function Courses(props) {
     }
 
     const handleAddCourse = (event) => {
-        
+
         const properties = { 'name': name, 'area': area, 'resources': resources, 'questions': questions };
         const addCourseResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-course', {
@@ -240,6 +240,10 @@ function Courses(props) {
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" required onChange = { () => setArea('Automoción') }/>
                             <label >Automoción</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('General') }/>
+                            <label >General</label>
                         </div> 
                     </form>
                     <br />
