@@ -171,9 +171,9 @@ function Users(props) {
 
             </div>
 
-            <div className = { !hiddenChanges ? 'change-instances' : 'display-false' }>
+            <div className = { !hiddenChanges ? 'corner-popup-aid' : 'display-false' }>
 
-                <div className = 'add-instance'> 
+                <div className = 'corner-popup'> 
                     <p onClick = { () => setAddUserForm(true) }> AÑADIR <br /> USUARIO </p>
                 </div> 
 
