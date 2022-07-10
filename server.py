@@ -93,7 +93,7 @@ def addUser(request: Request, user: User):
             users.insert_one(newUser)
             content['addedUser'] = True 
 
-            needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ 'area': user.area })]
+            needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': user.area }, { 'area': 'General' } ] })]
             for course in needed_courses: 
               users.update_one({ 'username': user.username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
 
