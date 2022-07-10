@@ -313,3 +313,24 @@
 .submit-course-evaluation {
   all: unset;
 }
+
+#name-attribute:hover {
+  opacity: 75%;
+  cursor: pointer;
+}
+
+.performance-summary {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+}
+
+.course-summary {
+  background-color:rgb(235, 228, 227);
+  border-radius: 20px;
+  padding-left: 25%;
+  margin-right: 2em;
+}
+
+.course-summary-name {
+  font-size: 1.4rem;
+}
