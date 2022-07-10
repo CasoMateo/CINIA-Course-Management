@@ -157,7 +157,7 @@ function Users(props) {
                             
                             return (
                                 <div key = { user._id.$oid } className = 'user-instance'> 
-                                    <p className = 'instance-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
+                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
                                     <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
                                     <p className = 'instance-attribute'> { user.employee_number } </p>
                                     <p className = 'instance-attribute'> { user.area } </p>
