@@ -32,6 +32,8 @@ db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
 
+score_threshold = 0.6
+
 class User(BaseModel):
   username: str
   password: str 
@@ -50,9 +52,13 @@ class findUser(BaseModel):
 
 class findCourse(BaseModel): 
   name: str
-  area: str
+  area: Optional[str]
 
-    
+class Stage(BaseModel): 
+  username: str
+  coursename: str
+  answers: Optional[list]
+
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
   
@@ -115,6 +121,19 @@ def getCourses(request: Request):
 
   return response 
 
+@app.get("/get-course/{name}", status_code = 200)
+def getCourse(request: Request, name: str): 
+
+  content = {}
+  content['course'] = courses.find_one({ 'name': name })
+
+  if not content['course']:
+    raise HTTPException(status_code=404, detail="Not found")
+
+  content['course'] = json.loads(json_util.dumps(content['course']))
+  return JSONResponse(content = content)  
+  
+
 @app.post("/add-course", status_code = 200)
 def addCourse(request: Request, course: Course): 
     
@@ -125,8 +144,12 @@ def addCourse(request: Request, course: Course):
     if not courses.find_one({ 'name': course.name }): 
       courses.insert_one(newCourse) 
       content['addedCourse'] = True 
-    
-      users.update_many({ 'area': course.area }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
+
+      if course.area != 'General':
+        users.update_many({ 'area': course.area }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
+
+      else: 
+        users.update_many({ 'area': { '$ne': 'Administrativo' }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
     return JSONResponse(content = content)
 
@@ -138,9 +161,58 @@ def deleteCourse(request: Request, course: findCourse):
     if courses.find_one_and_delete({ 'name': course.name }):
       content['deletedCourse'] = True 
     
-    users.update_many({ 'area':  course.area }, { '$pull': { 'courses': { 'name': course.name } } })
-    return JSONResponse(content = content)
+    if course.area != 'General':
+      users.update_many({ 'area':  course.area }, { '$pull': { 'courses': { 'name': course.name } } })
     
+    else: 
+      users.update_many({ }, { '$pull': { 'courses': { 'name': course.name } } })
 
+    return JSONResponse(content = content)
 
+@app.post("/complete-first-stage", status_code = 200)
+def completeFirstStage(request: Request, details: Stage): 
 
+  content = { 'completedStage': False }
+  
+  user = dict(users.find_one({ 'username': details.username }))
+  
+  for cur in user['courses']: 
+    if cur['name'] == details.coursename: 
+      cur['stage1'] = True 
+      users.delete_one({ 'username': details.username })
+      users.insert_one(user) 
+      content['completedStage'] = True 
+      break
+
+    
+  return JSONResponse(content = content)
+
+@app.post("/complete-second-stage", status_code = 200)
+def completeSecondStage(request: Request, details: Stage): 
+
+  content = { 'completedStage': False }
+  
+  user = dict(users.find_one({ 'username': details.username }))
+  course = dict(courses.find_one({ 'name': details.coursename })) 
+
+  cur = count = 0 
+
+  for question in course['questions']: 
+    if details.answers[cur] in question['correct']: 
+      count += 1 
+    
+    cur += 1 
+  
+  score = count / len(details.answers)
+
+  if score >= score_threshold: 
+    for cur in user['courses']: 
+      if cur['name'] == details.coursename: 
+        cur['stage2'] = score 
+        users.delete_one({ 'username': details.username })
+        users.insert_one(user) 
+        content['completedStage'] = True 
+        break
+    
+    
+  return JSONResponse(content = content)
