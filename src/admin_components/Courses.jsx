@@ -37,7 +37,6 @@ function Courses(props) {
         const response = await promise.json();
       
         setCourses(response.courses);
-        console.log(response.courses);
     };  
 
     if (!retrievedCourses) {
