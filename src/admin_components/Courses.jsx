@@ -178,7 +178,7 @@ function Courses(props) {
                             
                             return (
                                 <div key = { course._id.$oid } className = 'course-instance'> 
-                                    <p className = 'instance-attribute' onClick = { () => navigate('/curso/'.concat(course._id.$oid)) }> { course.name } </p>
+                                    <p className = 'instance-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
                                     <p className = 'instance-attribute'> { course.area } </p>
                                     <p className = 'instance-attribute'> { course.date } </p>
     
