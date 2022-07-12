@@ -46,6 +46,7 @@ class Course(BaseModel):
   area: str 
   resources: list
   questions: list 
+  threshold: int
 
 class findUser(BaseModel): 
   username: str
@@ -137,6 +138,9 @@ def getCourse(request: Request, name: str):
 @app.post("/add-course", status_code = 200)
 def addCourse(request: Request, course: Course): 
     
+    if course.threshold <= 0 or course.threshold > 10: 
+      raise HTTPException(status_code=400, detail="Invalid request")
+
     content = { 'addedCourse': False }
     newCourse = dict(course)
     newCourse['date'] = date.today().strftime("%d/%m/%Y") 
@@ -205,7 +209,7 @@ def completeSecondStage(request: Request, details: Stage):
   
   score = count / len(details.answers)
 
-  if score >= score_threshold: 
+  if score >= (course['threshold'] / 100): 
     for cur in user['courses']: 
       if cur['name'] == details.coursename: 
         cur['stage2'] = score 
@@ -216,3 +220,40 @@ def completeSecondStage(request: Request, details: Stage):
     
     
   return JSONResponse(content = content)
+
+@app.get("/summary-first-stage/{coursename}", status_code = 200)
+def summaryFirstStage(request: Request, coursename: str): 
+
+  full_course = dict(courses.find_one({ 'name': coursename }))
+  suitable_users = [user['courses'] for user in users.find({ 'area': full_course['area'] })]
+
+  if full_course['area'] == 'General': 
+    suitable_users = [user['courses'] for user in users.find()]
+
+  content = { 'total': len(suitable_users), 'completed': 0 }
+
+  for cur in suitable_users:
+    for each in cur: 
+      if each['name'] == coursename and each['stage1']: 
+        content['completed'] += 1 
+
+  return JSONResponse(content = content)
+
+@app.get("/summary-second-stage/{coursename}", status_code = 200)
+def summarySecondStage(request: Request, coursename: str): 
+
+  full_course = courses.find_one({ 'name': coursename })
+  suitable_users = [user['courses'] for user in users.find({ 'area': full_course['area'] })]
+
+  if full_course['area'] == 'General': 
+    suitable_users = [user['courses'] for user in users.find()]
+
+  content = { 'total': len(suitable_users), 'completed': 0 }
+
+  for cur in suitable_users:
+    for each in cur: 
+      if each['name'] == coursename and each['stage2']: 
+        content['completed'] += 1
+
+  return JSONResponse(content = content)
+  
