@@ -16,6 +16,7 @@ function Courses(props) {
     const [area, setArea] = useState();
     const [resources, setResources] = useState([0]);
     const [questions, setQuestions] = useState([{'correct': []}]);
+    const [threshold, setThreshold] = useState();
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState({}); 
 
@@ -70,7 +71,11 @@ function Courses(props) {
 
     const handleAddCourse = (event) => {
 
-        const properties = { 'name': name, 'area': area, 'resources': resources, 'questions': questions };
+        if (threshold <= 0 || threshold > 10) {
+            alert('La calificación tiene que estar entre 1 y 10');
+        }
+
+        const properties = { 'name': name, 'area': area, 'resources': resources, 'questions': questions, 'threshold': threshold };
         const addCourseResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-course', {
               method: 'POST',
@@ -161,6 +166,7 @@ function Courses(props) {
                 <div className = 'course-instance'>
                     <p className = 'instance-attribute-header'> Nombre </p>
                     <p className = 'instance-attribute-header'> Area </p>
+                    <p className = 'instance-attribute-header'> Calif. min. </p>
                     <p className = 'instance-attribute-header'> Fecha de creación </p>
                     
                 </div>
@@ -177,8 +183,9 @@ function Courses(props) {
                             
                             return (
                                 <div key = { course._id.$oid } className = 'course-instance'> 
-                                    <p className = 'instance-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
+                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
                                     <p className = 'instance-attribute'> { course.area } </p>
+                                    <p className = 'instance-attribute'> { course.threshold } </p>
                                     <p className = 'instance-attribute'> { course.date } </p>
     
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
@@ -214,7 +221,11 @@ function Courses(props) {
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del curso' required onChange = { (e) => setName(e.target.value)}/> 
                     <br/>
                     <br />
-                    
+                    <label className = 'form-label'> Calificación mínima </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba un número entre 1 y 10' required onChange = { (e) => setThreshold(e.target.value)}/> 
+                    <br/>
+                    <br />
                     <label className = 'form-label'> Área </label>
                     <br/>
                     <form>
