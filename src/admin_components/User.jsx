@@ -72,6 +72,12 @@ function User(props) {
             <div className = 'main-page'>
               <h5 className = 'course-header'> { user.username } </h5> 
 
+              {
+                user.courses.length == 0 
+                &&
+                <div className = 'message-no-data'> No tiene cursos el usuario </div>
+              }
+
               <div className = 'performance-summary'> 
                 {
                   user.courses.map(course => {
