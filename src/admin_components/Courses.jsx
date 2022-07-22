@@ -20,7 +20,8 @@ function Courses(props) {
     const [descriptionStage1, setDescriptionStage1] = useState();
     const [descriptionStage2, setDescriptionStage2] = useState();
     const [verifyRef, setVerifyRef] = useState(false); 
-    const [deletedCourse, setDeletedCourse] = useState({}); 
+    const [deletedCourse, setDeletedCourse] = useState(); 
+    const [reassignedCourse, setReassignedCourse] = useState();
 
     const getCoursesResource = async () => {
         
@@ -100,7 +101,7 @@ function Courses(props) {
         addCourseResource(); 
     }
 
-    const handleRemoveCourse = (name, area) => {
+    const handleRemoveCourse = () => {
         const deleteCourseResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/delete-course', {
               method: 'DELETE',
@@ -115,7 +116,7 @@ function Courses(props) {
             const response = await promise.json(); 
 
             if ((promise.status != 200) || (!response.deletedCourse)) {
-                alert('Not properly removed');
+                alert('No se eliminó correctamente');
             } else {
                 setRetrievedCourses(false);
             }
@@ -126,10 +127,39 @@ function Courses(props) {
         deleteCourseResource();
     }
 
+    const handleReassignCourse = () => {
+        const reassignCourseResource = async () => {
+            const promise = await fetch('http://127.0.0.1:8000/reassign-course', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(reassignedCourse)
+            });
+      
+            
+            const response = await promise.json(); 
+            
+            if ((promise.status != 200) || (!response.reassignedCourse)) {
+                alert('No se actualizó correctamente');
+            } else {
+                setRetrievedCourses(false);
+            }
+            
+      
+        };
+      
+        reassignCourseResource();
+    }
+
     const handleVerifyConfirm = () => {
         if (deletedCourse) {
-            handleRemoveCourse(deletedCourse);
-            setDeletedCourse({});
+            handleRemoveCourse();
+            setDeletedCourse();
+        } else if (reassignedCourse) {
+            handleReassignCourse();
+            setReassignedCourse();
         }
 
         setVerifyRef(false);
@@ -167,6 +197,7 @@ function Courses(props) {
                     <p className = 'instance-attribute-header'> Area </p>
                     <p className = 'instance-attribute-header'> Calif. min. </p>
                     <p className = 'instance-attribute-header'> Fecha de creación </p>
+                    <p className = 'instance-attribute-header'> Reasignar curso </p>
                     
                 </div>
 
@@ -186,7 +217,7 @@ function Courses(props) {
                                     <p className = 'instance-attribute'> { course.area } </p>
                                     <p className = 'instance-attribute'> { course.threshold } </p>
                                     <p className = 'instance-attribute'> { course.date } </p>
-    
+                                    <img className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
                                 </div>
                             )
@@ -353,7 +384,7 @@ function Courses(props) {
                         SÍ
                     </button>
 
-                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false); setDeletedCourse({}) } }>
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false); setDeletedCourse(); setReassignedCourse() } }>
                         CANCELAR 
                     </button>
             
