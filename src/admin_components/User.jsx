@@ -11,6 +11,7 @@ function User(props) {
     const rank = 'Admin.';
 
     const [retrievedUser, setRetrievedUser] = useState(false); 
+    const [changedNumber, setChangedNumber] = useState();
     const [hiddenMenu, setHiddenMenu] = useState(false);
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
 
@@ -37,6 +38,32 @@ function User(props) {
         console.log(response.user);
       
     };
+
+    const handleChangePhoneNumber = () => {
+
+      const changePhoneResource = async () => {
+        
+        const url = 'http://127.0.0.1:8000/change-phone-number';
+        const promise = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 'username': params.cur_user, 'phone_number': changedNumber })
+        }); 
+        
+        const response = await promise.json();
+        
+        
+        if ((!response.changedPhone) || (promise.status != 200)) {
+          alert('Ingresa datos correctos');
+        }  
+        
+      };
+
+      changePhoneResource();
+    }
     
     if (!retrievedUser) {
         getUserResource(); 
@@ -72,6 +99,12 @@ function User(props) {
             <div className = 'main-page'>
               <h5 className = 'course-header'> { user.username } </h5> 
 
+              <form className = 'change-phone-form' onSubmit = { () => handleChangePhoneNumber() }>
+                {user.phone_number ? (<label> <b> Cambiar </b> <i> { user.phone_number } </i>  </label> ) : (<label> Agregar contacto </label>) } 
+                <input className = 'change-phone-input' placeholder = 'Nuevo teléfono' onChange = { (e) => setChangedNumber(e.target.value) } />
+                <button className = 'submit-form' type = 'submit' id = 'change-phone-submit'> Cambiar </button> 
+              </form>
+
               {
                 user.courses.length == 0 
                 &&
@@ -105,6 +138,14 @@ function User(props) {
                   })
                 }
               </div>
+            </div>
+
+            <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
+
+                <div className = 'corner-popup'> 
+                    <div onClick = { () => { user.phone_number ? window.open("https://wa.me/".concat(user.phone_number).concat("?text=Tu mensaje")) : alert('No lo puedes contactar') } }> { user.phone_number ? (<p> CONTACTAR <br /> { user.phone_number } </p> ) : (<p> NO HAY <br /> CONTACTO </p> )} </div>
+                </div> 
+
             </div>
       </div>
 

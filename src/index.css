@@ -340,3 +340,18 @@
   margin-left: auto; 
   margin-right: auto;
 }
+
+.change-phone-form {
+  margin-left: 25%;
+  display: flex;
+  margin-bottom: 3em;
+}
+
+#change-phone-submit {
+  margin: 0;
+}
+
+.change-phone-form input {
+  margin-left: 2em;
+  margin-right: 1em;
+}

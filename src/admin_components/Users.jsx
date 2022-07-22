@@ -52,6 +52,10 @@ function Users(props) {
                 return;
             }
         }
+        
+        if (!addUserAttributes.phone_number) {
+            delete addUserAttributes.phone_number;
+        }
 
         const addUserResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-user', {
@@ -211,6 +215,11 @@ function Users(props) {
                     <label className = 'form-label'> Número de empleado </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el número de empleado' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, employee_number : e.target.value })) }/> 
+                    <br/>
+                    <br />
+                    <label className = 'form-label'> Número de teléfono </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el número de teléfono' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) }/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Posición </label>
