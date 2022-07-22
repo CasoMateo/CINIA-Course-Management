@@ -224,7 +224,7 @@ def completeSecondStage(request: Request, details: Stage):
 def summaryFirstStage(request: Request, coursename: str): 
 
   full_course = dict(courses.find_one({ 'name': coursename }))
-  suitable_users = [user['courses'] for user in users.find({ 'area': full_course['area'] })]
+  suitable_users = [user['courses'] for user in users.find({ '$and': [{ 'area': full_course['area'] }, { 'rank': { '$ne': True } } ]})]
 
   if full_course['area'] == 'General': 
     suitable_users = [user['courses'] for user in users.find()]
@@ -242,7 +242,7 @@ def summaryFirstStage(request: Request, coursename: str):
 def summarySecondStage(request: Request, coursename: str): 
 
   full_course = courses.find_one({ 'name': coursename })
-  suitable_users = [user['courses'] for user in users.find({ 'area': full_course['area'] })]
+  suitable_users = [user['courses'] for user in users.find({ '$and': [{ 'area': full_course['area'] }, { 'rank': { '$ne': True } } ]})]
 
   if full_course['area'] == 'General': 
     suitable_users = [user['courses'] for user in users.find()]
