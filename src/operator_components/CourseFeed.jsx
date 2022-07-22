@@ -113,6 +113,15 @@ function CourseFeed(props) {
 
             </div>
 
+            <div className = { !hiddenContact ? 'corner-popup-aid' : 'display-false' } id = 'gerencias-contacts'>
+
+                <div className = 'corner-popup-gerencias'> 
+                    <div onClick = { () => window.open("https://wa.me/2223287430?text=Tu mensaje") }> RECURSOS <br /> HUMANOS </div>
+                    <div onClick = { () => window.open("https://wa.me/2225647482?text=Tu mensaje") }> LIMPIEZA Y <br /> JARDINERÍA </div>
+                </div> 
+
+            </div>
+
         </div>
     );
 }

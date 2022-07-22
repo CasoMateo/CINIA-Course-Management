@@ -144,6 +144,21 @@
   box-shadow: 0 2px 3px -2px #000000;
 }
 
+#gerencias-contacts {
+  top: 83%;
+  left: 74%;
+}
+
+.corner-popup-gerencias {
+  display: flex;
+  left: 70%;
+  top: 83%;
+}
+
+.corner-popup-gerencias div {
+  padding: 1em;
+}
+
 .display-false {
   display: none;
 }
