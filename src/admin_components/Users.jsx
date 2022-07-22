@@ -45,6 +45,14 @@ function Users(props) {
     }
 
     const handleAddUser = () => {
+
+        if (addUserAttributes.rank) {
+            if (addUserAttributes.area != 'Adminis.') {
+                alert('Si es un administrador, debe pertenecer al área administrativa');
+                return;
+            }
+        }
+
         const addUserResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-user', {
               method: 'POST',
@@ -157,11 +165,11 @@ function Users(props) {
                             
                             return (
                                 <div key = { user._id.$oid } className = 'user-instance'> 
-                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/usuario/'.concat(user._id.$oid)) }> { user.username } </p>
+                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
                                     <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
                                     <p className = 'instance-attribute'> { user.employee_number } </p>
                                     <p className = 'instance-attribute'> { user.area } </p>
-                                    <p className = 'instance-attribute'> { Object.keys(user.courses).length } </p>
+                                    <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                 </div>
                             )
