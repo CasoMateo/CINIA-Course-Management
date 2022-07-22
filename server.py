@@ -32,8 +32,6 @@ db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
 
-score_threshold = 0.6
-
 class User(BaseModel):
   username: str
   password: str 
@@ -94,9 +92,10 @@ def addUser(request: Request, user: User):
             users.insert_one(newUser)
             content['addedUser'] = True 
 
-            needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': user.area }, { 'area': 'General' } ] })]
-            for course in needed_courses: 
-              users.update_one({ 'username': user.username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
+            if not newUser['rank']:
+              needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': user.area }, { 'area': 'General' } ] })]
+              for course in needed_courses: 
+                users.update_one({ 'username': user.username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
 
     if not content['addedUser']: 
         raise HTTPException(status_code=400, detail="Invalid request")
@@ -153,7 +152,7 @@ def addCourse(request: Request, course: Course):
         users.update_many({ 'area': course.area }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
 
       else: 
-        users.update_many({ 'area': { '$ne': 'Administrativo' }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+        users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
     return JSONResponse(content = content)
 
