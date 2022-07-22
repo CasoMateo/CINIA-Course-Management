@@ -77,6 +77,9 @@ def getUser(request: Request, username: str):
   if not content['user']:
     raise HTTPException(status_code=404, detail="Not found")
 
+  if content['user']['rank']:
+    raise HTTPException(status_code=400, detail="Bad request")
+
   content['user'] = json.loads(json_util.dumps(content['user']))
   return JSONResponse(content = content)
 
