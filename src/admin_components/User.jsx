@@ -30,7 +30,7 @@ function User(props) {
         
         if ((!response.user) || (promise.status != 200)) {
           alert('Error retrieving user');
-          
+          navigate('/usuarios');
         }  
         
         setUser(response.user);

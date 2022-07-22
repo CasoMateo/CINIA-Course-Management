@@ -40,6 +40,7 @@ function Course(props) {
         
         if (promise.status != 200) {
           alert('No se pudieron cargar las estadísticas');    
+          navigate('/cursos');
         }  
         
         const quantities_stage = [response.completed, response.total - response.completed]; 
@@ -61,7 +62,8 @@ function Course(props) {
         const response = await promise.json();
         
         if (promise.status != 200) {
-          alert('No se pudieron cargar las estadísticas');    
+          alert('No se pudieron cargar las estadísticas');  
+          navigate('/cursos');  
         }  
         console.log(response);
         const quantities_stage = [response.completed, response.total - response.completed]; 
