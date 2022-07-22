@@ -36,6 +36,7 @@ class User(BaseModel):
   username: str
   password: str 
   employee_number: int
+  phone_number: Optional[int]
   rank: bool
   area: str 
 
@@ -57,6 +58,10 @@ class Stage(BaseModel):
   username: str
   coursename: str
   answers: Optional[list]
+
+class ChangePhone(BaseModel): 
+  username: str
+  phone_number: int 
 
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
@@ -88,7 +93,7 @@ def addUser(request: Request, user: User):
     
     content = {'addedUser': False}
     password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
-    newUser = { 'username': user.username, 'password': password, 'employee_number': user.employee_number, 'area': user.area, 'rank': user.rank, 'courses': [] } 
+    newUser = { 'username': user.username, 'password': password, 'employee_number': user.employee_number, 'phone_number': user.phone_number, 'area': user.area, 'rank': user.rank, 'courses': [] } 
     
     if user.username and user.password and user.area and user.employee_number:
         if not users.find_one({ 'username': user.username }): 
@@ -258,4 +263,13 @@ def summarySecondStage(request: Request, coursename: str):
         content['completed'] += 1
 
   return JSONResponse(content = content)
-  
+
+@app.post("/change-phone-number", status_code = 200)
+def changePhoneNumber(request: Request, details: ChangePhone): 
+
+  content = { 'changedPhone': False }
+
+  users.update_one({ 'username': details.username }, { '$set': { 'phone_number': details.phone_number } })
+  content['changedPhone'] = True 
+
+  return JSONResponse(content = content)
