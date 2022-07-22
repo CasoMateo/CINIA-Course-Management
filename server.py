@@ -45,6 +45,8 @@ class Course(BaseModel):
   area: str 
   resources: list
   questions: list 
+  descriptionStage1: str
+  descriptionStage2: str
   threshold: int
 
 class findUser(BaseModel): 
@@ -176,7 +178,7 @@ def deleteCourse(request: Request, course: findCourse):
       users.update_many({ 'area':  course.area }, { '$pull': { 'courses': { 'name': course.name } } })
     
     else: 
-      users.update_many({ }, { '$pull': { 'courses': { 'name': course.name } } })
+      users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
 
     return JSONResponse(content = content)
 
