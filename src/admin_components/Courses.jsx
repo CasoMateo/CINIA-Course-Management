@@ -17,6 +17,8 @@ function Courses(props) {
     const [resources, setResources] = useState([0]);
     const [questions, setQuestions] = useState([{'correct': []}]);
     const [threshold, setThreshold] = useState();
+    const [descriptionStage1, setDescriptionStage1] = useState();
+    const [descriptionStage2, setDescriptionStage2] = useState();
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState({}); 
 
@@ -75,7 +77,7 @@ function Courses(props) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
 
-        const properties = { 'name': name, 'area': area, 'resources': resources, 'questions': questions, 'threshold': threshold };
+        const properties = { 'name': name, 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold };
         const addCourseResource = async () => {
             const promise = await fetch('http://127.0.0.1:8000/add-course', {
               method: 'POST',
@@ -90,12 +92,9 @@ function Courses(props) {
             const response = await promise.json(); 
 
             if ((promise.status !== 200) || (!response.addedCourse)) {
-                alert('Not properly added');
-            } else {
-                console.log('Successfully added course');
+                alert('No se añadió adecuadamente');
             }
             
-      
         };
 
         addCourseResource(); 
@@ -228,7 +227,7 @@ function Courses(props) {
                     <br />
                     <label className = 'form-label'> Área </label>
                     <br/>
-                    <form>
+                    <div>
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
                                     required onChange = { () => setArea('Jardinería') }/>
@@ -259,8 +258,13 @@ function Courses(props) {
                             <input name = 'level' type="radio" required onChange = { () => setArea('General') }/>
                             <label >General</label>
                         </div> 
-                    </form>
+                    </div>
                     <br />
+                    <br />
+                    <label className = 'form-label'> Instrucciones de Capacitación </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba la descripción' required onChange = { (e) => setDescriptionStage1(e.target.value) }/> 
+                    <br/>
                     {
                         resources.map(resource => { 
                             return (
@@ -277,7 +281,11 @@ function Courses(props) {
                         <button className = 'course-change' onClick = { () => setResources(resources => [...resources, resources.length]) }> MÁS </button>
                         <button className = 'course-change' onClick = { () => setResources(resources.slice(0, -1)) }> QUITAR </button>
                     </div>
-
+                    <br />
+                    <label className = 'form-label'> Instrucciones de Evaluación </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba la descripción' required onChange = { (e) => setDescriptionStage2(e.target.value) }/> 
+                    <br/>
                     {
                         questions.map(question => {
                             return (
