@@ -7,9 +7,8 @@ function User(props) {
     const navigate = useNavigate();
     const params = useParams(); 
 
-    const username = 'Mateo Caso';
+    const username = 'Fer';
     const rank = 'Operador';
-    const _id = '62c9ebc33aab475b6cdecb54';
 
     const [retrievedUser, setRetrievedUser] = useState(false); 
     const [retrievedCourse, setRetrievedCourse] = useState(false); 
@@ -20,7 +19,7 @@ function User(props) {
     
     const getUserResource = async () => {
         
-        const url = 'http://127.0.0.1:8000/get-user/'.concat(_id);
+        const url = 'http://127.0.0.1:8000/get-user/'.concat(username);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -175,6 +174,7 @@ function User(props) {
                     <div className = 'stage1-info'> 
                         <h5 className = 'course-header'> Recursos </h5>
                         
+                        <p className = 'course-description'> {  course.descriptionStage1 }</p>
                         <div className = 'course-resources'> 
                             {
                                 course.resources.map(resource => {
@@ -198,7 +198,7 @@ function User(props) {
                     :
                     <div className = 'stage2-info'> 
                         <h5 className = 'course-header'> Evaluación </h5>
-                        
+                        <p className = 'course-description'> { course.descriptionStage2 } </p>
                         <form className = 'course-evaluation' onSubmit = { (event) => handleCompleteSecondStage(event) }>
                             {
                                 course.questions.map(question => {

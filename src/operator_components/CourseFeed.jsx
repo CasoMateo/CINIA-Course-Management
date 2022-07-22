@@ -6,8 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 function CourseFeed(props) {
 
     const rank = 'Operador';
-    const username = 'Mateo Caso';
-    const _id = '62c9ebc33aab475b6cdecb54';
+    const username = 'Fer';
 
     // make get user request
     // arrange courses with name and date 
@@ -23,7 +22,7 @@ function CourseFeed(props) {
 
     const getUserResource = async () => {
         
-        const url = 'http://127.0.0.1:8000/get-user/'.concat(_id);
+        const url = 'http://127.0.0.1:8000/get-user/'.concat(username);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
