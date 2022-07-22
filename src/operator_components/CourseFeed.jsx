@@ -19,6 +19,7 @@ function CourseFeed(props) {
     const [retrievedUser, setRetrievedUser] = useState(false); 
     const [hiddenContact, setHiddenContact] = useState(false);
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
+    const [search, setSearch] = useState();
 
     const getUserResource = async () => {
         
@@ -81,6 +82,12 @@ function CourseFeed(props) {
             </div>
 
             <div className = 'main-page'>
+                <div className = 'search-box'>
+                    <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
+                    <img src = '/search_button.png' className = 'search-button' /> 
+
+                </div>
+
                 {
                     Object.keys(user.courses).length === 0 
                     && 
@@ -91,12 +98,14 @@ function CourseFeed(props) {
                 <div className = 'operator-courses'>
                     {
                         user.courses.map(course => {
-                            return (
-                                <div className = 'operator-course-instance' id = { course.stage2 && 'completed-course' } onClick = { () => handleExploreCourse(course)}> 
-                                    <p className = 'instance-attribute'> <b> { course.name } </b> </p>
-                                    <p className = 'instance-attribute'> { (course.stage1 && course.stage2) ? 'Completado' : 'En progreso...' }</p>
-                                </div>
-                            );
+                            if (!search || course.name.toLowerCase().includes(search.toLowerCase())) {
+                                return (
+                                    <div className = 'operator-course-instance' id = { course.stage2 && 'completed-course' } onClick = { () => handleExploreCourse(course)}> 
+                                        <p className = 'instance-attribute'> <b> { course.name } </b> </p>
+                                        <p className = 'instance-attribute'> { (course.stage1 && course.stage2) ? 'Completado' : 'En progreso...' }</p>
+                                    </div>
+                                );
+                            }
                         })
 
                     }

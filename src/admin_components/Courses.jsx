@@ -22,6 +22,7 @@ function Courses(props) {
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState(); 
     const [reassignedCourse, setReassignedCourse] = useState();
+    const [search, setSearch] = useState();
 
     const getCoursesResource = async () => {
         
@@ -192,6 +193,12 @@ function Courses(props) {
 
             <div className = 'main-page'>
                 
+                <div className = 'search-box'>
+                    <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
+                    <img src = '/search_button.png' className = 'search-button' /> 
+
+                </div>
+
                 <div className = 'course-instance'>
                     <p className = 'instance-attribute-header'> Nombre </p>
                     <p className = 'instance-attribute-header'> Area </p>
@@ -211,16 +218,18 @@ function Courses(props) {
 
                         : courses.map(course => {
                             
-                            return (
-                                <div key = { course._id.$oid } className = 'course-instance'> 
-                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
-                                    <p className = 'instance-attribute'> { course.area } </p>
-                                    <p className = 'instance-attribute'> { course.threshold } </p>
-                                    <p className = 'instance-attribute'> { course.date } </p>
-                                    <img className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
-                                    <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
-                                </div>
-                            )
+                            if (!search || course.name.toLowerCase().includes(search.toLowerCase())) {
+                                return (
+                                    <div key = { course._id.$oid } className = 'course-instance'> 
+                                        <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
+                                        <p className = 'instance-attribute'> { course.area } </p>
+                                        <p className = 'instance-attribute'> { course.threshold } </p>
+                                        <p className = 'instance-attribute'> { course.date } </p>
+                                        <img className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
+                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
+                                    </div>
+                                )
+                            }
                         })
                     }
                 </div>

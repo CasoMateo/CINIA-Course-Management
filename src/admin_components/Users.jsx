@@ -17,6 +17,7 @@ function Users(props) {
     const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
     const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
+    const [search, setSearch] = useState();
 
     const getUsersResource = async () => {
         
@@ -147,7 +148,13 @@ function Users(props) {
             </div>
 
             <div className = 'main-page'>
-                
+
+                <div className = 'search-box'>
+                    <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
+                    <img src = '/search_button.png' className = 'search-button' /> 
+
+                </div>
+
                 <div className = 'user-instance'>
                     <p className = 'instance-attribute-header'> Nombre </p>
                     <p className = 'instance-attribute-header'> Posición </p>
@@ -166,17 +173,18 @@ function Users(props) {
                         </div> 
 
                         : users.map(user => {
-                            
-                            return (
-                                <div key = { user._id.$oid } className = 'user-instance'> 
-                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
-                                    <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
-                                    <p className = 'instance-attribute'> { user.employee_number } </p>
-                                    <p className = 'instance-attribute'> { user.area } </p>
-                                    <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
-                                    <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
-                                </div>
-                            )
+                            if (!search || user.username.toLowerCase().includes(search.toLowerCase())) {
+                                return (
+                                    <div key = { user._id.$oid } className = 'user-instance'> 
+                                        <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
+                                        <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
+                                        <p className = 'instance-attribute'> { user.employee_number } </p>
+                                        <p className = 'instance-attribute'> { user.area } </p>
+                                        <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
+                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
+                                    </div>
+                                )
+                            }
                         })
                     }
                 </div>
