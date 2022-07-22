@@ -68,11 +68,11 @@ def getUsers(request: Request):
 
   return response 
 
-@app.get("/get-user/{usernameID}", status_code = 200)
-def getUser(request: Request, usernameID: str):
+@app.get("/get-user/{username}", status_code = 200)
+def getUser(request: Request, username: str):
   
   content = {}
-  content['user'] = users.find_one({ '_id': ObjectId(usernameID) })
+  content['user'] = users.find_one({ 'username': username })
 
   if not content['user']:
     raise HTTPException(status_code=404, detail="Not found")
