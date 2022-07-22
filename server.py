@@ -266,6 +266,15 @@ def summarySecondStage(request: Request, coursename: str):
 
   return JSONResponse(content = content)
 
+@app.post("/reassign-course", status_code = 200)
+def reassignCourse(request: Request, course: findCourse):
+  
+  users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
+  users.update_many({ 'rank': { '$ne': True } }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+
+  return JSONResponse(content = { 'reassignedCourse': True })
+
+
 @app.post("/change-phone-number", status_code = 200)
 def changePhoneNumber(request: Request, details: ChangePhone): 
 
