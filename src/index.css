@@ -96,6 +96,35 @@
   grid-template-columns: 50% 10% 10% 10% 10% 10%;
 }
 
+.contact-instance {
+  margin-top: 1.2em;
+  display: grid; 
+  grid-template-columns: 70% 15% 15%;
+}
+
+.contact-list {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.separate-contact {
+  background-color:rgb(245, 205, 199); 
+  border-radius: 15px;
+  justify-self: center;
+  padding-right: 6em;
+  padding-left: 6em;
+  padding-top: 1em; 
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+  font-size: 1.5rem;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.separate-contact:hover {
+  opacity: 75%;
+  cursor: pointer;
+}
+
 .trash-button-user {
   width: 40%;
 }
@@ -395,3 +424,4 @@
   width: 30%;
   margin-left: 3em;
 }
+

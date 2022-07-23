@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom'; 
+import '../index.css';
+import { useNavigate, useParams } from 'react-router-dom';  
+
+function ContactFeed(props) {
+
+    const navigate = useNavigate();
+    const username = 'Mateo Caso'; 
+    const rank = 'Operador';
+
+    const [contacts, setContacts] = useState([]); 
+    const [retrievedContacts, setRetrievedContacts] = useState(false);
+
+    const getContactsResource = async () => {
+        
+        if (retrievedContacts) {  
+          return;
+        }
+    
+        const promise = await fetch('http://127.0.0.1:8000/get-contacts', { 
+          method: 'GET',
+          credentials: 'include'
+        }); 
+        
+        if (promise.status !== 200) {
+          alert('Failed to retrieve contacts');
+        } 
+    
+        const response = await promise.json();
+      
+        setContacts(response.contacts);
+    };  
+
+    if (!retrievedContacts) {
+        getContactsResource();
+        setRetrievedContacts(true); 
+    }
+
+
+    return (
+        <div>
+            <div className = 'sidebar'>
+                
+                <img src = '/cinia_logo (1).png' alt = 'Logo' className = 'cinia-logo'/> 
+
+                <div className = 'sidebar-options'> 
+                    <p className = 'sidebar-option' onClick = { () => navigate('/operador') }> Cursos </p>
+                    <p className = 'sidebar-option' id = 'selected-page'> Contactos </p>
+                    
+                </div>
+
+                <div className = 'profile-details'>
+                    <div className = 'credentials'> 
+                        <p className = 'username' > { username } </p>
+                        <p className = 'rank'> { rank } </p>
+                    </div>
+
+                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+
+                </div> 
+            </div>
+
+            <div className = 'main-page'>
+                <div className = 'contact-list'>
+                {
+                    contacts.length === 0 
+                    ?
+                    <div className = 'message-no-data'> 
+                        No hay contactos disponibles
+                    </div> 
+                    :
+                    contacts.map(contact => {
+                        return(
+                            <div className = 'separate-contact' onClick = { () => window.open("https://wa.me/".concat(contact.phone_number).concat("?text=Tu mensaje")) } > { contact.name } </div>
+                        );
+                    })
+                }
+                </div>
+            </div>
+        </div> 
+    );
+}
+
+export default ContactFeed;
