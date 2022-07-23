@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../index.css';
 
-function User(props) {
+function ExploreCourse(props) {
     const navigate = useNavigate();
     const params = useParams(); 
 
@@ -245,4 +245,4 @@ function User(props) {
     );
 }
 
-export default User;
+export default ExploreCourse;
