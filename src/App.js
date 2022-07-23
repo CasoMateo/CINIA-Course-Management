@@ -1,8 +1,20 @@
 import AdminRoutes from './routes/AdminRoutes'; 
+import OperatorRoutes from './routes/OperatorRoutes'; 
 
 function App() {
+
+  const admin = true; 
+  const status = true; 
+
   return (
-    <AdminRoutes />
+  
+
+    admin ? 
+    <AdminRoutes /> : 
+    <OperatorRoutes />
+      
+
+    
   );
 }
 
