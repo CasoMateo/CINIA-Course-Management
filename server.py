@@ -31,6 +31,7 @@ cluster = MongoClient(os.getenv("CONNECTION_TO_DB"))
 db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
+contacts = db['contacts']
 
 class User(BaseModel):
   username: str
@@ -64,6 +65,10 @@ class Stage(BaseModel):
 class ChangePhone(BaseModel): 
   username: str
   phone_number: int 
+
+class Contact(BaseModel): 
+  name: str 
+  phone_number: Optional[int] 
 
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
@@ -284,3 +289,35 @@ def changePhoneNumber(request: Request, details: ChangePhone):
   content['changedPhone'] = True 
 
   return JSONResponse(content = content)
+
+@app.get('/get-contacts', status_code = 200)
+def getContacts(request: Request): 
+
+  content = { 'contacts': [json.loads(json_util.dumps(contact)) for contact in contacts.find()] }
+  response = JSONResponse(content = content) 
+
+  return response 
+
+@app.post('/add-contact', status_code = 200)
+def addContact(request: Request, contact: Contact): 
+
+  content = { 'addedContact': False }
+
+  if not contact.phone_number: 
+    raise HTTPException(status_code=400, detail="Bad request") 
+
+  if not contacts.find_one({ 'name': contact.name }): 
+    contacts.insert_one(dict(contact)) 
+    content['addedContact'] = True 
+  
+  return JSONResponse(content = content)
+
+@app.delete('/delete-contact', status_code = 200)
+def deleteContact(request: Request, contact: Contact): 
+
+  if not contacts.find_one({ 'name': contact.name }): 
+    raise HTTPException(status_code=404, detail="Not found") 
+  
+  contacts.delete_one({ 'name': contact.name })
+  
+  return JSONResponse(content = { 'deletedContact': True })
