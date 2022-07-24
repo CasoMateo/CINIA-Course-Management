@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import { useNavigate, useParams } from 'react-router-dom';
 import '../index.css';
+import { AuthContext } from '../contexts/AuthContext';
 
 function ExploreCourse(props) {
     const navigate = useNavigate();
     const params = useParams(); 
+    const { getCookie, logout } = useContext(AuthContext); 
 
-    const username = 'Fer';
+    const username = getCookie('username');
     const rank = 'Operador';
 
     const [retrievedUser, setRetrievedUser] = useState(false); 
@@ -16,6 +18,7 @@ function ExploreCourse(props) {
     const [course, setCourse] = useState({'resources': [], 'questions': []}); 
     const [hiddenMenu, setHiddenMenu] = useState(false);
     const [answers, setAnswers] = useState();
+    const [verifyRef, setVerifyRef] = useState(false);
     
     const getUserResource = async () => {
         
@@ -161,7 +164,7 @@ function ExploreCourse(props) {
                         <p className = 'hide-menu' onClick = { () => setHiddenMenu(!hiddenMenu) }> Ocultar/poner menú </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => setVerifyRef(true)} > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -241,6 +244,22 @@ function ExploreCourse(props) {
                 }
 
             </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => logout() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false) } }>
+                        CANCELAR 
+                    </button>
+            
+                </div>
+            </div>
+
         </div>
     );
 }

@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom';  
+import { AuthContext } from '../contexts/AuthContext';
 
 function ContactFeed(props) {
 
     const navigate = useNavigate();
-    const username = 'Mateo Caso'; 
+    const { getCookie, logout } = useContext(AuthContext); 
+
+    const username = getCookie('username'); 
     const rank = 'Operador';
 
     const [contacts, setContacts] = useState([]); 
     const [retrievedContacts, setRetrievedContacts] = useState(false);
+    const [verifyRef, setVerifyRef] = useState(false); 
 
     const getContactsResource = async () => {
         
@@ -56,7 +60,7 @@ function ContactFeed(props) {
                         <p className = 'rank'> { rank } </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => setVerifyRef(true)} > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -76,6 +80,21 @@ function ContactFeed(props) {
                         );
                     })
                 }
+                </div>
+            </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => logout() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false) }}>
+                        CANCELAR 
+                    </button>
+            
                 </div>
             </div>
         </div> 

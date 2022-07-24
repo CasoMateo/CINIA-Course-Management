@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom'; 
+import { AuthContext } from '../contexts/AuthContext';
 
 function CourseFeed(props) {
 
+    const { getCookie, logout } = useContext(AuthContext);
     const rank = 'Operador';
-    const username = 'Fer';
+    const username = getCookie('username');
 
     // make get user request
     // arrange courses with name and date 
@@ -20,6 +22,7 @@ function CourseFeed(props) {
     const [hiddenContact, setHiddenContact] = useState(false);
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
     const [search, setSearch] = useState();
+    const [verifyRef, setVerifyRef] = useState(false);
 
     const getUserResource = async () => {
         
@@ -77,7 +80,7 @@ function CourseFeed(props) {
                         <p className = 'hide-menu' onClick = { () => setHiddenContact(!hiddenContact) }> Ocultar/poner menú </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => setVerifyRef(true)} > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -121,6 +124,21 @@ function CourseFeed(props) {
                     <div onClick = { () => window.open("https://wa.me/2225647482?text=Tu mensaje") }> LIMPIEZA Y <br /> JARDINERÍA </div>
                 </div> 
 
+            </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => logout() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false) }}>
+                        CANCELAR 
+                    </button>
+            
+                </div>
             </div>
 
         </div>

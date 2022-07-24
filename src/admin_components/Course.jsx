@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import { Chart, Tooltip, Title, ArcElement, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../index.css';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 Chart.register(
   Tooltip, Title, ArcElement, Legend
@@ -13,7 +14,8 @@ function Course(props) {
     const navigate = useNavigate();
     const params = useParams(); 
 
-    const username = 'Mateo Caso';
+    const { getCookie, logout } = useContext(AuthContext); 
+    const username = getCookie('username'); 
     const rank = 'Admin.';
 
     const colors = ['#bef5b0', '#d1837b'];
@@ -24,6 +26,7 @@ function Course(props) {
     const [quantitiesStage2, setQuantitiesStage2] = useState([0, 0]);
     const [showStage, setShowStage] = useState(false);
     const [retrievedSummaries, setRetrievedSummaries] = useState(false);
+    const [verifyRef, setVerifyRef] = useState(false); 
 
     const getFirstStageSummary = async () => {
         
@@ -96,7 +99,7 @@ function Course(props) {
                         <p className = 'switch-stage' onClick = { () => setShowStage(!showStage) }> Cambiar a etapa de { !showStage ? 'Evaluación' : 'Capacitación' }</p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => setVerifyRef(true) } > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -125,6 +128,21 @@ function Course(props) {
                     )
                 }
               
+            </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => logout() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false) } }>
+                        CANCELAR 
+                    </button>
+            
+                </div>
             </div>
 
         </div>

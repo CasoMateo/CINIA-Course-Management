@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 function Courses(props) {
 
     const navigate = useNavigate();
-    const username = 'Mateo Caso';
+
+    const { getCookie, logout } = useContext(AuthContext); 
+    const username = getCookie('username'); 
     const rank = 'Admin.';
+
     const [courses, setCourses] = useState([]);
     const [retrievedCourses, setRetrievedCourses] = useState(false);
     const [hiddenChanges, setHiddenChanges] = useState(false);
@@ -22,6 +26,7 @@ function Courses(props) {
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState(); 
     const [reassignedCourse, setReassignedCourse] = useState();
+    const [clickedLogout, setClickedLogout] = useState(false);
     const [search, setSearch] = useState();
 
     const getCoursesResource = async () => {
@@ -161,6 +166,9 @@ function Courses(props) {
         } else if (reassignedCourse) {
             handleReassignCourse();
             setReassignedCourse();
+        } else if (clickedLogout) {
+            logout(); 
+            setClickedLogout(false); 
         }
 
         setVerifyRef(false);
@@ -185,7 +193,7 @@ function Courses(props) {
                         <p className = 'hide-menu' onClick = { () => setHiddenChanges(!hiddenChanges) }> Ocultar/poner menú </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => { setVerifyRef(true); setClickedLogout(true) }} > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -392,7 +400,7 @@ function Courses(props) {
                         SÍ
                     </button>
 
-                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false); setDeletedCourse(); setReassignedCourse() } }>
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false); setDeletedCourse(); setReassignedCourse(); setClickedLogout(false) } }>
                         CANCELAR 
                     </button>
             

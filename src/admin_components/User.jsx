@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import { useNavigate, useParams } from 'react-router-dom';
 import '../index.css';
+import { AuthContext } from '../contexts/AuthContext';
 
 function User(props) {
     const navigate = useNavigate();
     const params = useParams(); 
+    const { getCookie, logout } = useContext(AuthContext);
 
-    const username = 'Mateo Caso';
+    const username = getCookie('username');
     const rank = 'Admin.';
+    
 
     const [retrievedUser, setRetrievedUser] = useState(false); 
     const [changedNumber, setChangedNumber] = useState();
     const [hiddenMenu, setHiddenMenu] = useState(false);
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
+    const [verifyRef, setVerifyRef] = useState(false); 
 
     const getUserResource = async () => {
         
@@ -91,7 +95,7 @@ function User(props) {
                         <p className = 'hide-menu' onClick = { () => setHiddenMenu(!hiddenMenu) }> Ocultar/poner menú </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => setVerifyRef(true) } > Cerrar sesión </button>
 
                 </div> 
             </div>
@@ -146,6 +150,21 @@ function User(props) {
                     <div onClick = { () => { user.phone_number ? window.open("https://wa.me/".concat(user.phone_number).concat("?text=Tu mensaje")) : alert('No lo puedes contactar') } }> { user.phone_number ? (<p> CONTACTAR <br /> { user.phone_number } </p> ) : (<p> NO HAY <br /> CONTACTO </p> )} </div>
                 </div> 
 
+            </div>
+
+            <div className = { verifyRef ? 'verify-button' : 'display-false' } >
+                <h5> No puedes deshacer esta acción </h5> 
+
+                <div className = 'verifying-buttons'>
+                    <button id = 'verify-yes' onClick = { () => logout() }>
+                        SÍ
+                    </button>
+
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false) } }>
+                        CANCELAR 
+                    </button>
+            
+                </div>
             </div>
       </div>
 

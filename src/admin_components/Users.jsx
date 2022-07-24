@@ -1,18 +1,23 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom'; 
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 
 function Users(props) {
 
     const navigate = useNavigate();
-    const username = 'Mateo Caso';
+    const { getCookie, logout } = useContext(AuthContext); 
+
+    const username = getCookie('username');
     const rank = 'Admin.';
+
     const [users, setUsers] = useState([]); 
     const [verifyRef, setVerifyRef] = useState(false);
     const [deletedUser, setDeletedUser] = useState();
+    const [clickedLogout, setClickedLogout] = useState(false); 
     const [retrievedUsers, setRetrievedUsers] = useState(false);
     const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
@@ -117,6 +122,9 @@ function Users(props) {
         if (deletedUser) {
             handleRemoveUser(deletedUser); 
             setDeletedUser();
+        } else if (clickedLogout) {
+            logout(); 
+            setClickedLogout(false);
         }
 
         setVerifyRef(false);
@@ -289,7 +297,7 @@ function Users(props) {
                         SÍ
                     </button>
 
-                    <button id = 'verify-no' onClick = { () => setVerifyRef(false) }>
+                    <button id = 'verify-no' onClick = { () => { setVerifyRef(false); setDeletedUser(); setClickedLogout(false) }}>
                         CANCELAR 
                     </button>
             
