@@ -425,3 +425,24 @@
   margin-left: 3em;
 }
 
+.login-box {
+  margin-top: 10%;
+  margin-left: 30%;
+  margin-right: 30%;
+}
+
+.login-form {
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center;
+}
+
+#login-button {
+  width: 5em;
+  margin-left: 70%;
+}
+
+.login-logo {
+  width: 50%;
+  margin-left: 20%;
+}
