@@ -87,7 +87,7 @@ def getCookie(cname, ccookies):
 
 def authenticatedUser(username, token): 
 
-  return jwt.encode({ 'username': username }, 'secret', algorithm="HS256") == token
+  return jwt.encode({ 'username': username }, os.getenv('PRIVATE_TOKEN_KEY'), algorithm="HS256") == token
 
 def authorizedAdmin(username):
 
@@ -113,7 +113,7 @@ def login(request: Request, user: Payload):
       if bcrypt.checkpw(user.password.encode("utf8"), current['password']): 
         content['loggedIn'] = True 
 
-        content['token'] = jwt.encode({ "username": user.username }, 'secret', algorithm="HS256")
+        content['token'] = jwt.encode({ "username": user.username }, os.getenv('PRIVATE_TOKEN_KEY'), algorithm="HS256")
 
         if current['rank']: 
           content['admin'] = True 
