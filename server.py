@@ -11,6 +11,7 @@ from dotenv import load_dotenv, find_dotenv
 from bson import json_util, ObjectId
 import json 
 from datetime import date
+import jwt 
 
 app = FastAPI()
 
@@ -32,6 +33,10 @@ db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
 contacts = db['contacts']
+
+class Payload(BaseModel): 
+  username: str
+  password: str 
 
 class User(BaseModel):
   username: str
@@ -69,6 +74,66 @@ class ChangePhone(BaseModel):
 class Contact(BaseModel): 
   name: str 
   phone_number: Optional[int] 
+
+def getCookie(cname, ccookies):
+    cookies = ccookies.split('; ')
+
+    for cookie in cookies:
+        cur = cookie.split('=')
+        if cur[0] == cname:
+            return cur[1]
+
+    return False
+
+def authenticatedUser(username, token): 
+
+  return jwt.encode({ 'username': username }, 'secret', algorithm="HS256") == token
+
+def authorizedAdmin(username):
+
+  isAdmin = False
+  user = users.find_one({ 'username': username })
+
+  if user: 
+    isAdmin = user['rank'] 
+  
+  return isAdmin
+
+
+@app.post("/login", status_code = 200) 
+def login(request: Request, user: Payload): 
+
+  content = { 'loggedIn': False, 'admin': False }
+
+  if user.username and user.password: 
+
+    current = users.find_one({ 'username' : user.username}) 
+    
+    if current: 
+      if bcrypt.checkpw(user.password.encode("utf8"), current['password']): 
+        content['loggedIn'] = True 
+
+        content['token'] = jwt.encode({ "username": user.username }, 'secret', algorithm="HS256")
+
+        if current['rank']: 
+          content['admin'] = True 
+      
+  if not content['loggedIn']: 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+  
+  return JSONResponse(content = content)
+
+@app.get("/is-logged-in", status_code = 200) 
+def isLoggedIn(request: Request): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")
+
+@app.get("/is-privileged", status_code = 200) 
+def isPrivileged(request: Request): 
+
+  if not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")
 
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
