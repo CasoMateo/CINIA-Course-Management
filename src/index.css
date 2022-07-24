@@ -446,3 +446,8 @@
   width: 50%;
   margin-left: 20%;
 }
+
+.separate-contact:hover {
+  opacity: 75%;
+  cursor: pointer;
+}
