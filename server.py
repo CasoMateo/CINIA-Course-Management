@@ -103,6 +103,9 @@ def authorizedAdmin(username):
 @app.post("/login", status_code = 200) 
 def login(request: Request, user: Payload): 
 
+  if authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")
+
   content = { 'loggedIn': False, 'admin': False }
 
   if user.username and user.password: 
@@ -138,6 +141,9 @@ def isPrivileged(request: Request):
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
   
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+
   operators = [json.loads(json_util.dumps(user)) for user in users.find()]
   
   content = { 'users': operators }
@@ -147,6 +153,9 @@ def getUsers(request: Request):
 
 @app.get("/get-user/{username}", status_code = 200)
 def getUser(request: Request, username: str):
+  
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])):
+    raise HTTPException(status_code=401, detail="Unauthorized") 
   
   content = {}
   content['user'] = users.find_one({ 'username': username })
@@ -162,6 +171,9 @@ def getUser(request: Request, username: str):
 
 @app.post("/add-user", status_code = 200)
 def addUser(request: Request, user: User):
+    
+    if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
     
     content = {'addedUser': False}
     password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
@@ -185,6 +197,9 @@ def addUser(request: Request, user: User):
 @app.delete("/delete-user", status_code = 200)
 def deleteUser(request: Request, user: findUser):
     
+    if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+
     content = { 'deletedUser': False }
 
     if user.username:     
@@ -196,6 +211,9 @@ def deleteUser(request: Request, user: findUser):
 @app.get("/get-courses", status_code = 200)
 def getCourses(request: Request):
   
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+
   content = { 'courses': [json.loads(json_util.dumps(course)) for course in courses.find()] }
   response = JSONResponse(content = content) 
 
@@ -203,6 +221,9 @@ def getCourses(request: Request):
 
 @app.get("/get-course/{name}", status_code = 200)
 def getCourse(request: Request, name: str): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
 
   content = {}
   content['course'] = courses.find_one({ 'name': name })
@@ -215,8 +236,11 @@ def getCourse(request: Request, name: str):
   
 
 @app.post("/add-course", status_code = 200)
-def addCourse(request: Request, course: Course): 
-    
+def addCourse(request: Request, course: Course):
+
+    if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+
     if course.threshold <= 0 or course.threshold > 10: 
       raise HTTPException(status_code=400, detail="Invalid request")
 
@@ -239,6 +263,9 @@ def addCourse(request: Request, course: Course):
 @app.delete("/delete-course", status_code = 200)
 def deleteCourse(request: Request, course: findCourse): 
     
+    if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+
     content = { 'deletedCourse': False }
 
     if courses.find_one_and_delete({ 'name': course.name }):
@@ -254,6 +281,9 @@ def deleteCourse(request: Request, course: findCourse):
 
 @app.post("/complete-first-stage", status_code = 200)
 def completeFirstStage(request: Request, details: Stage): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
 
   content = { 'completedStage': False }
   
@@ -272,6 +302,9 @@ def completeFirstStage(request: Request, details: Stage):
 
 @app.post("/complete-second-stage", status_code = 200)
 def completeSecondStage(request: Request, details: Stage): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
 
   content = { 'completedStage': False }
   
@@ -303,6 +336,9 @@ def completeSecondStage(request: Request, details: Stage):
 @app.get("/summary-first-stage/{coursename}", status_code = 200)
 def summaryFirstStage(request: Request, coursename: str): 
 
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
+
   full_course = dict(courses.find_one({ 'name': coursename }))
   suitable_users = [user['courses'] for user in users.find({ '$and': [{ 'area': full_course['area'] }, { 'rank': { '$ne': True } } ]})]
 
@@ -320,6 +356,9 @@ def summaryFirstStage(request: Request, coursename: str):
 
 @app.get("/summary-second-stage/{coursename}", status_code = 200)
 def summarySecondStage(request: Request, coursename: str): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
 
   full_course = courses.find_one({ 'name': coursename })
   suitable_users = [user['courses'] for user in users.find({ '$and': [{ 'area': full_course['area'] }, { 'rank': { '$ne': True } } ]})]
@@ -339,6 +378,9 @@ def summarySecondStage(request: Request, coursename: str):
 @app.post("/reassign-course", status_code = 200)
 def reassignCourse(request: Request, course: findCourse):
   
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
+
   users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
   users.update_many({ 'rank': { '$ne': True } }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
@@ -347,6 +389,9 @@ def reassignCourse(request: Request, course: findCourse):
 
 @app.post("/change-phone-number", status_code = 200)
 def changePhoneNumber(request: Request, details: ChangePhone): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
 
   content = { 'changedPhone': False }
 
@@ -358,6 +403,9 @@ def changePhoneNumber(request: Request, details: ChangePhone):
 @app.get('/get-contacts', status_code = 200)
 def getContacts(request: Request): 
 
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+
   content = { 'contacts': [json.loads(json_util.dumps(contact)) for contact in contacts.find()] }
   response = JSONResponse(content = content) 
 
@@ -365,6 +413,9 @@ def getContacts(request: Request):
 
 @app.post('/add-contact', status_code = 200)
 def addContact(request: Request, contact: Contact): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
 
   content = { 'addedContact': False }
 
@@ -379,6 +430,9 @@ def addContact(request: Request, contact: Contact):
 
 @app.delete('/delete-contact', status_code = 200)
 def deleteContact(request: Request, contact: Contact): 
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
 
   if not contacts.find_one({ 'name': contact.name }): 
     raise HTTPException(status_code=404, detail="Not found") 
