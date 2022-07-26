@@ -26,7 +26,8 @@ function User(props) {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookies': document.cookie
           }
         }); 
         
@@ -52,7 +53,8 @@ function User(props) {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookies': document.cookie
           },
           body: JSON.stringify({ 'username': params.cur_user, 'phone_number': changedNumber })
         }); 

@@ -24,6 +24,9 @@ function ContactFeed(props) {
     
         const promise = await fetch('http://127.0.0.1:8000/get-contacts', { 
           method: 'GET',
+          headers: {
+            'Cookies': document.cookie
+          },
           credentials: 'include'
         }); 
         

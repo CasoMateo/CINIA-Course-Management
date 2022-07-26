@@ -29,6 +29,9 @@ function Contacts(props) {
     
         const promise = await fetch('http://127.0.0.1:8000/get-contacts', { 
           method: 'GET',
+          headers: {
+            'Cookies': document.cookie
+          },
           credentials: 'include'
         }); 
         
@@ -52,7 +55,8 @@ function Contacts(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify(addContactAttributes)
             });
@@ -78,7 +82,8 @@ function Contacts(props) {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify(deletedContact)
             });

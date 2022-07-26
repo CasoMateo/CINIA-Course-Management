@@ -27,7 +27,8 @@ function ExploreCourse(props) {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookies': document.cookie
           }
         }); 
         
@@ -53,7 +54,8 @@ function ExploreCourse(props) {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Cookies': document.cookie
           }
         }); 
         
@@ -87,7 +89,8 @@ function ExploreCourse(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               }, 
               body: JSON.stringify({ 'username': username, 'coursename': course.name })
             }); 
@@ -118,7 +121,8 @@ function ExploreCourse(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               }, 
               body: JSON.stringify({ 'username': username, 'coursename': course.name, 'answers': answers })
             }); 

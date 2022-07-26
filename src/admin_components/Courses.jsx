@@ -37,6 +37,9 @@ function Courses(props) {
     
         const promise = await fetch('http://127.0.0.1:8000/get-courses', { 
           method: 'GET',
+          headers: {
+            'Cookies': document.cookie
+          },
           credentials: 'include'
         }); 
         
@@ -90,7 +93,8 @@ function Courses(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie              
               },
               body: JSON.stringify(properties)
             });
@@ -113,7 +117,8 @@ function Courses(props) {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify(deletedCourse)
             });
@@ -139,7 +144,8 @@ function Courses(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify(reassignedCourse)
             });

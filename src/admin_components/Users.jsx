@@ -32,6 +32,9 @@ function Users(props) {
     
         const promise = await fetch('http://127.0.0.1:8000/get-users', { 
           method: 'GET',
+          headers: {
+            'Cookies': document.cookie
+          },
           credentials: 'include'
         }); 
         
@@ -68,7 +71,8 @@ function Users(props) {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify(addUserAttributes)
             });
@@ -98,7 +102,8 @@ function Users(props) {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
               },
               body: JSON.stringify({ 'username': username })
             });
