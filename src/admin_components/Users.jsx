@@ -155,7 +155,7 @@ function Users(props) {
                         <p className = 'hide-menu' onClick = { () => setHiddenChanges(!hiddenChanges) }> Ocultar/poner menú </p>
                     </div>
 
-                    <button className = 'logout' onClick = { () => alert('Logged out')} > Cerrar sesión </button>
+                    <button className = 'logout' onClick = { () => { setVerifyRef(true); setClickedLogout(true) } } > Cerrar sesión </button>
 
                 </div> 
             </div>
