@@ -129,7 +129,7 @@ function Users(props) {
             }
 
             if ((promise.status != 200) || (!response.deletedUser)) {
-                alert('Not properly removed');
+                alert('No se eliminó correctamente (no intentes eliminarte a ti mismo)');
                 return;
             } else {
                 setRetrievedUsers(false);
@@ -301,7 +301,7 @@ function Users(props) {
                             <label >Automoción</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Adminis.'})) }/>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Administra.'})) }/>
                             <label >Administrativo</label>
                         </div> 
                     </form>

@@ -328,7 +328,7 @@ function Courses(props) {
                             <label >Automoción</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Adminis.') }/>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Administra.') }/>
                             <label >Administrativo</label>
                         </div> 
                         <div className = 'radio-option'>
