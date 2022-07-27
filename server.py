@@ -10,10 +10,11 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from bson import json_util, ObjectId
 import json 
-from datetime import date
+from datetime import date, datetime, timedelta
 import jwt 
 
 app = FastAPI()
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'minute': datetime.now() } 
 
 origins = [
   "http://localhost:3000"
@@ -99,9 +100,24 @@ def authorizedAdmin(username):
   
   return isAdmin
 
+def checkRateLimit(name, limit): 
+  if (app.rates[name] <= limit): 
+    app.rates[name] += 1 
+  else: 
+    current_time = datetime.now()
+    
+    if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'minute': current_time } 
+    else: 
+      return True
+  
+  return False
 
 @app.post("/login", status_code = 200) 
 def login(request: Request, user: Payload): 
+
+  if checkRateLimit('login', 80): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")
@@ -141,8 +157,11 @@ def isPrivileged(request: Request):
 @app.get("/get-users", status_code = 200)
 def getUsers(request: Request):
   
+  if checkRateLimit('getUsers', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+      
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
-    raise HTTPException(status_code=401, detail="Unauthorized") 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
 
   operators = [json.loads(json_util.dumps(user)) for user in users.find()]
   
@@ -153,7 +172,10 @@ def getUsers(request: Request):
 
 @app.get("/get-user/{username}", status_code = 200)
 def getUser(request: Request, username: str):
-  
+
+  if checkRateLimit('getUser', 80): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])):
     raise HTTPException(status_code=401, detail="Unauthorized") 
   
@@ -172,6 +194,9 @@ def getUser(request: Request, username: str):
 @app.post("/add-user", status_code = 200)
 def addUser(request: Request, user: User):
     
+    if checkRateLimit('addUser', 10): 
+      raise HTTPException(status_code=429, detail="Too many requests")
+
     if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
     
@@ -197,6 +222,9 @@ def addUser(request: Request, user: User):
 @app.delete("/delete-user", status_code = 200)
 def deleteUser(request: Request, user: findUser):
     
+    if checkRateLimit('deleteUser', 10): 
+      raise HTTPException(status_code=429, detail="Too many requests")
+
     if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
 
@@ -211,6 +239,9 @@ def deleteUser(request: Request, user: findUser):
 @app.get("/get-courses", status_code = 200)
 def getCourses(request: Request):
   
+  if checkRateLimit('getCourses', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized") 
 
@@ -221,6 +252,9 @@ def getCourses(request: Request):
 
 @app.get("/get-course/{name}", status_code = 200)
 def getCourse(request: Request, name: str): 
+
+  if checkRateLimit('getCourse', 80): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized") 
@@ -237,6 +271,9 @@ def getCourse(request: Request, name: str):
 
 @app.post("/add-course", status_code = 200)
 def addCourse(request: Request, course: Course):
+
+    if checkRateLimit('addCourse', 10): 
+      raise HTTPException(status_code=429, detail="Too many requests")
 
     if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
@@ -263,6 +300,9 @@ def addCourse(request: Request, course: Course):
 @app.delete("/delete-course", status_code = 200)
 def deleteCourse(request: Request, course: findCourse): 
     
+    if checkRateLimit('deleteCourse', 10): 
+      raise HTTPException(status_code=429, detail="Too many requests")
+
     if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
 
@@ -281,6 +321,9 @@ def deleteCourse(request: Request, course: findCourse):
 
 @app.post("/complete-first-stage", status_code = 200)
 def completeFirstStage(request: Request, details: Stage): 
+
+  if checkRateLimit('completeFirst', 50): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
@@ -302,6 +345,9 @@ def completeFirstStage(request: Request, details: Stage):
 
 @app.post("/complete-second-stage", status_code = 200)
 def completeSecondStage(request: Request, details: Stage): 
+
+  if checkRateLimit('completeSecond', 50): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
@@ -336,6 +382,9 @@ def completeSecondStage(request: Request, details: Stage):
 @app.get("/summary-first-stage/{coursename}", status_code = 200)
 def summaryFirstStage(request: Request, coursename: str): 
 
+  if checkRateLimit('summaryFirst', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
 
@@ -356,6 +405,9 @@ def summaryFirstStage(request: Request, coursename: str):
 
 @app.get("/summary-second-stage/{coursename}", status_code = 200)
 def summarySecondStage(request: Request, coursename: str): 
+
+  if checkRateLimit('summarySecond', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
@@ -378,6 +430,9 @@ def summarySecondStage(request: Request, coursename: str):
 @app.post("/reassign-course", status_code = 200)
 def reassignCourse(request: Request, course: findCourse):
   
+  if checkRateLimit('reassignCourse', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
 
@@ -389,6 +444,9 @@ def reassignCourse(request: Request, course: findCourse):
 
 @app.post("/change-phone-number", status_code = 200)
 def changePhoneNumber(request: Request, details: ChangePhone): 
+
+  if checkRateLimit('changePhone', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
@@ -403,6 +461,9 @@ def changePhoneNumber(request: Request, details: ChangePhone):
 @app.get('/get-contacts', status_code = 200)
 def getContacts(request: Request): 
 
+  if checkRateLimit('getContacts', 80): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized") 
 
@@ -413,6 +474,9 @@ def getContacts(request: Request):
 
 @app.post('/add-contact', status_code = 200)
 def addContact(request: Request, contact: Contact): 
+
+  if checkRateLimit('addContact', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized") 
@@ -430,6 +494,9 @@ def addContact(request: Request, contact: Contact):
 
 @app.delete('/delete-contact', status_code = 200)
 def deleteContact(request: Request, contact: Contact): 
+
+  if checkRateLimit('deleteContact', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
