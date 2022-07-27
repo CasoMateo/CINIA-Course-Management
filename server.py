@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import Cookie, FastAPI, HTTPException, Request
 from fastapi.testclient import TestClient
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pymongo import MongoClient
@@ -12,6 +12,7 @@ from bson import json_util, ObjectId
 import json 
 from datetime import date, datetime, timedelta
 import jwt 
+import csv
 
 app = FastAPI()
 app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'minute': datetime.now() } 
@@ -510,3 +511,24 @@ def deleteContact(request: Request, contact: Contact):
   contacts.delete_one({ 'name': contact.name })
   
   return JSONResponse(content = { 'deletedContact': True })
+
+@app.get('/users-csv-file', status_code = 200)
+async def getCSV(request: Request): 
+
+  with open('usuarios_exporte.csv', 'w', encoding='UTF8') as csv_file:
+
+    writer = csv.writer(csv_file)
+
+    headers = ['Name', 'Administrador', 'Área', 'Teléfono', 'Cursos']
+
+    writer.writerow(headers) 
+
+    for user in [user for user in users.find()]: 
+      filtered = [user['username'], user['rank'], user['area'], user['phone_number']]
+
+      for course in user['courses']: 
+        filtered.append(course)  
+       
+      writer.writerow(filtered)
+
+  return FileResponse('usuarios_exporte.csv')
