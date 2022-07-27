@@ -225,6 +225,9 @@ def deleteUser(request: Request, user: findUser):
     if checkRateLimit('deleteUser', 10): 
       raise HTTPException(status_code=429, detail="Too many requests")
 
+    if getCookie('username', request.headers['cookies']) == user.username: 
+      raise HTTPException(status_code=400, detail="Bad request")
+
     if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
 
