@@ -115,7 +115,7 @@ function Courses(props) {
 
             if ((promise.status !== 200) || (!response.addedCourse)) {
                 alert('No se añadió adecuadamente');
-                alert;
+                return;
             }
             
         };
