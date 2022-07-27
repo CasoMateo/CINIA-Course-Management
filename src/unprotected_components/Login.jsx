@@ -14,7 +14,7 @@ function Login(props) {
     return (
         <div className = 'login-box'>
             <img src = '/cinia_logo (1).png' className = 'login-logo' />
-            <form className = 'login-form' onSubmit = { () => login(username, password) }>
+            <form className = 'login-form' onSubmit = { (event) => login(event, username, password) }>
                 <label className = 'form-label'> Nombre de usuario </label>
                 <input placeholder = 'Escribe tu nombre de usuario' type = 'text' onChange = { (e) => setUsername(e.target.value)} required /> 
                 <br />

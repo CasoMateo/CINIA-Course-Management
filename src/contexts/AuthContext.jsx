@@ -25,6 +25,7 @@ const AuthContextProvider = (props) => {
     const [retrievedAuth, setRetrievedAuth] = useState(false); 
 
     if (!retrievedAuth) {
+
         fetch('http://127.0.0.1:8000/is-logged-in', {
             method: 'GET',
             headers: {
@@ -46,28 +47,32 @@ const AuthContextProvider = (props) => {
         }).then(response => setAdmin(response.status == 200));
 
         setRetrievedAuth(true);
+
     }
     
-    const login = (username, password) => {
+    const login = (event, username, password) => {
+        event.preventDefault();
+
         if ((!username) || (!password)) {
           setRenderVerifyCredentials(true);
           return;
         }
             
         const loginResource = async (username, password) => {
+          
+
           const promise = await fetch('http://127.0.0.1:8000/login', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json', 
-              'mode': 'cors',
               'Cookies': document.cookie
             },
             body: JSON.stringify({ 'username': username, 'password': password }) 
           }); 
         
           const response = await promise.json();
-              
+          
           if ((response.loggedIn) && (promise.status == 200)) {
             if (!getCookie('token') || (!status)) {
               const session_id_cookie = 'token='.concat(response.token)
@@ -80,7 +85,7 @@ const AuthContextProvider = (props) => {
             document.cookie = username_cookie;
             
   
-            if ((response.admin)) { 
+            if (response.admin) { 
               setAdmin(true);
               if (!getCookie('admin')){
                 document.cookie = 'admin=True';
@@ -95,7 +100,7 @@ const AuthContextProvider = (props) => {
         };
         
         loginResource(username, password);
-      }
+    }
 
     const logout = () => {
         if (!status) {
