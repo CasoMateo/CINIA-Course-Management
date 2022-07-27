@@ -38,8 +38,14 @@ function Users(props) {
           credentials: 'include'
         }); 
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+        
         if (promise.status !== 200) {
           alert('Failed to retrieve users');
+          return;
         } 
     
         const response = await promise.json();
@@ -79,9 +85,15 @@ function Users(props) {
       
             
             const response = await promise.json(); 
-            
+
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
             if ((promise.status !== 200) || (!response.addedUser)) {
                 alert('Not properly added');
+                return;
             } else {
                 setRetrievedUsers(false);
             }
@@ -110,9 +122,15 @@ function Users(props) {
       
             
             const response = await promise.json(); 
+            
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
 
             if ((promise.status != 200) || (!response.deletedUser)) {
                 alert('Not properly removed');
+                return;
             } else {
                 setRetrievedUsers(false);
             }

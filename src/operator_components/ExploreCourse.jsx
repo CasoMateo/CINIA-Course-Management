@@ -34,9 +34,13 @@ function ExploreCourse(props) {
         
         const response = await promise.json();
         
-        
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if ((!response.user) || (promise.status != 200)) {
-          alert('Error retrieving user');
+          alert('No se retiró tu información correctamente');
           navigate('/operadores');
         }  
         
@@ -61,9 +65,13 @@ function ExploreCourse(props) {
         
         const response = await promise.json();
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
         
         if ((!response.course) || (promise.status != 200)) {
-          alert('Error retrieving course');
+          alert('No se retiró el curso correctamente');
           navigate('/operadores');
           
         }  

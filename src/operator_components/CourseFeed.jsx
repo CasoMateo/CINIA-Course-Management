@@ -38,9 +38,14 @@ function CourseFeed(props) {
         
         const response = await promise.json();
         
-        
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if ((!response.user) || (promise.status != 200)) {
-          alert('Error retrieving user');
+          alert('No se retiró tu información adecuadamente');
+          return;
           
         }  
         

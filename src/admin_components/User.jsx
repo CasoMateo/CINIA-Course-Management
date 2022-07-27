@@ -12,7 +12,6 @@ function User(props) {
     const username = getCookie('username');
     const rank = 'Admin.';
     
-
     const [retrievedUser, setRetrievedUser] = useState(false); 
     const [changedNumber, setChangedNumber] = useState();
     const [hiddenMenu, setHiddenMenu] = useState(false);
@@ -33,14 +32,17 @@ function User(props) {
         
         const response = await promise.json();
         
-        
+        if (promise.status == 429) {
+          alert('Demasiadas solicitudes, espera un poco');
+          return;
+        }
+
         if ((!response.user) || (promise.status != 200)) {
-          alert('Error retrieving user');
+          alert('No se retiró el usuario correctamente');
           navigate('/usuarios');
         }  
         
         setUser(response.user);
-        console.log(response.user);
       
     };
 
@@ -61,9 +63,14 @@ function User(props) {
         
         const response = await promise.json();
         
+        if (promise.status == 429) {
+          alert('Demasiadas solicitudes, espera un poco');
+          return;
+        }
         
         if ((!response.changedPhone) || (promise.status != 200)) {
           alert('Ingresa datos correctos');
+          return;
         }  
         
       };

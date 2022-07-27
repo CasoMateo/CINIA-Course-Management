@@ -30,8 +30,14 @@ function ContactFeed(props) {
           credentials: 'include'
         }); 
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if (promise.status !== 200) {
-          alert('Failed to retrieve contacts');
+          alert('No se retiraron los contactos adecuadamente');
+          return;
         } 
     
         const response = await promise.json();

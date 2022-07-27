@@ -42,13 +42,18 @@ function Course(props) {
         
         const response = await promise.json();
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if (promise.status != 200) {
           alert('No se pudieron cargar las estadísticas');    
           navigate('/cursos');
         }  
         
         const quantities_stage = [response.completed, response.total - response.completed]; 
-        console.log(response);
+        
         setQuantitiesStage1(quantities_stage);
     };
 
@@ -66,11 +71,16 @@ function Course(props) {
         
         const response = await promise.json();
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if (promise.status != 200) {
           alert('No se pudieron cargar las estadísticas');  
           navigate('/cursos');  
         }  
-        console.log(response);
+        
         const quantities_stage = [response.completed, response.total - response.completed]; 
         setQuantitiesStage2(quantities_stage);
  

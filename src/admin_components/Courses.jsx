@@ -43,8 +43,14 @@ function Courses(props) {
           credentials: 'include'
         }); 
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if (promise.status !== 200) {
-          alert('Failed to retrieve courses');
+          alert('No se recuperaron los cursos adecuadamente');
+          return;
         } 
     
         const response = await promise.json();
@@ -101,9 +107,15 @@ function Courses(props) {
       
             
             const response = await promise.json(); 
+            
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
 
             if ((promise.status !== 200) || (!response.addedCourse)) {
                 alert('No se añadió adecuadamente');
+                alert;
             }
             
         };
@@ -125,9 +137,15 @@ function Courses(props) {
       
             
             const response = await promise.json(); 
+            
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
 
             if ((promise.status != 200) || (!response.deletedCourse)) {
                 alert('No se eliminó correctamente');
+                return;
             } else {
                 setRetrievedCourses(false);
             }
@@ -153,8 +171,14 @@ function Courses(props) {
             
             const response = await promise.json(); 
             
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
             if ((promise.status != 200) || (!response.reassignedCourse)) {
                 alert('No se actualizó correctamente');
+                return;
             } else {
                 setRetrievedCourses(false);
             }

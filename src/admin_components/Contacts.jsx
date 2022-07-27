@@ -35,8 +35,14 @@ function Contacts(props) {
           credentials: 'include'
         }); 
         
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
         if (promise.status !== 200) {
-          alert('Failed to retrieve contacts');
+          alert('No se retiraron los contactos adecuadamente');
+          return;
         } 
     
         const response = await promise.json();
@@ -64,8 +70,14 @@ function Contacts(props) {
             
             const response = await promise.json(); 
 
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
             if ((promise.status != 200) || (!response.addedContact)) {
                 alert('No se añadió correctamente');
+                return;
             } else {
                 setRetrievedContacts(false);
             }
@@ -91,8 +103,14 @@ function Contacts(props) {
             
             const response = await promise.json(); 
 
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
             if ((promise.status != 200) || (!response.deletedContact)) {
                 alert('No se eliminó correctamente');
+                return;
             } else {
                 setRetrievedContacts(false);
             }
