@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; 
-
+import fileDownload from 'js-file-download'
 
 function Users(props) {
 
@@ -53,6 +53,34 @@ function Users(props) {
         
         setUsers(response.users);
     };  
+
+    const getCSVResource = async () => {
+        
+        const promise = await fetch('http://127.0.0.1:8000/users-csv-file', { 
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Cookies': document.cookie
+          },
+          credentials: 'include'
+        }); 
+        
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+        
+        if (promise.status !== 200) {
+          alert('No se recuperó el archivo de Excel');
+          return;
+        } 
+    
+        const response = await promise.blob();
+        fileDownload(response, "usuarios_exporte.csv");
+        console.log(response);
+    };  
+
 
     if (!retrievedUsers) {
         getUsersResource();
@@ -179,6 +207,10 @@ function Users(props) {
             </div>
 
             <div className = 'main-page'>
+                
+                <button className = 'download-button' onClick = { () => getCSVResource() }>
+                    Descargar la base de datos 
+                </button>
 
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
