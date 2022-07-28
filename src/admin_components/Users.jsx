@@ -59,8 +59,6 @@ function Users(props) {
         const promise = await fetch('http://127.0.0.1:8000/users-csv-file', { 
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
             'Cookies': document.cookie
           },
           credentials: 'include'
