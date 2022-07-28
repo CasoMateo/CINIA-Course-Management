@@ -15,7 +15,7 @@ import jwt
 import csv
 
 app = FastAPI()
-app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'minute': datetime.now() } 
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'minute': datetime.now() } 
 
 origins = [
   "http://localhost:3000"
@@ -102,13 +102,13 @@ def authorizedAdmin(username):
   return isAdmin
 
 def checkRateLimit(name, limit): 
-  if (app.rates[name] <= limit): 
+  if (app.rates[name] <= limit - 1): 
     app.rates[name] += 1 
   else: 
     current_time = datetime.now()
     
     if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
-      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'minute': current_time } 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'minute': current_time } 
     else: 
       return True
   
@@ -515,6 +515,12 @@ def deleteContact(request: Request, contact: Contact):
 @app.get('/users-csv-file', status_code = 200)
 async def getCSV(request: Request): 
 
+  if checkRateLimit('getCSV', 2): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+  
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+      
   with open('usuarios_exporte.csv', 'w', encoding='UTF8') as csv_file:
 
     writer = csv.writer(csv_file)
@@ -527,7 +533,9 @@ async def getCSV(request: Request):
       filtered = [user['username'], user['rank'], user['area'], user['phone_number']]
 
       for course in user['courses']: 
-        filtered.append(course)  
+        filtered.append(course['name']) 
+        filtered.append(course['stage1'])
+        filtered.append(course['stage2'])  
        
       writer.writerow(filtered)
 
