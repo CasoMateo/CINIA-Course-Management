@@ -530,7 +530,7 @@ async def getCSV(request: Request):
     writer.writerow(headers) 
 
     for user in [user for user in users.find()]: 
-      filtered = [user['username'], user['rank'], user['area'], user['phone_number']]
+      filtered = [user['username'], user['rank'], user['area'], user.get('phone_number')]
 
       for course in user['courses']: 
         filtered.append(course['name']) 
