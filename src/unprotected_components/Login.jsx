@@ -24,7 +24,7 @@ function Login(props) {
                 <button type = 'submit' className = 'submit-form' id = 'login-button'> Ingresar </button>
             </form>
 
-            <p className = { renderVerifyCredentials ? 'invalid-login-credentials' : 'display-false' } > Credenciales inválidas </p>
+            <p className = { renderVerifyCredentials ? 'invalid-login-credentials' : 'display-false' } > Usuario o contraseña incorrecto </p>
         </div>
     );
 } 
