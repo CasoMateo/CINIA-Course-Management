@@ -535,7 +535,7 @@ async def getCSV(request: Request):
       for course in user['courses']: 
         filtered.append(course['name']) 
         filtered.append(course['stage1'])
-        filtered.append(course['stage2'])  
+        filtered.append(course['stage2'] * 100)  
        
       writer.writerow(filtered)
 
