@@ -192,10 +192,10 @@ function ExploreCourse(props) {
                         <p className = 'course-description'> {  course.descriptionStage1 }</p>
                         <div className = 'course-resources'> 
                             {
-                                course.resources.map(resource => {
+                                course.resources.map((resource, cur_resource) => {
                                     return (
                                         <a className = 'course-resource' href = { resource } target = '_blank'> 
-                                            { resource }
+                                            Material { cur_resource + 1 }
                                         </a>
                                     )
                                 })
