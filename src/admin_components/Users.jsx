@@ -30,7 +30,7 @@ function Users(props) {
           return;
         }
     
-        const promise = await fetch('http://127.0.0.1:8000/get-users', { 
+        const promise = await fetch('https://noooui64xj5ktxhh4dof7yejey0vubte.lambda-url.us-west-2.on.aws/get-users', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -56,7 +56,7 @@ function Users(props) {
 
     const getCSVResource = async () => {
         
-        const promise = await fetch('http://127.0.0.1:8000/users-csv-file', { 
+        const promise = await fetch('https://noooui64xj5ktxhh4dof7yejey0vubte.lambda-url.us-west-2.on.aws/users-csv-file', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -99,7 +99,7 @@ function Users(props) {
         }
 
         const addUserResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/add-user', {
+            const promise = await fetch('https://noooui64xj5ktxhh4dof7yejey0vubte.lambda-url.us-west-2.on.aws/add-user', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -136,7 +136,7 @@ function Users(props) {
 
     const handleRemoveUser = (username) => {
         const deleteUserResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/delete-user', {
+            const promise = await fetch('https://noooui64xj5ktxhh4dof7yejey0vubte.lambda-url.us-west-2.on.aws/delete-user', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
