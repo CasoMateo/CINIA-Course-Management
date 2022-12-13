@@ -39,8 +39,7 @@ function Courses(props) {
           method: 'GET',
           headers: {
             'Cookies': document.cookie
-          },
-          credentials: 'include'
+          }
         }); 
         
         if (promise.status == 429) {
