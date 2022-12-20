@@ -26,22 +26,20 @@ const AuthContextProvider = (props) => {
 
     if (!retrievedAuth) {
 
-        fetch('http://127.0.0.1:8000/is-logged-in', {
+        fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/is-logged-in', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',  
-                'mode': 'cors',
                 'Cookies': document.cookie
             }
         }).then(response => setStatus(response.status == 200)); 
 
-        fetch('http://127.0.0.1:8000/is-privileged', {
+        fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/is-privileged', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',  
-                'mode': 'cors',
+                'Content-Type': 'application/json', 
                 'Cookies': document.cookie
             }
         }).then(response => setAdmin(response.status == 200));
@@ -61,7 +59,7 @@ const AuthContextProvider = (props) => {
         const loginResource = async (username, password) => {
           
 
-          const promise = await fetch('http://127.0.0.1:8000/login', {
+          const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/login', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',
