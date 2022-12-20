@@ -1,3 +1,5 @@
 .env
 __pycache__/server.cpython-39.pyc
 *.csv
+lib
+*.zip
