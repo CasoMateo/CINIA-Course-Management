@@ -22,7 +22,7 @@ function ContactFeed(props) {
           return;
         }
     
-        const promise = await fetch('http://127.0.0.1:8000/get-contacts', { 
+        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-contacts', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie

@@ -30,7 +30,7 @@ function Course(props) {
 
     const getFirstStageSummary = async () => {
         
-        const url = 'http://127.0.0.1:8000/summary-first-stage/'.concat(params.cur_course);
+        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/summary-first-stage/'.concat(params.cur_course);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -59,7 +59,7 @@ function Course(props) {
 
     const getSecondStageSummary = async () => {
         
-        const url = 'http://127.0.0.1:8000/summary-second-stage/'.concat(params.cur_course);
+        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/summary-second-stage/'.concat(params.cur_course);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {

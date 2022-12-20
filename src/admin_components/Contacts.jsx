@@ -27,7 +27,7 @@ function Contacts(props) {
           return;
         }
     
-        const promise = await fetch('http://127.0.0.1:8000/get-contacts', { 
+        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-contacts', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -56,7 +56,7 @@ function Contacts(props) {
 
     const handleAddContact = () => {
         const addContactResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/add-contact', {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-contact', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -89,7 +89,7 @@ function Contacts(props) {
 
     const handleDeleteContact = () => {
         const deleteContactResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/delete-contact', {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-contact', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',

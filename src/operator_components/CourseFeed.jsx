@@ -26,7 +26,7 @@ function CourseFeed(props) {
 
     const getUserResource = async () => {
         
-        const url = 'http://127.0.0.1:8000/get-user/'.concat(username);
+        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-user/'.concat(username);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {

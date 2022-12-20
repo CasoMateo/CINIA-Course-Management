@@ -35,7 +35,7 @@ function Courses(props) {
           return;
         }
     
-        const promise = await fetch('http://127.0.0.1:8000/get-courses', { 
+        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-courses', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -94,7 +94,7 @@ function Courses(props) {
 
         const properties = { 'name': name, 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold };
         const addCourseResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/add-course', {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-course', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -124,7 +124,7 @@ function Courses(props) {
 
     const handleRemoveCourse = () => {
         const deleteCourseResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/delete-course', {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-course', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
@@ -157,7 +157,7 @@ function Courses(props) {
 
     const handleReassignCourse = () => {
         const reassignCourseResource = async () => {
-            const promise = await fetch('http://127.0.0.1:8000/reassign-course', {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/reassign-course', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
