@@ -86,8 +86,8 @@ function Users(props) {
         setRetrievedUsers(true);
     }
 
-    const handleAddUser = () => {
-
+    const handleAddUser = (event) => {
+        event.preventDefault();
         if (addUserAttributes.rank) {
             if (addUserAttributes.area != 'Adminis.') {
                 alert('Si es un administrador, debe pertenecer al área administrativa');
@@ -117,7 +117,7 @@ function Users(props) {
                 alert('Demasiadas solicitudes, espera un poco');
                 return;
             }
-
+            
             if ((promise.status !== 200) || (!response.addedUser)) {
                 alert('Not properly added');
                 return;
@@ -271,7 +271,7 @@ function Users(props) {
                     
                 </div>
 
-                <form onSubmit = { () => handleAddUser() }>
+                <form onSubmit = { (event) => handleAddUser(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 

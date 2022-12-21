@@ -54,7 +54,8 @@ function Contacts(props) {
         setRetrievedContacts(true);
     }
 
-    const handleAddContact = () => {
+    const handleAddContact = (event) => {
+        event.preventDefault();
         const addContactResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-contact', {
               method: 'POST',
@@ -221,7 +222,7 @@ function Contacts(props) {
                     
                 </div>
 
-                <form onSubmit = { () => handleAddContact() }>
+                <form onSubmit = { (event) => handleAddContact(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del contacto' required onChange = { e => setAddContactAttributes(prevState => ({ ...prevState, name : e.target.value })) }/> 

@@ -87,7 +87,7 @@ function Courses(props) {
     }
 
     const handleAddCourse = (event) => {
-
+        event.preventDefault();
         if (threshold <= 0 || threshold > 10) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
