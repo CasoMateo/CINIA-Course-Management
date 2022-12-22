@@ -13,24 +13,14 @@ import json
 from datetime import date, datetime, timedelta
 import jwt 
 import csv
+from mangum import Mangum
 
 app = FastAPI()
+handler = Mangum(app)
 app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'minute': datetime.now() } 
 
-origins = [
-  "http://localhost:3000"
-]
 
-app.add_middleware(
-  CORSMiddleware,
-  allow_origins=origins,
-  allow_credentials=True,
-  allow_methods=["*"],
-  allow_headers=["*"],
-)
-
-load_dotenv('.env')
-cluster = MongoClient(os.getenv("CONNECTION_TO_DB"))
+cluster = MongoClient(os.environ.get("CONNECTION_TO_DB"))
 db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
@@ -114,6 +104,10 @@ def checkRateLimit(name, limit):
   
   return False
 
+@app.get("/get", status_code = 200)
+def get(): 
+  return {'GOTIT'}
+  
 @app.post("/login", status_code = 200) 
 def login(request: Request, user: Payload): 
 
@@ -133,7 +127,7 @@ def login(request: Request, user: Payload):
       if bcrypt.checkpw(user.password.encode("utf8"), current['password']): 
         content['loggedIn'] = True 
 
-        content['token'] = jwt.encode({ "username": user.username }, os.getenv('PRIVATE_TOKEN_KEY'), algorithm="HS256")
+        content['token'] = jwt.encode({ "username": user.username }, os.environ.get('PRIVATE_TOKEN_KEY'), algorithm="HS256")
 
         if current['rank']: 
           content['admin'] = True 
@@ -521,7 +515,7 @@ async def getCSV(request: Request):
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
       
-  with open('usuarios_exporte.csv', 'w', encoding='UTF8') as csv_file:
+  with open('/tmp/usuarios_exporte.csv', 'w', encoding='UTF8') as csv_file:
 
     writer = csv.writer(csv_file)
 
@@ -539,4 +533,4 @@ async def getCSV(request: Request):
        
       writer.writerow(filtered)
 
-  return FileResponse('usuarios_exporte.csv')
+  return FileResponse('/tmp/usuarios_exporte.csv')
