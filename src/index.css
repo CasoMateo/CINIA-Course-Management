@@ -555,3 +555,7 @@
   font-size: 1.5rem;
   padding-left: 20%;
 }
+
+.contacts-popup-pointer {
+  cursor: pointer;
+}
