@@ -104,10 +104,6 @@ def checkRateLimit(name, limit):
   
   return False
 
-@app.get("/get", status_code = 200)
-def get(): 
-  return {'GOTIT'}
-  
 @app.post("/login", status_code = 200) 
 def login(request: Request, user: Payload): 
 
@@ -514,7 +510,7 @@ async def getCSV(request: Request):
   
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
       raise HTTPException(status_code=401, detail="Unauthorized") 
-      
+
   with open('/tmp/usuarios_exporte.csv', 'w', encoding='UTF8') as csv_file:
 
     writer = csv.writer(csv_file)
