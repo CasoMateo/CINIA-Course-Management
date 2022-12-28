@@ -88,8 +88,9 @@ function Users(props) {
 
     const handleAddUser = (event) => {
         event.preventDefault();
+        
         if (addUserAttributes.rank) {
-            if (addUserAttributes.area != 'Adminis.') {
+            if (addUserAttributes.area != 'Administra.') {
                 alert('Si es un administrador, debe pertenecer al área administrativa');
                 return;
             }
@@ -118,8 +119,13 @@ function Users(props) {
                 return;
             }
             
+            if (promise.status == 422) {
+                alert('Refresca la página para añadir a un nuevo usuario');
+                return;
+            }
+
             if ((promise.status !== 200) || (!response.addedUser)) {
-                alert('Not properly added');
+                alert('No se añadió correctamente. Es probable que tengas que escoger otro nombre para el usuario');
                 return;
             } else {
                 setRetrievedUsers(false);
@@ -129,8 +135,6 @@ function Users(props) {
         };
       
         addUserResource();
-          
-        setAddUserAttributes();
 
         setAddUserForm(false);
     }
@@ -274,7 +278,7 @@ function Users(props) {
                 <form onSubmit = { (event) => handleAddUser(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
-                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) } defaultValue = ''/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Contraseña </label>
@@ -293,7 +297,8 @@ function Users(props) {
                     <br/>
                     <br />
                     <label className = 'form-label'> Posición </label>
-                    <form>
+                    <div>
+                        <form> 
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
                                     required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: true })) } />
@@ -301,14 +306,16 @@ function Users(props) {
                         </div>
 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) }/>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) } />
                             <label >Operador</label>
                         </div>
-                    </form>
+                        </form>
+                    </div>
                     <br/>
                     <label className = 'form-label'> Área </label>
                     <br/>
-                    <form>
+                    <div>
+                        <form>
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
                                     required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Jardinería'})) }/>
@@ -335,7 +342,8 @@ function Users(props) {
                             <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Administra.'})) }/>
                             <label >Administrativo</label>
                         </div> 
-                    </form>
+                        </form>
+                    </div>
                     <br />
                     <button type = 'submit' className = 'submit-form'> AÑADIR </button>
                 

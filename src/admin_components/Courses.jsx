@@ -88,6 +88,7 @@ function Courses(props) {
 
     const handleAddCourse = (event) => {
         event.preventDefault();
+
         if (threshold <= 0 || threshold > 10) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
@@ -112,14 +113,23 @@ function Courses(props) {
                 return;
             }
 
-            if ((promise.status !== 200) || (!response.addedCourse)) {
-                alert('No se añadió adecuadamente');
+            if (promise.status == 422) {
+                alert('Refresca la página para añadir a un nuevo curso');
                 return;
+            }
+
+            if ((promise.status !== 200) || (!response.addedCourse)) {
+                alert('No se añadió adecuadamente. Es probable que tengas que escoger otro nombre para el curso.');
+                return;
+            } else {
+                setRetrievedCourses(false);
             }
             
         };
 
         addCourseResource(); 
+
+        setAddCourseForm(false);
     }
 
     const handleRemoveCourse = () => {

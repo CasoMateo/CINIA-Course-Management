@@ -56,6 +56,8 @@ function Contacts(props) {
 
     const handleAddContact = (event) => {
         event.preventDefault();
+        event.target.reset();
+
         const addContactResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-contact', {
               method: 'POST',
@@ -86,6 +88,7 @@ function Contacts(props) {
         };
       
         addContactResource();
+        setAddContactForm(false);
     }
 
     const handleDeleteContact = () => {
