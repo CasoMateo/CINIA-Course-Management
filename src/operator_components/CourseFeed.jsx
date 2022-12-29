@@ -111,8 +111,8 @@ function CourseFeed(props) {
                             if (!search || course.name.toLowerCase().includes(search.toLowerCase())) {
                                 return (
                                     <div className = 'operator-course-instance' id = { course.stage2 && 'completed-course' } onClick = { () => handleExploreCourse(course)}> 
-                                        <p className = 'instance-attribute'> <b> { course.name } </b> </p>
-                                        <p className = 'instance-attribute'> { (course.stage1 && course.stage2) ? 'Completado' : 'En progreso...' }</p>
+                                        <p className = 'instance-attribute' id = 'course-feed-instance'> <b> { course.name } </b> </p>
+                                        <p className = 'instance-attribute' id = 'course-feed-instance'> { (course.stage1 && course.stage2) ? 'Completado' : 'En progreso...' }</p>
                                     </div>
                                 );
                             }

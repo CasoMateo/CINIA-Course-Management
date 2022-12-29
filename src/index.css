@@ -490,6 +490,18 @@
     left: 25%;
   }
 
+  .operator-course-instance {
+    padding-left: 20%;
+  }
+
+  .credentials {
+    font-size: 0.9rem;
+  }
+
+  .profile-details {
+    flex-direction: column;
+  }
+
 }
 
 @media screen and (max-width: 675px) {
@@ -547,6 +559,22 @@
 
   .corner-popup-aid {
     left: 70%;
+  }
+
+  .operator-course-instance {
+    padding-left: 20%;
+  }
+
+  #course-feed-instance {
+    font-size: 0.8rem;
+  }
+
+  #gerencias-contacts {
+    left:50%;
+  }
+
+  .verify-button {
+    left: 10%;
   }
 }
 
