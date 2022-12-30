@@ -300,7 +300,7 @@ function Courses(props) {
                     
                 </div>
 
-                <form>
+                <form class = 'add-whatever-form'>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del curso' required onChange = { (e) => setName(e.target.value)}/> 

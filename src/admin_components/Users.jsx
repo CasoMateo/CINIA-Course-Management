@@ -275,7 +275,7 @@ function Users(props) {
                     
                 </div>
 
-                <form onSubmit = { (event) => handleAddUser(event) }>
+                <form class = 'add-whatever-form' onSubmit = { (event) => handleAddUser(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) } defaultValue = ''/> 

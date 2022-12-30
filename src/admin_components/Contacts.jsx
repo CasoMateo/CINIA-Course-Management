@@ -225,7 +225,7 @@ function Contacts(props) {
                     
                 </div>
 
-                <form onSubmit = { (event) => handleAddContact(event) }>
+                <form class = 'add-whatever-form' onSubmit = { (event) => handleAddContact(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
                     <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del contacto' required onChange = { e => setAddContactAttributes(prevState => ({ ...prevState, name : e.target.value })) }/> 

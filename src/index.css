@@ -529,6 +529,10 @@
     grid-template-columns: 50% 50%;
   }
 
+  .logout {
+    margin-top: 1em;
+  }
+
 }
 
 @media screen and (max-width: 675px) {
@@ -578,16 +582,17 @@
   }  
 
   .credentials p {
-    font-size: .45rem;
+    font-size: .35rem;
   }
 
   .logout {
+    margin-left: 1em; 
     font-size: .5rem;
   }
 
   .logout:hover {
-    margin-top: 1em;
     font-size: 0.7rem;
+    margin-top: 0.5em;
   }
 
   .instance-attribute, .instance-attribute-header {
@@ -652,6 +657,13 @@
     padding-top: 3%;
   }
 
+  .add-whatever-form {
+    padding-left: 10%;
+  }
+
+  .submit-form {
+    margin-left: 8em;
+  }
 }
 
 .invalid-login-credentials {
