@@ -181,7 +181,7 @@ function ExploreCourse(props) {
                 </div> 
             </div>
 
-            <div className = 'main-page'>
+            <div className = 'main-page' id = 'course-explore-page'>
                 
                 {
                     !userCourseInfo.stage1 

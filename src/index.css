@@ -161,7 +161,7 @@
 .corner-popup-aid {
   position: fixed;
   top: 83%;
-  left:85%;
+  left:74%;
   background-color: #f5f8f5;
   border-radius: 20px; 
   padding-left: 1em;
@@ -336,6 +336,8 @@
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: rgb(245, 66, 38);
   margin-left: 40%;
+  margin-bottom: 0;
+  margin-top: 2rem;
 }
 
 .course-resources {
@@ -372,8 +374,10 @@
 .course-summary {
   background-color:rgb(235, 228, 227);
   border-radius: 20px;
-  padding-left: 25%;
+  padding-left: 12%;
+  padding-right: 12%;
   margin-right: 2em;
+  padding-top: 1em;
 }
 
 .course-summary-name {
@@ -403,6 +407,7 @@
 
 .course-description {
   font-size: 1.25rem; 
+  text-align: justify;
   margin-left: 30%;
   width: 35%; 
   padding-bottom: 1em; 
@@ -502,9 +507,36 @@
     flex-direction: column;
   }
 
+  .separate-contact {
+    font-size: 1rem;
+    padding-right: 2em;
+    padding-left: 2em;
+    padding-top: 1em; 
+    padding-bottom: 1em;
+  }
+
+  .course-description {
+    width: 70%;
+    margin-left: 15%;
+  }
+
+  .change-phone-form {
+    margin-left: 15%;
+    margin-top: 1em;
+  }
+
+  .performance-summary {
+    grid-template-columns: 50% 50%;
+  }
+
 }
 
 @media screen and (max-width: 675px) {
+
+  .profile-details {
+    flex-direction: row;
+  }
+
   .sidebar {
     width: 100%;
     height: 3em;
@@ -538,15 +570,24 @@
 
   .main-page {
     margin-left: 0;
-    margin-top: 1rem;
   }
 
+  #course-explore-page {
+    margin-top: 0; 
+    padding-top: 0;
+  }  
+
   .credentials p {
-    font-size: .5rem;
+    font-size: .45rem;
   }
 
   .logout {
     font-size: .5rem;
+  }
+
+  .logout:hover {
+    margin-top: 1em;
+    font-size: 0.7rem;
   }
 
   .instance-attribute, .instance-attribute-header {
@@ -573,9 +614,44 @@
     left:50%;
   }
 
+  .corner-popup-aid {
+    left: 50%;
+  }
   .verify-button {
     left: 10%;
   }
+
+  .separate-contact {
+    padding-right: 1em;
+    padding-left: 1em;
+  }
+
+  .course-description {
+    width: 90%;
+    margin-left: 7%;
+    font-size: 1rem;
+  }
+
+  #login-button {
+    margin-left: 50%;
+  }
+
+  .change-phone-form {
+    margin-left: 0%;
+  }
+
+  .course-header {
+    margin-top: 0.3em;
+  }
+
+  .change-phone-form input {
+    margin-left: 1em;
+  }
+
+  .stage2-info {
+    padding-top: 3%;
+  }
+
 }
 
 .invalid-login-credentials {
