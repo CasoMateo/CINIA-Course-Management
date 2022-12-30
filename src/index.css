@@ -658,7 +658,8 @@
   }
 
   .add-whatever-form {
-    padding-left: 10%;
+    padding-left: auto;
+    padding-right: auto;
   }
 
   .submit-form {
