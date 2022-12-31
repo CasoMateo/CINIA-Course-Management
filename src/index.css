@@ -530,7 +530,7 @@
   }
 
   .logout {
-    margin-top: 1em;
+    margin-top: 15%;
   }
 
 }
@@ -582,12 +582,15 @@
   }  
 
   .credentials p {
-    margin-top: 2em;
-    font-size: .2rem;
+    margin-top: 10%;
+    font-size: .4rem;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
   }
 
   .logout {
-    margin-left: 2em; 
+    margin-left: 1em; 
     font-size: .5rem;
   }
 
@@ -665,6 +668,7 @@
   .submit-form {
     margin-left: 8em;
   }
+
 }
 
 .invalid-login-credentials {
