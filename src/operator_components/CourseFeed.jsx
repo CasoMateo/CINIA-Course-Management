@@ -92,6 +92,14 @@ function CourseFeed(props) {
             </div>
 
             <div className = 'main-page'>
+
+                <p className = 'welcome'>
+                ¡<b> Hola </b>, te damos la bienvenida a tú plataforma de capacitación!
+Si tienes dudas de cuáles son tus cursos, cómo hacerlos, donde buscar tu calificación no dudes en escribirnos en la pestaña "Contactos".
+
+¡<b>Feliz aprendizaje </b>!
+                </p>
+
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
                     <img src = '/search_button.png' className = 'search-button' /> 

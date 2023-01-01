@@ -211,6 +211,11 @@ function Users(props) {
 
             <div className = 'main-page'>
                 
+                <p className = 'welcome'>
+                    ¡Bienvenido a tu página de capacitación! Podrás ver los usuarios de la plataforma, 
+                    los cursos asignados, y los contactos proporcionados aquí...
+                </p>
+
                 <button className = 'download-button' onClick = { () => getCSVResource() }>
                     Descargar la base de datos 
                 </button>
@@ -278,7 +283,7 @@ function Users(props) {
                 <form class = 'add-whatever-form' onSubmit = { (event) => handleAddUser(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
-                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) } defaultValue = ''/> 
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Contraseña </label>
