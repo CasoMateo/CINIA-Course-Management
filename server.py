@@ -515,7 +515,7 @@ async def getCSV(request: Request):
 
     writer = csv.writer(csv_file)
 
-    headers = ['Name', 'Administrador', 'Área', 'Teléfono', 'Cursos']
+    headers = ['Name', 'Administrador', 'Area', 'Telefono', 'Cursos']
 
     writer.writerow(headers) 
 
