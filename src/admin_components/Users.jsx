@@ -323,7 +323,7 @@ function Users(props) {
                         <form>
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
-                                    required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Jardinería'})) }/>
+                                    required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Jardineria'})) }/>
                             <label>Jardinería</label>
                         </div>
 
@@ -340,7 +340,7 @@ function Users(props) {
                             <label >Acondicionamiento</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automoción'})) }/>
+                            <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automocion'})) }/>
                             <label >Automoción</label>
                         </div> 
                         <div className = 'radio-option'>
