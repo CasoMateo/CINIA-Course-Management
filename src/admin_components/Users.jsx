@@ -283,12 +283,12 @@ function Users(props) {
                 <form class = 'add-whatever-form' onSubmit = { (event) => handleAddUser(event) }>
                     <label className = 'form-label'> Nombre </label>
                     <br/>
-                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre sin acentos' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Contraseña </label>
                     <br/>
-                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el nombre del usuario' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba la contraseña' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
                     <br/>
                     <br />
                     <label className = 'form-label'> Número de empleado </label>
