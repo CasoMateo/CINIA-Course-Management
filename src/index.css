@@ -296,14 +296,14 @@
   vertical-align: middle;
 }
 
-.button-24:hover,
-.button-24:active {
+.submit-form:hover,
+.submit-form:active {
   background-color: initial;
   background-position: 0 0;
   color: #FF4742;
 }
 
-.button-24:active {
+.submit-form:active {
   opacity: .5;
 }
 
@@ -687,6 +687,7 @@
 
   .profile-details {
     flex-direction: row;
+    margin-left: 0;
   }
 
   .sidebar {
