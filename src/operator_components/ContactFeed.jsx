@@ -81,19 +81,23 @@ function ContactFeed(props) {
                 </p>
 
                 <div className = 'contact-list'>
-                {
+                     
+                    {   
+                    
                     contacts.length === 0 
                     ?
-                    <div className = 'message-no-data'> 
-                        No hay contactos disponibles
-                    </div> 
+                    <div className = 'message-no-data'> No hay contactos disponibles </div>
                     :
                     contacts.map(contact => {
                         return(
                             <div className = 'separate-contact' onClick = { () => window.open("https://wa.me/".concat(contact.phone_number).concat("?text=Tu mensaje")) } > { contact.name } </div>
                         );
                     })
+                
                 }
+
+                    <div className = 'separate-contact' onClick = { () => alert("Abre tu correo y manda tu mensaje a soportec@cinia.net!") }>  soportec@cinia.net </div>
+                    <div className = 'separate-contact' onClick = { () => alert("Abre tu correo y manda tu mensaje a marketing@cinia.net!") }> marketing@cinia.net </div>
                 </div>
             </div>
 
