@@ -84,10 +84,8 @@ function ContactFeed(props) {
                      
                     {   
                     
-                    contacts.length === 0 
-                    ?
-                    <div className = 'message-no-data'> No hay contactos disponibles </div>
-                    :
+                    contacts.length > 0 
+                    &&
                     contacts.map(contact => {
                         return(
                             <div className = 'separate-contact' onClick = { () => window.open("https://wa.me/".concat(contact.phone_number).concat("?text=Tu mensaje")) } > { contact.name } </div>
