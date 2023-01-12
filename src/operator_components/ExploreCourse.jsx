@@ -138,8 +138,9 @@ function ExploreCourse(props) {
             const response = await promise.json();
             
             if ((!response.completedStage) || (promise.status != 200)) {
-              alert('Reprobaste el examen, o hubo un error técnico');
+              alert('Uy reprobaste este curso :(, si tienes dudas habla con tu supervisor para que te diga qué puedes hacer');
             } else {
+                alert('¡Felicidades! tienes todo lo que se necesita ;)');
                 navigate('/operador');
             }  
             

@@ -134,7 +134,7 @@ Si tienes dudas de cuáles son tus cursos, cómo hacerlos, donde buscar tu calif
             <div className = { !hiddenContact ? 'corner-popup-aid' : 'display-false' } id = 'gerencias-contacts'>
 
                 <div className = 'corner-popup-gerencias'> 
-                    <div className = 'contacts-popup-pointer' onClick = { () => window.open("/contactos", "_self") }> CONTACTAR <br /> GERENCIAS </div>
+                    <div className = 'contacts-popup-pointer' onClick = { () => window.open("/contactos", "_self") }> TENGO UNA <br/> DUDA </div>
                 </div> 
 
             </div>

@@ -411,7 +411,7 @@
 }
 
 .operator-course-instance {
-  padding-left: 40%;
+  padding-left: 30%;
   margin-top: 2em;
   background-color:rgb(245, 205, 199);
   border-radius: 20px;
@@ -758,7 +758,7 @@
   }
 
   .operator-course-instance {
-    padding-left: 20%;
+    padding-left: 12%;
   }
 
   #course-feed-instance {
@@ -850,6 +850,11 @@
 
   .welcome {
     margin-bottom: 0.7em;
+  }
+
+  #change-form-submit {
+    font-size: 0px; 
+    padding: 3px;
   }
 
 }
