@@ -93,7 +93,7 @@ function Courses(props) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
 
-        const properties = { 'name': name, 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold * 10};
+        const properties = { 'name': name, 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
         const addCourseResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-course', {
               method: 'POST',

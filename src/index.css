@@ -783,7 +783,7 @@
 
   .course-description {
     width: 90%;
-    margin-left: 7%;
+    margin-left: 1%;
     font-size: 1rem;
   }
 
@@ -798,6 +798,7 @@
 
   .course-header {
     margin-top: 0.3em;
+    margin-left: 30%;
   }
 
   .change-phone-form input {
@@ -855,6 +856,10 @@
   #change-form-submit {
     font-size: 0px; 
     padding: 3px;
+  }
+
+  .course-evaluation {
+    padding-left: 1%;
   }
 
 }
