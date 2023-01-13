@@ -361,16 +361,18 @@ def completeSecondStage(request: Request, details: Stage):
   
   score = count / len(details.answers)
 
-  if score >= (course['threshold'] / 100): 
-    for cur in user['courses']: 
-      if cur['name'] == details.coursename: 
+  for cur in user['courses']: 
+    if cur['name'] == details.coursename: 
+      if score >= (course['threshold'] / 10):
         cur['stage2'] = score 
-        users.delete_one({ 'username': details.username })
-        users.insert_one(user) 
         content['completedStage'] = True 
-        break
-    
-    
+      else: 
+        cur['stage1'] = False 
+
+      users.delete_one({ 'username': details.username })
+      users.insert_one(user) 
+      break
+        
   return JSONResponse(content = content)
 
 @app.get("/summary-first-stage/{coursename}", status_code = 200)
