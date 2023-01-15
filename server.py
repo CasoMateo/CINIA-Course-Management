@@ -17,7 +17,7 @@ from mangum import Mangum
 
 app = FastAPI()
 handler = Mangum(app)
-app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'minute': datetime.now() } 
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'minute': datetime.now() } 
 
 
 cluster = MongoClient(os.environ.get("CONNECTION_TO_DB"))
@@ -25,6 +25,7 @@ db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
 contacts = db['contacts']
+messages = db['messages']
 
 class Payload(BaseModel): 
   username: str
@@ -67,6 +68,12 @@ class Contact(BaseModel):
   name: str 
   phone_number: Optional[int] 
 
+class Message(BaseModel): 
+  message: str
+
+class findMessage(BaseModel): 
+  _id: str
+
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
 
@@ -98,7 +105,7 @@ def checkRateLimit(name, limit):
     current_time = datetime.now()
     
     if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
-      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'minute': current_time } 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'minute': current_time } 
     else: 
       return True
   
@@ -532,3 +539,48 @@ async def getCSV(request: Request):
       writer.writerow(filtered)
 
   return FileResponse('/tmp/usuarios_exporte.csv')
+
+@app.post('/add-message', status_code = 200)
+def addMessage(request: Request, message: Message): 
+  if checkRateLimit('addMessage', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+  
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+
+  if not message.message: 
+    raise HTTPException(status_code=400, detail="Bad request") 
+
+  messages.insert_one(dict(message)) 
+  
+  return JSONResponse(content = { 'addedMessage': True })
+
+@app.delete('/delete-message', status_code = 200)
+def deleteContact(request: Request, message: findMessage): 
+
+  if checkRateLimit('deleteMessage', 20): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized")  
+
+  if not contacts.find_one({ '_id': message._id }): 
+    raise HTTPException(status_code=404, detail="Not found") 
+  
+  contacts.delete_one({ '_id': message._id })
+  
+  return JSONResponse(content = { 'deletedContact': True })
+
+@app.get('/get-messages', status_code = 200)
+def getMessages(request: Request): 
+
+  if checkRateLimit('getMessages', 80): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+
+  content = { 'messages': [json.loads(json_util.dumps(message)) for message in messages.find()] }
+  response = JSONResponse(content = content) 
+
+  return response 
