@@ -222,7 +222,7 @@ function Courses(props) {
                 <div className = 'sidebar-options'> 
                     <p className = 'sidebar-option' onClick = { () => navigate('/usuarios') }> Usuarios </p>
                     <p className = 'sidebar-option' id = 'selected-page'> Cursos </p>
-                    <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos </p>
+                    <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos y Mensajes </p>
                 </div>
 
                 <div className = 'profile-details'>

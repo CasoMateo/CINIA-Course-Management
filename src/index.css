@@ -25,6 +25,7 @@
 
 .sidebar-option {
   font-size: 1.25rem;
+  text-align: center;
 }
 
 .sidebar-option:hover {
@@ -51,6 +52,10 @@
 
 .rank {
   color: rgb(245, 66, 38);
+}
+
+.switch-stage {
+  text-align: center;
 }
 
 .hide-menu:hover, .switch-stage:hover {
@@ -327,15 +332,23 @@
 .welcome {
   color: red; 
   font-size: 1.5rem;
-  margin-left: 1em; 
-  margin-right: 3em;
   margin-bottom: 1em;
   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   border-radius: 20px; 
   background-color:rgb(250, 230, 227);
-  padding: 1em;
+  padding: 1em 0.5em;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
-  text-align: justify;
+  text-align: center;
+}
+
+#mensajes-importantes {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+}
+
+.trash-button-message {
+  width: 10%;
+  margin-left: 2em;
 }
 
 .welcome-contacts {
@@ -593,6 +606,11 @@
   word-break: break-word;
 }
 
+.add-button-message {
+  margin-left: 85%;
+  width: 10%;
+}
+
 .download-button:active,
 .download-button:hover,
 .download-button:focus {
@@ -681,6 +699,10 @@
     margin-top: auto;
     margin-bottom: auto;
     padding: 0px 2px;
+  }
+
+  #access-retrieval-contacts {
+    margin-left: 2em;
   }
 
 }
@@ -783,7 +805,7 @@
 
   .course-description {
     width: 90%;
-    margin-left: 1%;
+    margin-left: 3%;
     font-size: 1rem;
   }
 
@@ -798,11 +820,15 @@
 
   .course-header {
     margin-top: 0.3em;
-    margin-left: 30%;
+    margin-left: 33%;
   }
 
   .change-phone-form input {
     margin-left: 1em;
+  }
+
+  .change-phone-form {
+    justify-content: center;
   }
 
   .stage2-info {
@@ -862,6 +888,18 @@
     padding-left: 1%;
   }
 
+  #change-phone-submit {
+    font-size: 0.75rem; 
+    padding: 0;
+  }
+
+  .change-phone-form input {
+    width: 40%;
+  }
+
+  .change-phone-label {
+    width: 20%;
+  }
 }
 
 .invalid-login-credentials {
@@ -872,4 +910,13 @@
 
 .contacts-popup-pointer {
   cursor: pointer;
+}
+
+#welcome-message {
+  display: flex; 
+  align-items: center;
+}
+
+.add-message-body {
+  margin-top: 1em;
 }

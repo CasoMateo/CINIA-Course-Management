@@ -193,7 +193,7 @@ function Users(props) {
                 <div className = 'sidebar-options'> 
                     <p className = 'sidebar-option' id = 'selected-page'> Usuarios </p>
                     <p className = 'sidebar-option' onClick = { () => navigate('/cursos') }> Cursos </p>
-                    <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos </p>
+                    <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos y Mensajes </p>
                     
                 </div>
 

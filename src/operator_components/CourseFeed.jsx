@@ -23,6 +23,7 @@ function CourseFeed(props) {
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
     const [search, setSearch] = useState();
     const [verifyRef, setVerifyRef] = useState(false);
+    const [messages, setMessages] = useState([]);
 
     const getUserResource = async () => {
         
@@ -52,9 +53,38 @@ function CourseFeed(props) {
         setUser(response.user);
       
     };
+
+    const getMessagesResource = async () => {
+        
+        if (retrievedUser) {  
+          return;
+        }
+    
+        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-messages', { 
+          method: 'GET',
+          headers: {
+            'Cookies': document.cookie
+          }
+        }); 
+        
+        if (promise.status == 429) {
+            alert('Demasiadas solicitudes, espera un poco');
+            return;
+        }
+
+        if (promise.status !== 200) {
+          alert('No se retiraron los contactos adecuadamente');
+          return;
+        } 
+    
+        const response = await promise.json();
+      
+        setMessages(response.messages);
+    };  
     
     if (!retrievedUser) {
         getUserResource(); 
+        getMessagesResource();
         setRetrievedUser(true);
     }
 
@@ -93,12 +123,17 @@ function CourseFeed(props) {
 
             <div className = 'main-page'>
 
-                <p className = 'welcome'>
-                ¡<b> Hola </b>, te damos la bienvenida a tú plataforma de capacitación!
-Si tienes dudas de cuáles son tus cursos, cómo hacerlos, donde buscar tu calificación no dudes en escribirnos en la pestaña "Contactos".
+                <div className = 'message-no-data' id = 'mensajes-importantes'> Mensajes importantes </div>
+                {
+                    messages.map(message => {
+                        return (
+                            <p className = 'welcome'>
+                                { message.message }
+                            </p>
+                        )
+                    })
 
-¡<b>Feliz aprendizaje </b>!
-                </p>
+                }
 
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
