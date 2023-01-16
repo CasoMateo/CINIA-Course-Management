@@ -71,9 +71,6 @@ class Contact(BaseModel):
 class Message(BaseModel): 
   message: str
 
-class findMessage(BaseModel): 
-  _id: str
-
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
 
@@ -556,7 +553,7 @@ def addMessage(request: Request, message: Message):
   return JSONResponse(content = { 'addedMessage': True })
 
 @app.delete('/delete-message', status_code = 200)
-def deleteContact(request: Request, message: findMessage): 
+def deleteMessage(request: Request, message: Message): 
 
   if checkRateLimit('deleteMessage', 20): 
     raise HTTPException(status_code=429, detail="Too many requests")
@@ -564,12 +561,12 @@ def deleteContact(request: Request, message: findMessage):
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized")  
 
-  if not contacts.find_one({ '_id': message._id }): 
+  if not messages.find_one({ 'message': message.message }): 
     raise HTTPException(status_code=404, detail="Not found") 
   
-  contacts.delete_one({ '_id': message._id })
+  messages.delete_one({ 'message': message.message })
   
-  return JSONResponse(content = { 'deletedContact': True })
+  return JSONResponse(content = { 'deletedMessage': True })
 
 @app.get('/get-messages', status_code = 200)
 def getMessages(request: Request): 
