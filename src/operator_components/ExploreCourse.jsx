@@ -207,7 +207,7 @@ function ExploreCourse(props) {
                         <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
 
                             <div className = 'corner-popup'> 
-                                <p onClick = { () => handleCompleteFirstStage() }> COMPLETAR <br /> ETAPA </p>
+                                <p onClick = { () => handleCompleteFirstStage() }> Completar <br /> Etapa </p>
                             </div> 
 
                         </div>
@@ -248,7 +248,7 @@ function ExploreCourse(props) {
                             <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
 
                                 <div className = 'corner-popup'> 
-                                    <button className = 'submit-course-evaluation' type = 'submit'> <p> COMPLETAR <br /> ETAPA </p> </button>
+                                    <button className = 'submit-course-evaluation' type = 'submit'> <p> Completar <br /> Etapa </p> </button>
                                 </div> 
 
                             </div>

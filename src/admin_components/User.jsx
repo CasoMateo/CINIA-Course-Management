@@ -156,7 +156,7 @@ function User(props) {
             <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
 
                 <div className = 'corner-popup'> 
-                    <div onClick = { () => { user.phone_number ? window.open("https://wa.me/".concat(user.phone_number).concat("?text=Tu mensaje")) : alert('No lo puedes contactar') } }> { user.phone_number ? (<p> CONTACTAR <br /> { user.phone_number } </p> ) : (<p> NO HAY <br /> CONTACTO </p> )} </div>
+                    <div onClick = { () => { user.phone_number ? window.open("https://wa.me/".concat(user.phone_number).concat("?text=Tu mensaje")) : alert('No lo puedes contactar') } }> { user.phone_number ? (<p> Contactar <br /> { user.phone_number } </p> ) : (<p> No Hay <br /> Contacto </p> )} </div>
                 </div> 
 
             </div>

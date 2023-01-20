@@ -400,7 +400,7 @@ function Contacts(props) {
             <div className = { (!hiddenMenu && !showStage) ? 'corner-popup-aid' : 'display-false' }>
 
                 <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddContactForm(true) }> AÑADIR <br /> CONTACTO </p>
+                    <p onClick = { () => setAddContactForm(true) }> Añadir <br /> Contacto </p>
                 </div> 
 
             </div>
@@ -408,7 +408,7 @@ function Contacts(props) {
             <div className = { (!hiddenMenu && showStage) ? 'corner-popup-aid' : 'display-false' }>
 
                 <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddMessageForm(true) }> AÑADIR <br /> MENSAJE </p>
+                    <p onClick = { () => setAddMessageForm(true) }> Añadir <br /> Mensaje </p>
                 </div> 
 
             </div>

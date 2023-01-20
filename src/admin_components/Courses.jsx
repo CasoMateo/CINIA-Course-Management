@@ -285,7 +285,7 @@ function Courses(props) {
             <div className = { !hiddenChanges ? 'corner-popup-aid' : 'display-false' }>
 
                 <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddCourseForm(true) }> AÑADIR <br /> CURSO </p>
+                    <p onClick = { () => setAddCourseForm(true) }> Añadir <br /> Curso </p>
                 </div> 
 
             </div>

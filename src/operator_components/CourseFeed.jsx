@@ -174,7 +174,7 @@ function CourseFeed(props) {
             <div className = { !hiddenContact ? 'corner-popup-aid' : 'display-false' } id = 'gerencias-contacts'>
 
                 <div className = 'corner-popup-gerencias'> 
-                    <div className = 'contacts-popup-pointer' onClick = { () => window.open("/contactos", "_self") }> TENGO UNA <br/> DUDA </div>
+                    <div className = 'contacts-popup-pointer' onClick = { () => window.open("/contactos", "_self") }> Tengo una <br/> duda </div>
                 </div> 
 
             </div>
