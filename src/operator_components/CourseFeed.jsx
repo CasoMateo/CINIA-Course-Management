@@ -124,7 +124,12 @@ function CourseFeed(props) {
             <div className = 'main-page'>
 
                 <div className = 'message-no-data' id = 'mensajes-importantes'> Mensajes importantes </div>
-                {
+                
+                    <p className = 'welcome'>
+                        {"¡Hola " + username.split(" ")[0] + "! Te damos la bienvenida a tu plataforma de capacitación..." }
+                    </p>
+
+                    {
                     messages.map(message => {
                         return (
                             <p className = 'welcome'>

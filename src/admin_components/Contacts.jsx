@@ -313,7 +313,10 @@ function Contacts(props) {
                 </div>
                 <div className = { showStage ? 'add-message-body' : 'display-false' }>
                     
+
                     {
+                        messages.length == 0 ?
+                        <div className = 'message-no-data'> No hay mensajes disponibles </div> :
                         messages.map(message =>{
                             if (!search || message.message.toLowerCase().includes(search.toLowerCase())) {
                             return (
