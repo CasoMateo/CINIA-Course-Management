@@ -21,7 +21,7 @@ function Login(props) {
                 <label className = 'form-label'> Contraseña </label> 
                 <input placeholder = 'Escribe tu contraseña' type = 'password' onChange = { (e) => setPassword(e.target.value) } required />
                 <br />
-                <button type = 'submit' className = 'submit-form' id = 'login-button'> Ingresar </button>
+                <button type = 'submit' className = 'submit-form' id = 'login-button'> <div> Ingresar </div> </button>
             </form>
 
             <p className = { renderVerifyCredentials ? 'invalid-login-credentials' : 'display-false' } > Usuario o contraseña incorrecto </p>

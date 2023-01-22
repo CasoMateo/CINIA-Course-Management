@@ -147,7 +147,8 @@
 .contact-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 70% 20% 10%;
+  grid-template-columns: 60% 20% 10% 10%;
+  align-items: center;
 }
 
 .contact-list {
@@ -349,6 +350,20 @@
 .trash-button-message {
   width: 10%;
   margin-left: 2em;
+}
+
+.edit-button-message-1 {
+  margin-left: 0.3em; 
+  width: 70%;
+}
+
+.edit-button-message-2 {
+  margin-left: 0.3em; 
+  width: 20%;
+}
+
+#message-trash-button {
+  margin-left: 0;
 }
 
 .welcome-contacts {
@@ -638,7 +653,7 @@
 }
 
 @media screen and (max-width: 950px) {
-  
+
   .user-instance {
     grid-template-columns: 16% 16% 16% 20% 20% 12%;
   }
@@ -648,7 +663,7 @@
   }
 
   .contact-instance {
-    grid-template-columns: 50% 30% 20%;
+    grid-template-columns: 40% 20% 20% 20%;
   }
 
   .login-box {
@@ -812,7 +827,11 @@
   #login-button {
     margin-left: 50%;
     width: auto;
-    padding-right: 10px;
+  }
+
+  #login-button div {
+    margin-left: auto; 
+    margin-right: auto; 
   }
 
   .change-phone-form {
@@ -901,6 +920,15 @@
   .change-phone-label {
     width: 20%;
   }
+
+  .edit-button-message-1 {
+    width: 100%;
+  }
+
+  #contact-trash-button {
+    width: 50%;
+  }
+
 }
 
 .invalid-login-credentials {

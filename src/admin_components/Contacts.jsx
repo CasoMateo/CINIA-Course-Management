@@ -24,7 +24,10 @@ function Contacts(props) {
     const [addContactAttributes, setAddContactAttributes] = useState();
     const [addContactForm, setAddContactForm] = useState(false);
     const [addMessageForm, setAddMessageForm] = useState(false);
+    const [changeContactForm, setChangeContactForm] = useState(false);
+    const [changeMessageForm, setChangeMessageForm] = useState(false);
     const [clickedLogout, setClickedLogout] = useState(false);
+    const [changedMessage, setChangedMessage] = useState();
 
     const getContactsResource = async () => {
         
@@ -197,7 +200,7 @@ function Contacts(props) {
     }
 
     const handleDeleteMessage = () => {
-        console.log(deletedMessage);
+
         const deleteMessageResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-message', {
               method: 'DELETE',
@@ -229,6 +232,80 @@ function Contacts(props) {
       
         deleteMessageResource();
     }
+
+    const handleChangeContact = (event) => {
+        event.preventDefault();
+        event.target.reset();
+
+        const changeContactResource = async () => {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-contact', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
+              },
+              body: JSON.stringify(addContactAttributes)
+            });
+      
+            
+            const response = await promise.json(); 
+
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
+            if ((promise.status != 200) || (!response.changedContact)) {
+                alert('No se cambió correctamente');
+                return;
+            }
+
+            setRetrievedContacts(false);
+            
+      
+        };
+      
+        changeContactResource();
+        setChangeContactForm(false);
+    }
+
+    const handleChangeMessage = (event) => {
+        event.preventDefault();
+        event.target.reset();
+
+        const changeContactResource = async () => {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-message', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
+              },
+              body: JSON.stringify(changedMessage)
+            });
+      
+            
+            const response = await promise.json(); 
+
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
+            if ((promise.status != 200) || (!response.changedMessage)) {
+                alert('No se cambió correctamente');
+                return;
+            }
+            
+            setRetrievedContacts(false);
+      
+        };
+      
+        changeContactResource();
+        setChangeMessageForm(false);
+    }
+    
 
     const handleVerifyConfirm = () => {
         if (deletedContact) {
@@ -302,7 +379,8 @@ function Contacts(props) {
                                     <div key = { contact._id.$oid } className = 'contact-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute'> { contact.name } </p>
                                         <p className = 'instance-attribute'> { contact.phone_number } </p>
-                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedContact(prevState => ({ ...prevState, name : contact.name } ) ) } } /> 
+                                        <img className = 'edit-button-message-1' onClick = { () => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, name : contact.name, phone_number: contact.phone_number })) }} src = '/edit_button.png' />
+                                        <img className = 'trash-button-user' id = 'contact-trash-button' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedContact(prevState => ({ ...prevState, name : contact.name } ) ) } } /> 
                                     </div>
                                 )
                             }
@@ -322,8 +400,8 @@ function Contacts(props) {
                             return (
                                 <div id = 'welcome-message'>
                                     <p className = 'welcome'> { message.message } </p>
-
-                                    <img className = 'trash-button-message' src = '/trash_button.png' onClick = { () => { setVerifyRef(true); setDeletedMessage(prevState => ({ ...prevState, message : message.message } ) ) } } />
+                                    <img className = 'edit-button-message-2' src = '/edit_button.png' onClick = { () => { setChangeMessageForm(message.message); setChangedMessage(prevState => ({ ...prevState, prevMessage: message.message, newMessage: message.message })) } } />
+                                    <img className = 'trash-button-message' id = 'message-trash-button' src = '/trash_button.png' onClick = { () => { setVerifyRef(true); setDeletedMessage(prevState => ({ ...prevState, message : message.message } ) ) } } />
 
                                 </div>
                             )
@@ -397,6 +475,50 @@ function Contacts(props) {
 
             </div>
 
+            <div className = { changeContactForm ? 'pop-up-form' : 'display-false' }> 
+               
+                <div className = 'title-close-form'>
+                    <h5 className = 'form-title'> 
+                        Editar Contacto
+                    </h5>
+                    <img onClick = { () => setChangeContactForm(false) } className = 'close-pop-up-form' src = '/close_button.png' />
+                    
+                </div>
+
+                <form class = 'add-whatever-form' onSubmit = { (event) => handleChangeContact(event) }>
+                    <label className = 'form-label'> Número de teléfono </label>
+                    <br />
+                    <input className = 'input-field-add' type="text" placeholder = { changeContactForm } required onChange = { (e) => setAddContactAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) } />
+                    <br />
+                    <br />
+                    <button type = 'submit' className = 'submit-form'> Cambiar </button>
+                
+                </form>
+
+            </div>
+
+            <div className = { changeMessageForm ? 'pop-up-form' : 'display-false' }> 
+               
+                <div className = 'title-close-form'>
+                    <h5 className = 'form-title'> 
+                        Editar Mensaje
+                    </h5>
+                    <img onClick = { () => setChangeMessageForm(false) } className = 'close-pop-up-form' src = '/close_button.png' />
+                    
+                </div>
+
+                <form class = 'add-whatever-form' onSubmit = { (event) => handleChangeMessage(event) }>
+                    <label className = 'form-label'> Nuevo Mensaje </label>
+                    <br />
+                    <input className = 'input-field-add' type="text" placeholder = { changeMessageForm } required onChange = { (e) => setChangedMessage(prevState => ({ ...prevState, newMessage : e.target.value })) } />
+                    <br />
+                    <br />
+                    <button type = 'submit' className = 'submit-form'> Cambiar </button>
+                
+                </form>
+
+            </div>
+
             <div className = { (!hiddenMenu && !showStage) ? 'corner-popup-aid' : 'display-false' }>
 
                 <div className = 'corner-popup'> 
@@ -414,6 +536,8 @@ function Contacts(props) {
             </div>
         </div>
     );
+                
 }
+
 
 export default Contacts;
