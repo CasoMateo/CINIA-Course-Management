@@ -46,7 +46,8 @@ function User(props) {
       
     };
 
-    const handleChangePhoneNumber = () => {
+    const handleChangePhoneNumber = (event) => {
+      event.preventDefault();
 
       const changePhoneResource = async () => {
         
@@ -71,7 +72,9 @@ function User(props) {
         if ((!response.changedPhone) || (promise.status != 200)) {
           alert('Ingresa datos correctos');
           return;
-        }  
+        } else {
+          setRetrievedUser(false);
+        }
         
       };
 
@@ -112,7 +115,7 @@ function User(props) {
             <div className = 'main-page'>
               <h5 className = 'course-header'> { user.username } </h5> 
 
-              <form className = 'change-phone-form' onSubmit = { () => handleChangePhoneNumber() }>
+              <form className = 'change-phone-form' onSubmit = { (event) => handleChangePhoneNumber(event) }>
                 {user.phone_number ? (<label className = 'change-phone-label'> <b> Cambiar </b> <i> { user.phone_number } </i>  </label> ) : (<label> Agregar contacto </label>) } 
                 <input className = 'change-phone-input' placeholder = 'Nuevo teléfono' onChange = { (e) => setChangedNumber(e.target.value) } />
                 <button className = 'submit-form' type = 'submit' id = 'change-phone-submit'> Cambiar </button> 
