@@ -949,3 +949,7 @@
 .add-message-body {
   margin-top: 1em;
 }
+
+.change-message-input {
+  width: 100%;
+}

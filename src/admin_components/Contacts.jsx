@@ -510,7 +510,7 @@ function Contacts(props) {
                 <form class = 'add-whatever-form' onSubmit = { (event) => handleChangeMessage(event) }>
                     <label className = 'form-label'> Nuevo Mensaje </label>
                     <br />
-                    <input className = 'input-field-add' type="text" placeholder = { changeMessageForm } required onChange = { (e) => setChangedMessage(prevState => ({ ...prevState, newMessage : e.target.value })) } />
+                    <input className = 'change-message-input' type="text" placeholder = { changeMessageForm } required onChange = { (e) => setChangedMessage(prevState => ({ ...prevState, newMessage : e.target.value })) } />
                     <br />
                     <br />
                     <button type = 'submit' className = 'submit-form'> Cambiar </button>
