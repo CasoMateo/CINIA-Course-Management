@@ -234,8 +234,7 @@ function Contacts(props) {
     }
 
     const handleChangeContact = (event) => {
-        event.preventDefault();
-        event.target.reset();
+        
 
         const changeContactResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-contact', {
@@ -271,8 +270,6 @@ function Contacts(props) {
     }
 
     const handleChangeMessage = (event) => {
-        event.preventDefault();
-        event.target.reset();
 
         const changeContactResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-message', {
@@ -378,8 +375,18 @@ function Contacts(props) {
                                 return (
                                     <div key = { contact._id.$oid } className = 'contact-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute'> { contact.name } </p>
-                                        <p className = 'instance-attribute'> { contact.phone_number } </p>
-                                        <img className = 'edit-button-message-1' onClick = { () => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, name : contact.name, phone_number: contact.phone_number })) }} src = '/edit_button.png' />
+                                        {
+                                            !(changeContactForm == contact.phone_number) ?
+                                        <p className = 'instance-attribute'> { contact.phone_number } </p> :
+                                        <input className = 'instance-attribute' value = { addContactAttributes.phone_number} onChange = { (event) => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, phone_number: event.target.value })) }}  ></input>
+                                        
+                                        
+                            }
+                            {
+                                !(changeContactForm == contact.phone_number) ?
+                                        <img className = 'edit-button-message-1' onClick = { () => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, name : contact.name, phone_number: contact.phone_number })) }} src = '/edit_button.png' /> :
+                                        <button type = 'submit' className = 'submit-form' id = 'change-button-contact' onClick = { (event) => handleChangeContact(event)}> Cambiar </button>
+                            }
                                         <img className = 'trash-button-user' id = 'contact-trash-button' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedContact(prevState => ({ ...prevState, name : contact.name } ) ) } } /> 
                                     </div>
                                 )
@@ -399,8 +406,14 @@ function Contacts(props) {
                             if (!search || message.message.toLowerCase().includes(search.toLowerCase())) {
                             return (
                                 <div id = 'welcome-message'>
-                                    <p className = 'welcome'> { message.message } </p>
+                                    { !(changeMessageForm  == message.message)  ? <p className = 'welcome'> { message.message } </p> :
+                                    <input className = 'welcome' id = 'change-message-input' value = { changedMessage.newMessage} onChange = { (e) => setChangedMessage(prevState => ({ ...prevState, newMessage : e.target.value })) } ></input>}
+                                    {
+                                        (!(changeMessageForm == message.message)) ?
                                     <img className = 'edit-button-message-2' src = '/edit_button.png' onClick = { () => { setChangeMessageForm(message.message); setChangedMessage(prevState => ({ ...prevState, prevMessage: message.message, newMessage: message.message })) } } />
+                                    :
+                                    <button type = 'submit' className = 'submit-form' id = 'change-button-message' onClick = { (event) => handleChangeMessage(event)}> Cambiar </button>
+                                    }
                                     <img className = 'trash-button-message' id = 'message-trash-button' src = '/trash_button.png' onClick = { () => { setVerifyRef(true); setDeletedMessage(prevState => ({ ...prevState, message : message.message } ) ) } } />
 
                                 </div>
@@ -475,7 +488,7 @@ function Contacts(props) {
 
             </div>
 
-            <div className = { changeContactForm ? 'pop-up-form' : 'display-false' }> 
+            <div className = { false ? 'pop-up-form' : 'display-false' }> 
                
                 <div className = 'title-close-form'>
                     <h5 className = 'form-title'> 
@@ -489,28 +502,6 @@ function Contacts(props) {
                     <label className = 'form-label'> Número de teléfono </label>
                     <br />
                     <input className = 'input-field-add' type="text" placeholder = { changeContactForm } required onChange = { (e) => setAddContactAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) } />
-                    <br />
-                    <br />
-                    <button type = 'submit' className = 'submit-form'> Cambiar </button>
-                
-                </form>
-
-            </div>
-
-            <div className = { changeMessageForm ? 'pop-up-form' : 'display-false' }> 
-               
-                <div className = 'title-close-form'>
-                    <h5 className = 'form-title'> 
-                        Editar Mensaje
-                    </h5>
-                    <img onClick = { () => setChangeMessageForm(false) } className = 'close-pop-up-form' src = '/close_button.png' />
-                    
-                </div>
-
-                <form class = 'add-whatever-form' onSubmit = { (event) => handleChangeMessage(event) }>
-                    <label className = 'form-label'> Nuevo Mensaje </label>
-                    <br />
-                    <input className = 'change-message-input' type="text" placeholder = { changeMessageForm } required onChange = { (e) => setChangedMessage(prevState => ({ ...prevState, newMessage : e.target.value })) } />
                     <br />
                     <br />
                     <button type = 'submit' className = 'submit-form'> Cambiar </button>

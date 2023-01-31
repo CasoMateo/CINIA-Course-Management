@@ -288,7 +288,7 @@
   font-size: 16px;
   font-weight: 800;
   line-height: 16px;
-  min-height: 40px;
+  min-height: 20px;
   margin-left: 15em;
   margin-top: .5em;
   margin-bottom: 1em;
@@ -929,6 +929,10 @@
     width: 50%;
   }
 
+  #change-button-message {
+    font-size: 0.7rem;
+  }
+
 }
 
 .invalid-login-credentials {
@@ -950,6 +954,17 @@
   margin-top: 1em;
 }
 
-.change-message-input {
-  width: 100%;
+#change-message-input {
+  width: 90%;
+}
+
+#change-button-message {
+  margin-left: 1.2em; 
+  margin-right: 1.2em;
+}
+
+#change-button-contact {
+  font-size: 0.7rem;
+  margin-left: 0.4rem;
+  margin-right: 0.2rem;
 }
