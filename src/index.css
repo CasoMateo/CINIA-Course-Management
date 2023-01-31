@@ -961,10 +961,14 @@
 #change-button-message {
   margin-left: 1.2em; 
   margin-right: 1.2em;
+  margin-top: 0; 
+  margin-bottom: 0;
 }
 
 #change-button-contact {
   font-size: 0.7rem;
-  margin-left: 0.4rem;
-  margin-right: 0.2rem;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  margin-top: 0; 
+  margin-bottom: 0;
 }
