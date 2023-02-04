@@ -90,7 +90,10 @@ function ExploreCourse(props) {
         setRetrievedCourse(true);
     }
 
-    const handleCompleteFirstStage = () => {
+    const handleCompleteFirstStage = (event) => {
+
+        event.preventDefault();
+
         const completeFirstStageResource = async () => {
             
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/complete-first-stage', {
@@ -203,11 +206,11 @@ function ExploreCourse(props) {
                                 })
                             }
                         </div>
-
+                        
                         <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
 
                             <div className = 'corner-popup'> 
-                                <p onClick = { () => handleCompleteFirstStage() }> Completar <br /> Etapa </p>
+                                <p className = 'stage-button-info' onClick = { (event) => handleCompleteFirstStage(event) }> Hacer evaluación </p>
                             </div> 
 
                         </div>
@@ -240,20 +243,18 @@ function ExploreCourse(props) {
                                                 <label > { question.option4 } </label>
                                             </div> 
                                             <br />
+
+                                            
                                         </form>
                                     )
                                 }) 
                             }
 
-                            <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
-
-                                <div className = 'corner-popup'> 
-                                    <button className = 'submit-course-evaluation' type = 'submit'> <p> Completar <br /> Etapa </p> </button>
-                                </div> 
-
-                            </div>
+                            
+                            <button className = 'submit-form' id = 'submit-course' type = 'submit'> Completar curso </button>
+                            
                         </form>
-
+                        
                     </div>
                 }
 

@@ -66,7 +66,7 @@ const AuthContextProvider = (props) => {
               'Content-Type': 'application/json', 
               'Cookies': document.cookie
             },
-            body: JSON.stringify({ 'username': username, 'password': password }) 
+            body: JSON.stringify({ 'username': username.trimEnd(), 'password': password }) 
           }); 
         
           const response = await promise.json();
@@ -79,7 +79,7 @@ const AuthContextProvider = (props) => {
             } 
             
               
-            const username_cookie = 'username='.concat(username); 
+            const username_cookie = 'username='.concat(username.trimEnd()); 
             document.cookie = username_cookie;
             
   

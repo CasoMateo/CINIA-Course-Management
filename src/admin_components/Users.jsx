@@ -19,7 +19,6 @@ function Users(props) {
     const [deletedUser, setDeletedUser] = useState();
     const [clickedLogout, setClickedLogout] = useState(false); 
     const [retrievedUsers, setRetrievedUsers] = useState(false);
-    const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
     const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
     const [search, setSearch] = useState();
@@ -99,6 +98,9 @@ function Users(props) {
         if (!addUserAttributes.phone_number) {
             delete addUserAttributes.phone_number;
         }
+
+        addUserAttributes.username = addUserAttributes.username.trimEnd();
+        addUserAttributes.password = addUserAttributes.password.trimEnd();
 
         const addUserResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-user', {
@@ -201,7 +203,6 @@ function Users(props) {
                     <div className = 'credentials'> 
                         <p className = 'username' > { username } </p>
                         <p className = 'rank'> { rank } </p>
-                        <p className = 'hide-menu' onClick = { () => setHiddenChanges(!hiddenChanges) }> Ocultar/poner menú </p>
                     </div>
 
                     <button className = 'logout' onClick = { () => { setVerifyRef(true); setClickedLogout(true) } } > Cerrar sesión </button>
@@ -216,13 +217,18 @@ function Users(props) {
                     los cursos asignados, y los contactos proporcionados aquí...
                 </p>
 
+                
                 <button className = 'download-button' onClick = { () => getCSVResource() }>
                     Descargar la base de datos 
                 </button>
 
+
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el nombre del usuario' onChange = { (e) => setSearch(e.target.value) } />
                     <img src = '/search_button.png' className = 'search-button' /> 
+                    <p className = 'add-popup-form' onClick = { () => setAddUserForm(true) }> Añadir <br /> Usuario </p>
+                    
+                    
 
                 </div>
 
@@ -259,14 +265,6 @@ function Users(props) {
                         })
                     }
                 </div>
-
-            </div>
-
-            <div className = { !hiddenChanges ? 'corner-popup-aid' : 'display-false' }>
-
-                <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddUserForm(true) }> Añadir <br /> Usuario </p>
-                </div> 
 
             </div>
 

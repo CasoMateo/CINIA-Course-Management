@@ -11,7 +11,7 @@ function Contacts(props) {
     const username = getCookie('username'); 
     const rank = 'Admin.';
 
-    const [hiddenMenu, setHiddenMenu] = useState(false);
+    
     const [search, setSearch] = useState(); 
     const [verifyRef, setVerifyRef] = useState(false);
     const [retrievedContacts, setRetrievedContacts] = useState(false); 
@@ -337,7 +337,6 @@ function Contacts(props) {
                         <p className = 'username' > { username } </p>
                         <p className = 'rank'> { rank } </p>
                         <p className = 'switch-stage' onClick = { () => setShowStage(!showStage) }> { !showStage ? 'Ver mensajes' : 'Ver contactos'} </p>
-                        <p className = 'switch-stage' onClick = { () => setHiddenMenu(!hiddenMenu) }> Ocultar/poner menú </p>
                     </div>
 
                     <button className = 'logout' onClick = { () => { setVerifyRef(true); setClickedLogout(true) }} > Cerrar sesión </button>
@@ -351,7 +350,7 @@ function Contacts(props) {
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el contacto o mensaje' onChange = { (e) => setSearch(e.target.value) } />
                     <img src = '/search_button.png' className = 'search-button' /> 
-
+                    <p className = 'add-popup-form' onClick = { () => { showStage ? setAddMessageForm(true) : setAddContactForm(true) }}> Añadir <br /> { showStage ? 'Mensaje' : 'Contacto'} </p>
                 </div>
 
                 <div id = 'access-retrieval-contacts' className = { showStage && 'display-false'}>
@@ -507,22 +506,6 @@ function Contacts(props) {
                     <button type = 'submit' className = 'submit-form'> Cambiar </button>
                 
                 </form>
-
-            </div>
-
-            <div className = { (!hiddenMenu && !showStage) ? 'corner-popup-aid' : 'display-false' }>
-
-                <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddContactForm(true) }> Añadir <br /> Contacto </p>
-                </div> 
-
-            </div>
-
-            <div className = { (!hiddenMenu && showStage) ? 'corner-popup-aid' : 'display-false' }>
-
-                <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddMessageForm(true) }> Añadir <br /> Mensaje </p>
-                </div> 
 
             </div>
         </div>

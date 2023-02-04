@@ -14,7 +14,6 @@ function Courses(props) {
 
     const [courses, setCourses] = useState([]);
     const [retrievedCourses, setRetrievedCourses] = useState(false);
-    const [hiddenChanges, setHiddenChanges] = useState(false);
     const [addCourseForm, setAddCourseForm] = useState(false);
     const [name, setName] = useState();
     const [area, setArea] = useState();
@@ -93,7 +92,7 @@ function Courses(props) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
 
-        const properties = { 'name': name, 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
+        const properties = { 'name': name.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
         const addCourseResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-course', {
               method: 'POST',
@@ -229,7 +228,6 @@ function Courses(props) {
                     <div className = 'credentials'> 
                         <p className = 'username' > { username } </p>
                         <p className = 'rank'> { rank } </p>
-                        <p className = 'hide-menu' onClick = { () => setHiddenChanges(!hiddenChanges) }> Ocultar/poner menú </p>
                     </div>
 
                     <button className = 'logout' onClick = { () => { setVerifyRef(true); setClickedLogout(true) }} > Cerrar sesión </button>
@@ -242,7 +240,7 @@ function Courses(props) {
                 <div className = 'search-box'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
                     <img src = '/search_button.png' className = 'search-button' /> 
-
+                    <p className = 'add-popup-form' onClick = { () => setAddCourseForm(true) }> Añadir <br /> Curso </p>
                 </div>
 
                 <div className = 'course-instance'>
@@ -279,14 +277,6 @@ function Courses(props) {
                         })
                     }
                 </div>
-
-            </div>
-
-            <div className = { !hiddenChanges ? 'corner-popup-aid' : 'display-false' }>
-
-                <div className = 'corner-popup'> 
-                    <p onClick = { () => setAddCourseForm(true) }> Añadir <br /> Curso </p>
-                </div> 
 
             </div>
 

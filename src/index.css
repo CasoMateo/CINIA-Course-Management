@@ -135,19 +135,21 @@
 .user-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 37% 12% 13% 13% 13% 12%;
+  grid-template-columns: 37% 12% 13% 13% 13% 8%;
+  align-items: center;
 }
 
 .course-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 50% 10% 10% 10% 10% 10%;
+  grid-template-columns: 50% 10% 10% 10% 8% 8%;
+  align-items: center;
 }
 
 .contact-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 60% 20% 10% 10%;
+  grid-template-columns: 50% 30% 8% 8%;
   align-items: center;
 }
 
@@ -206,26 +208,98 @@
   padding-left: 6em;
 }
 
+.corner-popup-aid, .add-popup-form {
+  background-color: #f5f8f5;
+  border-radius: 20px; 
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: bold;
+  color: red;
+  box-shadow: 0 2px 3px -2px #000000;
+}
+
+.add-popup-form {
+  justify-self: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.add-popup-form:hover {
+  opacity: 75%; 
+  cursor: pointer;
+}
+
 .corner-popup-aid {
   position: fixed;
   top: 83%;
   left:74%;
-  background-color: #f5f8f5;
-  border-radius: 20px; 
-  padding-left: 1em;
-  padding-right: 1em;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-weight: bold;
-  color: red;
   opacity: 80%;
   z-index: 9;
-  box-shadow: 0 2px 3px -2px #000000;
 }
 
 #gerencias-contacts {
-  top: 83%;
-  left: 74%;
+  top: 92%;
+  left: 80%;
+  border-radius: 15px;
+  background-color: #ffe3e0;
+  border-color: white;
+  height: 2.7em;
+  align-items: center;
+  background-color: #FFE7E7;
+  background-position: 0 0;
+  border: 1px solid #FEE0E0;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #f81b07;
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 33.4929px;
+  padding: 2px 12px;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  text-underline-offset: 1px;
+  transition: border .2s ease-in-out,box-shadow .2s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  word-break: break-word;
 }
+
+#gerencias-contacts div div {
+  font-size: 1.5rem;
+}
+
+#gerencias-contacts:active,
+#gerencias-contacts:hover,
+#gerencias-contacts:focus {
+  outline: 0;
+}
+
+
+#gerencias-contacts:active {
+  background-color: #D33A2C;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+  color: #FFFFFF;
+}
+
+#gerencias-contacts:hover {
+  background-color: #FFE3E3;
+  border-color: #FAA4A4;
+}
+
+#gerencias-contacts:active:hover,
+#gerencias-contacts:focus:hover,
+#gerencias-contacts:focus {
+  background-color: #D33A2C;
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
+  color: #FFFFFF;
+}
+
 
 .corner-popup-gerencias {
   display: flex;
@@ -359,11 +433,12 @@
 
 .edit-button-message-2 {
   margin-left: 0.3em; 
-  width: 20%;
+  width: 10%;
 }
 
 #message-trash-button {
   margin-left: 0;
+  width: 5%;
 }
 
 .welcome-contacts {
@@ -443,7 +518,8 @@
   margin-top: 2em;
   background-color:rgb(245, 205, 199);
   border-radius: 20px;
-  margin-left: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
   cursor: pointer;
 } 
 
@@ -487,6 +563,7 @@
 
 .submit-course-evaluation {
   all: unset;
+  font-size: 1.5rem;
 }
 
 #name-attribute:hover {
@@ -543,19 +620,28 @@
   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.download-and-add-form {
+  display: flex; 
+  align-items: center;
+  justify-content: left;
+}
+
 .search-box {
   display: grid; 
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 70% 15% 5%;
+  align-items: center;
   
 }
 
 .search-box input {
   font-size: 1.3rem; 
   padding-left: 2em; 
+  padding-top: 0.2em; 
+  padding-bottom: 0.2em;
 }
 
 .search-button {
-  width: 30%;
+  width: 20%;
   margin-left: 3em;
 }
 
@@ -652,14 +738,33 @@
   color: #FFFFFF;
 }
 
+#submit-course {
+  margin-left: 70%;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+
+.stage-button-info {
+  font-size: 1.5rem;
+}
+
+#welcome-message {
+  display: flex;
+  align-items: center;
+  margin-right: 2em;
+}
+
 @media screen and (max-width: 950px) {
 
   .user-instance {
-    grid-template-columns: 16% 16% 16% 20% 20% 12%;
+    grid-template-columns: 20% 16% 16% 20% 20% 12%;
   }
 
   .course-instance {
-    grid-template-columns: 16% 16% 16% 20% 20% 12%;
+    grid-template-columns: 20% 16% 16% 20% 20% 12%;
   }
 
   .contact-instance {
@@ -720,6 +825,26 @@
     margin-left: 2em;
   }
 
+  #gerencias-contacts {
+    top: 95%;
+    left: 67%;
+  }
+
+  .user-instance {
+    grid-template-columns: 20% 18% 15% 20% 20% 12%;
+  }
+
+  .course-instance {
+    grid-template-columns: 23% 20% 10% 20% 15% 12%;
+  }
+
+  .search-box {
+    grid-template-columns: 55% 20% 15%;
+  }
+
+  .search-box input {
+    padding-left: 1em;
+  }
 }
 
 @media screen and (max-width: 675px) {
@@ -803,7 +928,13 @@
   }
 
   #gerencias-contacts {
-    left:50%;
+    left:40%;
+    top: 93%;
+  
+  }
+
+  #gerencias-contacts div div {
+    font-size: 1.3rem;
   }
 
   .corner-popup-aid {
@@ -933,6 +1064,54 @@
     font-size: 0.7rem;
   }
 
+  .course-instance {
+    grid-template-columns: 23% 20% 10% 23% 15% 12%;
+  }
+
+  .edit-button-message-2 {
+    margin-left: 0.3em; 
+    width: 20%;
+  }
+  
+  #message-trash-button {
+    margin-left: 0;
+    width: 10%;
+  }
+
+  #welcome-message {
+    margin-right: 0.5em;
+  }
+
+  .search-button {
+    width: 30%;
+    margin-left: 1.6em;
+  }
+
+  .search-box {
+    grid-template-columns: 63% 20% 15%;
+  }
+
+  .search-box input {
+    padding-left: 1em;
+    font-size: 0.9rem;
+  }
+
+  .add-popup-form {
+    font-size: 0.5rem;
+  }
+
+  .stage-button-info {
+    font-size: 1rem;
+  }
+
+  .submit-course-evaluation {
+    font-size: 1rem;
+  }
+
+  #submit-course {
+    margin-left: 60%; 
+  }
+
 }
 
 .invalid-login-credentials {
@@ -943,11 +1122,6 @@
 
 .contacts-popup-pointer {
   cursor: pointer;
-}
-
-#welcome-message {
-  display: flex; 
-  align-items: center;
 }
 
 .add-message-body {
