@@ -22,6 +22,7 @@ function Users(props) {
     const [addUserForm, setAddUserForm] = useState(false);
     const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
     const [search, setSearch] = useState();
+    const [editUserForm, setEditUserForm] = useState(false);
 
     const getUsersResource = async () => {
         
@@ -50,7 +51,6 @@ function Users(props) {
       
         
         setUsers(response.users);
-        console.log(response.users);
     };  
 
     const getCSVResource = async () => {
@@ -174,6 +174,61 @@ function Users(props) {
         deleteUserResource();
     }
 
+    const handleEditUser = (event) => {
+        event.preventDefault(); 
+        if (addUserAttributes.rank) {
+            if (addUserAttributes.area != 'Administra.') {
+                alert('Si es un administrador, debe pertenecer al área administrativa');
+                return;
+            }
+        }
+        
+        if (!addUserAttributes.phone_number) {
+            delete addUserAttributes.phone_number;
+        }
+
+        addUserAttributes.username = addUserAttributes.username.trimEnd();
+        
+        addUserAttributes.prevUsername = editUserForm; 
+
+        const changeUserResource = async () => {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-user', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie
+              },
+              body: JSON.stringify(addUserAttributes)
+            });
+      
+            
+            const response = await promise.json(); 
+
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+            
+            if (promise.status == 422) {
+                alert('Refresca la página para añadir a un nuevo usuario');
+                return;
+            }
+
+            if ((promise.status !== 200) || (!response.changedUser)) {
+                alert('No se cambió correctamente. Es probable que tengas que escoger otro nombre para el usuario');
+                return;
+            } else {
+                setRetrievedUsers(false);
+            }
+            
+      
+        };
+      
+        changeUserResource();
+        setEditUserForm(false);
+    }
+
     const handleVerifyConfirm = () => {
         if (deletedUser) {
             handleRemoveUser(deletedUser); 
@@ -258,6 +313,7 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
                                         <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: user.password, rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )) }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
@@ -351,6 +407,87 @@ function Users(props) {
                     <button type = 'submit' className = 'submit-form'> AÑADIR </button>
                 
                 </form>
+
+            </div>
+
+            <div className = { editUserForm ? 'pop-up-form' : 'display-false' }> 
+               
+                    <div className = 'title-close-form'>
+                        <h5 className = 'form-title'> 
+                            Editar Usuario 
+                        </h5>
+                        <img onClick = { () => setEditUserForm(false) } className = 'close-pop-up-form' src = '/close_button.png' />
+                        
+                    </div>
+
+                    <form class = 'add-whatever-form' onSubmit = { (event) => handleEditUser(event) }>
+                        <label className = 'form-label'> Nombre </label>
+                        <br/>
+                        <input className = 'input-field-add' value = { addUserAttributes.username } type="text" placeholder = 'Escriba el nombre sin acentos' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
+                        <br/>
+                        <br />
+                        <label className = 'form-label'> Número de empleado </label>
+                        <br/>
+                        <input className = 'input-field-add' type="text" value = { addUserAttributes.employee_number } placeholder = 'Escriba el número de empleado' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, employee_number : e.target.value })) }/> 
+                        <br/>
+                        <br />
+                        <label className = 'form-label'> Número de teléfono </label>
+                        <br/>
+                        <input className = 'input-field-add' type="text" value = { addUserAttributes.phone_number } placeholder = 'Nuevo número de teléfono' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) }/> 
+                        <br/>
+                        <br />
+                        <label className = 'form-label'> Posición </label>
+                        <div>
+                            <form> 
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" 
+                                        required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: true })) } />
+                                <label>Admin.</label>
+                            </div>
+
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) } />
+                                <label >Operador</label>
+                            </div>
+                            </form>
+                        </div>
+                        <br/>
+                        <label className = 'form-label'> Área </label>
+                        <br/>
+                        <div>
+                            <form>
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" 
+                                        required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Jardineria'})) }/>
+                                <label>Jardinería</label>
+                            </div>
+
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Limpieza'})) }/>
+                                <label >Limpieza</label>
+                            </div> 
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Textil'})) }/>
+                                <label >Textil</label>
+                            </div> 
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Acondi.'})) }/>
+                                <label >Acondicionamiento</label>
+                            </div> 
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automocion'})) }/>
+                                <label >Automoción</label>
+                            </div> 
+                            <div className = 'radio-option'>
+                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Administra.'})) }/>
+                                <label >Administrativo</label>
+                            </div> 
+                            </form>
+                        </div>
+                        <br />
+                        <button type = 'submit' className = 'submit-form'> EDITAR </button>
+                    
+                    </form>
 
             </div>
 

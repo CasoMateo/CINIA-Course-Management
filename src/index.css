@@ -135,7 +135,7 @@
 .user-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 37% 12% 13% 13% 13% 8%;
+  grid-template-columns: 32% 12% 13% 13% 13% 8% 8%;
   align-items: center;
 }
 
@@ -760,7 +760,7 @@
 @media screen and (max-width: 950px) {
 
   .user-instance {
-    grid-template-columns: 20% 16% 16% 20% 20% 12%;
+    grid-template-columns: 20% 14% 15% 18% 15% 10% 10%;
   }
 
   .course-instance {
@@ -828,10 +828,6 @@
   #gerencias-contacts {
     top: 95%;
     left: 67%;
-  }
-
-  .user-instance {
-    grid-template-columns: 20% 18% 15% 20% 20% 12%;
   }
 
   .course-instance {
@@ -1110,6 +1106,11 @@
 
   #submit-course {
     margin-left: 60%; 
+  }
+
+  .user-instance {
+    grid-template-columns: 20% 17% 13% 20% 15% 10% 10%;
+    font-size: 0.3rem;
   }
 
 }
