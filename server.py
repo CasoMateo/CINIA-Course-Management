@@ -17,7 +17,7 @@ from mangum import Mangum
 
 app = FastAPI()
 handler = Mangum(app)
-app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'minute': datetime.now() } 
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'minute': datetime.now() } 
 
 
 cluster = MongoClient(os.environ.get("CONNECTION_TO_DB"))
@@ -75,6 +75,23 @@ class changeMessage(BaseModel):
   prevMessage: str
   newMessage: str
 
+class changeMessage(BaseModel): 
+  prevMessage: str
+  newMessage: str
+
+class changeContact(BaseModel): 
+  prevName: str
+  name: str
+  phone_number: int
+
+class changeUser(BaseModel): 
+  prevUsername: str
+  username: str
+  employee_number: int
+  phone_number: Optional[int]
+  rank: bool
+  area: str 
+
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
 
@@ -106,7 +123,7 @@ def checkRateLimit(name, limit):
     current_time = datetime.now()
     
     if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
-      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'minute': current_time } 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'minute': current_time } 
     else: 
       return True
   
@@ -587,7 +604,7 @@ def getMessages(request: Request):
   return response 
 
 @app.post('/change-contact', status_code = 200)
-def changeContact(request: Request, contact: Contact): 
+def changeContact(request: Request, contact: changeContact): 
 
   if checkRateLimit('changeContact', 30): 
     raise HTTPException(status_code=429, detail="Too many requests")
@@ -595,8 +612,10 @@ def changeContact(request: Request, contact: Contact):
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
     raise HTTPException(status_code=401, detail="Unauthorized") 
 
-  contacts.delete_one({ 'name': contact.name })
-  contacts.insert_one(dict(contact)) 
+  contacts.delete_one({ 'name': contact.prevName })
+  prototype = dict(contact)
+  prototype.pop('prevName')
+  contacts.insert_one(prototype) 
 
   return JSONResponse(content = { 'changedContact': True })
 
@@ -613,3 +632,22 @@ def changeMessage(request: Request, message: changeMessage):
   messages.insert_one(dict({ 'message': message.newMessage })) 
 
   return JSONResponse(content = { 'changedMessage': True })
+
+@app.post('/change-user', status_code = 200)
+def changeUser(request: Request, user: changeUser): 
+
+  if checkRateLimit('changeUser', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+
+  target = users.find_one({'username': user.prevUsername})
+  prototype = dict(user)
+  prototype['password'] = target['password']
+  prototype['courses'] = target['courses']
+  users.delete_one({ 'username': user.prevUsername })
+  prototype.pop('prevUsername')
+  users.insert_one(prototype) 
+
+  return JSONResponse(content = { 'changedUser': True })
