@@ -113,7 +113,7 @@ function Courses(props) {
             }
 
             if (promise.status == 422) {
-                alert('Refresca la página para añadir a un nuevo curso');
+                alert('Ingresa todos los datos que se piden. Si sigue el problema, refrezca la página');
                 return;
             }
 

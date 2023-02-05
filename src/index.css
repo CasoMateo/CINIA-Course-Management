@@ -759,6 +759,15 @@
 
 @media screen and (max-width: 950px) {
 
+  .instance-attribute-header{
+    margin-bottom: 0; 
+    margin-top: 0; 
+  }
+
+  #area-header {
+    padding-left: 15%;
+  }
+
   .user-instance {
     grid-template-columns: 20% 14% 15% 18% 15% 10% 10%;
   }
@@ -1111,6 +1120,10 @@
   .user-instance {
     grid-template-columns: 20% 17% 13% 20% 15% 10% 10%;
     font-size: 0.3rem;
+  }
+
+  #area-header {
+    padding-left: 25%;
   }
 
 }

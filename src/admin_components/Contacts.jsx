@@ -117,7 +117,7 @@ function Contacts(props) {
             if (promise.status == 422) {
                 alert('El teléfono tiene que ser un número');
             }
-            if ((promise.status != 200) || (!response.addedContact)) {
+            else if ((promise.status != 200) || (!response.addedContact)) {
                 alert('No se añadió correctamente');
                 return;
             } else {

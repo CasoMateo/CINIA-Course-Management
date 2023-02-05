@@ -122,7 +122,7 @@ function Users(props) {
             }
             
             if (promise.status == 422) {
-                alert('Refresca la página para añadir a un nuevo usuario');
+                alert('Ingresa todos los datos que se piden. Si sigue el problema, refrezca la página');
                 return;
             }
 
@@ -291,7 +291,7 @@ function Users(props) {
                     <p className = 'instance-attribute-header'> Nombre </p>
                     <p className = 'instance-attribute-header'> Posición </p>
                     <p className = 'instance-attribute-header'> # Empleado </p>
-                    <p className = 'instance-attribute-header'> Área </p>
+                    <p className = 'instance-attribute-header' id = 'area-header'> Área </p>
                     <p className = 'instance-attribute-header'> Cursos </p>
 
                 </div>
