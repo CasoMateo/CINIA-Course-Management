@@ -21,7 +21,7 @@ function Contacts(props) {
     const [contacts, setContacts] = useState([]); 
     const [messages, setMessages] = useState([]);
     const [addMessageAttributes, setAddMessageAttributes] = useState();
-    const [addContactAttributes, setAddContactAttributes] = useState();
+    const [addContactAttributes, setAddContactAttributes] = useState({ 'name': '', 'phone_number': ''});
     const [addContactForm, setAddContactForm] = useState(false);
     const [addMessageForm, setAddMessageForm] = useState(false);
     const [changeContactForm, setChangeContactForm] = useState(false);
@@ -114,6 +114,9 @@ function Contacts(props) {
                 return;
             }
 
+            if (promise.status == 422) {
+                alert('El teléfono tiene que ser un número');
+            }
             if ((promise.status != 200) || (!response.addedContact)) {
                 alert('No se añadió correctamente');
                 return;
@@ -234,8 +237,10 @@ function Contacts(props) {
     }
 
     const handleChangeContact = (event) => {
+        event.preventDefault();
+        addContactAttributes.prevName = changeContactForm;
+        console.log(addContactAttributes);
         
-
         const changeContactResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-contact', {
               method: 'POST',
@@ -267,6 +272,7 @@ function Contacts(props) {
       
         changeContactResource();
         setChangeContactForm(false);
+        
     }
 
     const handleChangeMessage = (event) => {
@@ -374,18 +380,11 @@ function Contacts(props) {
                                 return (
                                     <div key = { contact._id.$oid } className = 'contact-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute'> { contact.name } </p>
-                                        {
-                                            !(changeContactForm == contact.phone_number) ?
-                                        <p className = 'instance-attribute'> { contact.phone_number } </p> :
-                                        <input className = 'instance-attribute' value = { addContactAttributes.phone_number} onChange = { (event) => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, phone_number: event.target.value })) }}  ></input>
                                         
+                                        <p className = 'instance-attribute'> { contact.phone_number } </p> 
                                         
-                            }
-                            {
-                                !(changeContactForm == contact.phone_number) ?
-                                        <img className = 'edit-button-message-1' onClick = { () => { setChangeContactForm(contact.phone_number); setAddContactAttributes(prevState => ({ ...prevState, name : contact.name, phone_number: contact.phone_number })) }} src = '/edit_button.png' /> :
-                                        <button type = 'submit' className = 'submit-form' id = 'change-button-contact' onClick = { (event) => handleChangeContact(event)}> Cambiar </button>
-                            }
+                                        <img className = 'edit-button-message-1' onClick = { () => { setChangeContactForm(contact.name); setAddContactAttributes(prevState => ({ ...prevState, name : contact.name, phone_number: contact.phone_number })) }} src = '/edit_button.png' />
+                            
                                         <img className = 'trash-button-user' id = 'contact-trash-button' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedContact(prevState => ({ ...prevState, name : contact.name } ) ) } } /> 
                                     </div>
                                 )
@@ -487,7 +486,7 @@ function Contacts(props) {
 
             </div>
 
-            <div className = { false ? 'pop-up-form' : 'display-false' }> 
+            <div className = { changeContactForm ? 'pop-up-form' : 'display-false' }> 
                
                 <div className = 'title-close-form'>
                     <h5 className = 'form-title'> 
@@ -498,9 +497,14 @@ function Contacts(props) {
                 </div>
 
                 <form class = 'add-whatever-form' onSubmit = { (event) => handleChangeContact(event) }>
+                <label className = 'form-label'> Número del contacto </label>
+                    <br />
+                    <input className = 'input-field-add' type="text" value = {  addContactAttributes.name } required onChange = { (e) => setAddContactAttributes(prevState => ({ ...prevState, name : e.target.value })) } />
+                    <br />
+                    <br />
                     <label className = 'form-label'> Número de teléfono </label>
                     <br />
-                    <input className = 'input-field-add' type="text" placeholder = { changeContactForm } required onChange = { (e) => setAddContactAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) } />
+                    <input className = 'input-field-add' type="text" value = {  addContactAttributes.phone_number }  required onChange = { (e) => setAddContactAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) } />
                     <br />
                     <br />
                     <button type = 'submit' className = 'submit-form'> Cambiar </button>
