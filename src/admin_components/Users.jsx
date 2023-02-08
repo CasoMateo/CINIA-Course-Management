@@ -187,10 +187,16 @@ function Users(props) {
             delete addUserAttributes.phone_number;
         }
 
+        if (!addUserAttributes.password) {
+            delete addUserAttributes.password;
+        } 
+
         addUserAttributes.username = addUserAttributes.username.trimEnd();
         
         addUserAttributes.prevUsername = editUserForm; 
 
+        
+        console.log(addUserAttributes);
         const changeUserResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-user', {
               method: 'POST',
@@ -313,7 +319,7 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
                                         <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: user.password, rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )) }}/> 
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )) }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
@@ -424,6 +430,11 @@ function Users(props) {
                         <label className = 'form-label'> Nombre </label>
                         <br/>
                         <input className = 'input-field-add' value = { addUserAttributes.username } type="text" placeholder = 'Escriba el nombre sin acentos' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, username : e.target.value })) }/> 
+                        <br/>
+                        <br />
+                        <label className = 'form-label'> Contraseña </label>
+                        <br/>
+                        <input className = 'input-field-add' value = { addUserAttributes.password } type="text" placeholder = 'Escriba la contraseña' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
                         <br/>
                         <br />
                         <label className = 'form-label'> Número de empleado </label>

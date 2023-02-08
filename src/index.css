@@ -757,6 +757,13 @@
   margin-right: 2em;
 }
 
+.forgot-password {
+  font-weight: bolder; 
+  color:red;
+  margin-top : 0;
+  padding-left: 10%;
+}
+
 @media screen and (max-width: 950px) {
 
   .instance-attribute-header{

@@ -13,7 +13,7 @@ function User(props) {
     const rank = 'Admin.';
     
     const [retrievedUser, setRetrievedUser] = useState(false); 
-    const [changedNumber, setChangedNumber] = useState();
+    const [changedPassword, setChangedPassword] = useState();
     const [hiddenMenu, setHiddenMenu] = useState(false);
     const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
     const [verifyRef, setVerifyRef] = useState(false); 
@@ -46,12 +46,12 @@ function User(props) {
       
     };
 
-    const handleChangePhoneNumber = (event) => {
+    const handleChangePassword = (event) => {
       event.preventDefault();
 
-      const changePhoneResource = async () => {
+      const changePasswordResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-phone-number';
+        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-password';
         const promise = await fetch(url, {
           method: 'POST',
           headers: {
@@ -59,7 +59,7 @@ function User(props) {
             'Content-Type': 'application/json',
             'Cookies': document.cookie
           },
-          body: JSON.stringify({ 'username': params.cur_user, 'phone_number': changedNumber })
+          body: JSON.stringify({ 'username': params.cur_user, 'newPassword': changedPassword })
         }); 
         
         const response = await promise.json();
@@ -69,16 +69,17 @@ function User(props) {
           return;
         }
         
-        if ((!response.changedPhone) || (promise.status != 200)) {
+        if ((!response.changedPassword) || (promise.status != 200)) {
           alert('Ingresa datos correctos');
           return;
         } else {
+          alert('Se cambió la contraseña correctamente');
           setRetrievedUser(false);
         }
         
       };
 
-      changePhoneResource();
+      changePasswordResource();
     }
     
     if (!retrievedUser) {
@@ -115,9 +116,9 @@ function User(props) {
             <div className = 'main-page'>
               <h5 className = 'course-header'> { user.username } </h5> 
 
-              <form className = 'change-phone-form' onSubmit = { (event) => handleChangePhoneNumber(event) }>
-                {user.phone_number ? (<label className = 'change-phone-label'> <b> Cambiar </b> <i> { user.phone_number } </i>  </label> ) : (<label> Agregar contacto </label>) } 
-                <input className = 'change-phone-input' placeholder = 'Nuevo teléfono' onChange = { (e) => setChangedNumber(e.target.value) } />
+              <form className = 'change-phone-form' onSubmit = { (event) => handleChangePassword(event) }>
+                <label className = 'change-phone-label'> <b> Cambiar contraseña </b> </label> 
+                <input className = 'change-phone-input' placeholder = 'Nueva contraseña' onChange = { (e) => setChangedPassword(e.target.value) } />
                 <button className = 'submit-form' type = 'submit' id = 'change-phone-submit'> Cambiar </button> 
               </form>
 

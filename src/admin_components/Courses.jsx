@@ -306,7 +306,7 @@ function Courses(props) {
                     <div>
                         <div className = 'radio-option'>
                             <input name = 'level' type="radio" 
-                                    required onChange = { () => setArea('Jardinería') }/>
+                                    required onChange = { () => setArea('Jardineria') }/>
                             <label>Jardinería</label>
                         </div>
 
@@ -323,7 +323,7 @@ function Courses(props) {
                             <label >Acondicionamiento</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Automoción') }/>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Automocion') }/>
                             <label >Automoción</label>
                         </div> 
                         <div className = 'radio-option'>
