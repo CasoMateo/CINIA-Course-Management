@@ -17,7 +17,7 @@ from mangum import Mangum
 
 app = FastAPI()
 handler = Mangum(app)
-app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'minute': datetime.now() } 
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'minute': datetime.now() } 
 
 
 cluster = MongoClient(os.environ.get("CONNECTION_TO_DB"))
@@ -41,6 +41,7 @@ class User(BaseModel):
 
 class Course(BaseModel):
   name: str
+  prevName: Optional[str]
   area: str 
   resources: list
   questions: list 
@@ -95,6 +96,7 @@ class changeUser(BaseModel):
   phone_number: Optional[int]
   rank: bool
   area: str 
+  password: str
 
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
@@ -127,7 +129,7 @@ def checkRateLimit(name, limit):
     current_time = datetime.now()
     
     if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
-      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'minute': current_time } 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'minute': current_time } 
     else: 
       return True
   
@@ -692,7 +694,7 @@ def changeUser(request: Request, user: changeUser):
 @app.post('/change-password', status_code = 200)
 def changePassword(request: Request, password: changePassword): 
 
-  if checkRateLimit('changePassword', 30): 
+  if checkRateLimit('changePassword', 15): 
     raise HTTPException(status_code=429, detail="Too many requests")
 
   if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
@@ -702,3 +704,50 @@ def changePassword(request: Request, password: changePassword):
   users.update_one({ 'username': password.username }, {'$set': {'password': encrypted_password }})
 
   return JSONResponse(content = {'changedPassword': True})
+
+@app.post('/change-course', status_code = 200)
+def changeCourse(request: Request, course: Course): 
+  if checkRateLimit('changeCourse', 10): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])): 
+    raise HTTPException(status_code=401, detail="Unauthorized") 
+  
+  target = dict(courses.find_one({'name':course.prevName}))
+
+  courses.delete_one({'name': course.prevName})
+  prototype = dict(course)
+  prototype.pop('prevName') 
+  prototype['date'] = date.today().strftime("%d/%m/%Y") 
+  courses.insert_one(prototype)
+
+  if target['area'] != prototype['area']: 
+    newUsers = users.find()
+
+    for user in newUsers: 
+      actual = dict(user)
+      done = False
+      
+      if prototype['area'] == 'General' and actual['area'] == target['area']: 
+        continue 
+      
+      if prototype['area'] == 'General' and actual['area'] != target['area']: 
+        done = actual['username']
+        actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
+
+      elif actual['area'] == prototype['area'] and target['area'] != 'General': 
+        done = actual['username']
+        actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
+        
+      elif actual['area'] != prototype['area'] and (target['area'] == 'General' or actual['area'] == target['area']): 
+        done = actual['username']
+        for i in range(len(actual['courses'])): 
+          if actual['courses'][i]['name'] == target['name']: 
+            actual['courses'] = actual['courses'][: i] + actual['courses'][i + 1: ]
+            break
+      
+      if done: 
+        users.delete_one({'username': done})
+        users.insert_one(actual)
+
+  return JSONResponse(content = { 'changedCourse': True })
