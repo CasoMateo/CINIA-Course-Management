@@ -27,6 +27,8 @@ function Courses(props) {
     const [reassignedCourse, setReassignedCourse] = useState();
     const [clickedLogout, setClickedLogout] = useState(false);
     const [search, setSearch] = useState();
+    const [editCourseForm, setEditCourseForm] = useState(false);
+    const [prevName, setPrevName] = useState();
 
     const getCoursesResource = async () => {
         
@@ -164,6 +166,53 @@ function Courses(props) {
         deleteCourseResource();
     }
 
+    const handleEditCourse = (event) => {
+        event.preventDefault(); 
+        const properties = { 'name': name.trimEnd(), 'prevName': prevName.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
+        console.log(properties);
+
+        if (threshold <= 0 || threshold > 10) {
+            alert('La calificación tiene que estar entre 1 y 10');
+        }
+
+        const changeCourseResource = async () => {
+            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-course', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Cookies': document.cookie              
+              },
+              body: JSON.stringify(properties)
+            });
+      
+            
+            const response = await promise.json(); 
+            
+            if (promise.status == 429) {
+                alert('Demasiadas solicitudes, espera un poco');
+                return;
+            }
+
+            if (promise.status == 422) {
+                alert('Ingresa todos los datos que se piden. Si sigue el problema, refrezca la página');
+                return;
+            }
+
+            if ((promise.status !== 200) || (!response.changedCourse)) {
+                alert('No se cambió adecuadamente. Es probable que tengas que escoger otro nombre para el curso.');
+                return;
+            } else {
+                setRetrievedCourses(false);
+            }
+            
+        };
+
+        changeCourseResource(); 
+
+        setEditCourseForm(false);
+    }
+
     const handleReassignCourse = () => {
         const reassignCourseResource = async () => {
             const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/reassign-course', {
@@ -267,9 +316,10 @@ function Courses(props) {
                                     <div key = { course._id.$oid } className = 'course-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>
                                         <p className = 'instance-attribute'> { course.area } </p>
-                                        <p className = 'instance-attribute'> { course.threshold } </p>
+                                        <p className = 'instance-attribute' id = 'threshold-attribute'> { course.threshold } </p>
                                         <p className = 'instance-attribute'> { course.date } </p>
-                                        <img className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
+                                        <img id = 'trash-button-courses' className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditCourseForm(true); setPrevName(course.name); setName(course.name); setArea(course.area); setThreshold(course.threshold); setDescriptionStage1(course.descriptionStage1); setDescriptionStage2(course.descriptionStage2); setResources(course.resources); setQuestions(course.questions); } }/>
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
                                     </div>
                                 )
@@ -416,6 +466,147 @@ function Courses(props) {
                     </div>
 
                     <button type = 'submit' className = 'submit-form' onClick = { (event) => handleAddCourse(event) }> AÑADIR </button>
+                
+                </form>
+
+            </div>
+
+            <div className = { editCourseForm ? 'pop-up-form' : 'display-false' }> 
+               
+                <div className = 'title-close-form'>
+                    <h5 className = 'form-title'> 
+                        Editar Curso 
+                    </h5>
+                    <img onClick = { () => setEditCourseForm(false) } className = 'close-pop-up-form' src = '/close_button.png' />
+                    
+                </div>
+
+                <form class = 'add-whatever-form'>
+                    <label className = 'form-label'> Nombre </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" value = { name } placeholder = 'Escriba el nombre del curso' required onChange = { (e) => setName(e.target.value)}/> 
+                    <br/>
+                    <br />
+                    <label className = 'form-label'> Calificación mínima </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" value = { threshold} placeholder = 'Escriba un número entre 1 y 10' required onChange = { (e) => setThreshold(e.target.value)}/> 
+                    <br/>
+                    <br />
+                    <label className = 'form-label'> Área </label>
+                    <br/>
+                    <div>
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" 
+                                    required onChange = { () => setArea('Jardineria') }/>
+                            <label>Jardinería</label>
+                        </div>
+
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Limpieza') }/>
+                            <label >Limpieza</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Textil') }/>
+                            <label >Textil</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Acondi.') }/>
+                            <label >Acondicionamiento</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Automocion') }/>
+                            <label >Automoción</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('Administra.') }/>
+                            <label >Administrativo</label>
+                        </div> 
+                        <div className = 'radio-option'>
+                            <input name = 'level' type="radio" required onChange = { () => setArea('General') }/>
+                            <label >General</label>
+                        </div> 
+                    </div>
+                    <br />
+                    <br />
+                    <label className = 'form-label'> Instrucciones de Capacitación </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" value = {  descriptionStage1 } placeholder = 'Escriba la descripción' required onChange = { (e) => setDescriptionStage1(e.target.value) }/> 
+                    <br/>
+                    {
+                        resources.map(resource => { 
+                            return (
+                            <div>
+                                <br />
+                                <label className = 'form-label'> Recurso { resources.indexOf(resource) + 1 } </label>
+                                <br/>
+                                <input className = 'input-field-add' type="text" value = { resource } placeholder = 'Escriba el link del recurso' required onChange = { (e) => handleChangeResource(resources.indexOf(resource), e.target.value) }/> 
+                                <br/>
+                            </div> 
+                        )})
+                    }
+                    <div className = 'course-adjustment'>
+                        <button className = 'course-change' onClick = { () => setResources(resources => [...resources, resources.length]) }> MÁS </button>
+                        <button className = 'course-change' onClick = { () => setResources(resources.slice(0, -1)) }> QUITAR </button>
+                    </div>
+                    <br />
+                    <label className = 'form-label'> Instrucciones de Evaluación </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" value = { descriptionStage2 } placeholder = 'Escriba la descripción' required onChange = { (e) => setDescriptionStage2(e.target.value) }/> 
+                    <br/>
+                    {
+                        questions.map(question => {
+                            return (
+                            <div>
+                                <br />
+                               <label className = 'form-label'> Pregunta { questions.indexOf(question) + 1 }</label>
+                                <br/>
+                                <input className = 'input-field-add' type="text" value = { question.name } placeholder = 'Escriba la pregunta' required  onChange = { (e) => handleChangeQuestion(questions.indexOf(question), 'name', e.target.value) } /> 
+                                <br/>
+                                <br /> 
+                                <label className = 'form-label'> Opciones </label>
+                                <br/>
+                                <input className = 'input-field-add' type="text" value = { question.option1 } placeholder = 'Opción 1' required onChange = { (e) => handleChangeQuestion(questions.indexOf(question), 'option1', e.target.value) }/> 
+                                <br/> 
+                                <input className = 'input-field-add' type="text" value = { question.option2 } placeholder = 'Opción 2' required onChange = { (e) => handleChangeQuestion(questions.indexOf(question), 'option2', e.target.value) }/> 
+                                <br/> 
+                                <input className = 'input-field-add' type="text" value = { question.option3 }placeholder = 'Opción 3' required onChange = { (e) => handleChangeQuestion(questions.indexOf(question), 'option3', e.target.value) }/>
+                                <br/> 
+                                <input className = 'input-field-add' type="text" value = { question.option4 }placeholder = 'Opción 4' required onChange = { (e) => handleChangeQuestion(questions.indexOf(question), 'option4', e.target.value) }/>
+                                <br />
+                                <br />
+                                <label className = 'form-label'> Opción correcta </label>
+                                <form>
+                                    <div className = 'radio-option'>
+                                        <input name = 'level' type="checkbox" 
+                                                required onChange = { () => handleAddCorrect(questions.indexOf(question), 1) }/>
+                                        <label>1</label>
+                                    </div>
+
+                                    <div className = 'radio-option'>
+                                        <input name = 'level' type="checkbox" required onChange = { () => handleAddCorrect(questions.indexOf(question), 2) }/>
+                                        <label >2</label>
+                                    </div> 
+                                    <div className = 'radio-option'>
+                                        <input name = 'level' type="checkbox" required onChange = { () => handleAddCorrect(questions.indexOf(question), 3) }/>
+                                        <label >3</label>
+                                    </div> 
+                                    <div className = 'radio-option'>
+                                        <input name = 'level' type="checkbox" required onChange = { () => handleAddCorrect(questions.indexOf(question), 4) }/>
+                                        <label >4</label>
+                                    </div> 
+                                </form>
+
+                            </div>
+                            )
+                        })
+                    }
+
+                    <div className = 'course-adjustment'>
+                        <button className = 'course-change' onClick = { () => setQuestions(questions => [...questions, {'correct': []}]) }> MÁS </button>
+                        <button className = 'course-change' onClick = { () => setQuestions(questions.slice(0, -1)) }> QUITAR </button>
+                    </div>
+
+                    <button type = 'submit' className = 'submit-form' onClick = { (event) => handleEditCourse(event) }> EDITAR </button>
                 
                 </form>
 
