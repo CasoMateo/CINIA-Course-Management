@@ -319,7 +319,7 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
                                         <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )) }}/> 
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
@@ -434,7 +434,7 @@ function Users(props) {
                         <br />
                         <label className = 'form-label'> Contraseña </label>
                         <br/>
-                        <input className = 'input-field-add' value = { addUserAttributes.password } type="text" placeholder = 'Escriba la contraseña' required onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
+                        <input className = 'input-field-add' value = { addUserAttributes.password } type="text" placeholder = 'Escriba la contraseña' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, password : e.target.value })) }/> 
                         <br/>
                         <br />
                         <label className = 'form-label'> Número de empleado </label>
@@ -444,7 +444,7 @@ function Users(props) {
                         <br />
                         <label className = 'form-label'> Número de teléfono </label>
                         <br/>
-                        <input className = 'input-field-add' type="text" value = { addUserAttributes.phone_number } placeholder = 'Nuevo número de teléfono' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) }/> 
+                        <input className = 'input-field-add' type="text" value = { addUserAttributes.phone_number ? addUserAttributes.phone_number : ''} placeholder = 'Nuevo número de teléfono' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, phone_number : e.target.value })) }/> 
                         <br/>
                         <br />
                         <label className = 'form-label'> Posición </label>
