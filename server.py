@@ -96,7 +96,7 @@ class changeUser(BaseModel):
   phone_number: Optional[int]
   rank: bool
   area: str 
-  password: str
+  password: Optional[str]
 
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
