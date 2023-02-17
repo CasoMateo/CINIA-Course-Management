@@ -178,7 +178,7 @@ function ExploreCourse(props) {
                     <div className = 'credentials'> 
                         <p className = 'username' > { username } </p>
                         <p className = 'rank'> { rank } </p>
-                        <p className = 'hide-menu' onClick = { () => setHiddenMenu(!hiddenMenu) }> Ocultar/poner menú </p>
+                        { !userCourseInfo.stage1 && <p className = 'hide-menu' onClick = { () => setHiddenMenu(!hiddenMenu) }> Ocultar/poner menú </p>}
                     </div>
 
                     <button className = 'logout' onClick = { () => setVerifyRef(true)} > Cerrar sesión </button>
