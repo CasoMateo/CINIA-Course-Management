@@ -10,6 +10,11 @@
   position: fixed;
 }
 
+#accessibilityWidget {
+  color: red;
+  font-weight: bold;
+}
+
 .cinia-logo {
   width: 80%;
   margin-bottom: 6em;
@@ -135,7 +140,7 @@
 .user-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 32% 12% 13% 13% 13% 8% 8%;
+  grid-template-columns: 29% 12% 13% 13% 13% 8% 8%;
   align-items: center;
 }
 
@@ -149,7 +154,7 @@
 .contact-instance {
   margin-top: 1.2em;
   display: grid; 
-  grid-template-columns: 50% 30% 8% 8%;
+  grid-template-columns: 50% 27% 8% 8%;
   align-items: center;
 }
 
