@@ -56,8 +56,9 @@ function ContactFeed(props) {
             <div className = 'sidebar'>
                 
                 <img src = '/cinia_logo (1).png' alt = 'Logo' className = 'cinia-logo'/> 
-
+                <img src = '/accesibility.png' id="accessibilityWidget" className = 'sidebar-option' tabindex="0" />
                 <div className = 'sidebar-options'> 
+                
                     <p className = 'sidebar-option' onClick = { () => navigate('/operador') }> Cursos </p>
                     <p className = 'sidebar-option' id = 'selected-page'> Contactos </p>
                     

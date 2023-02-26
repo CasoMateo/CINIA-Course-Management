@@ -254,7 +254,7 @@ function Users(props) {
                 <img src = '/cinia_logo (1).png' alt = 'Logo' className = 'cinia-logo'/> 
 
                 <div className = 'sidebar-options'> 
-                <span id="accessibilityWidget" className = 'sidebar-option' tabindex="0"> Accesibilidad </span>
+                
                     <p className = 'sidebar-option' id = 'selected-page'> Usuarios </p>
                     <p className = 'sidebar-option' onClick = { () => navigate('/cursos') }> Cursos </p>
                     <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos y Mensajes </p>
