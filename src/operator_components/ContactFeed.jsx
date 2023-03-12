@@ -94,8 +94,8 @@ function ContactFeed(props) {
                 
                 }
 
-                    <div className = 'separate-contact' onClick = { () => alert("Abre tu correo y manda tu mensaje a soportec@cinia.net!") }>  soportec@cinia.net </div>
-                    <div className = 'separate-contact' onClick = { () => alert("Abre tu correo y manda tu mensaje a marketing@cinia.net!") }> marketing@cinia.net </div>
+                    <div className = 'separate-contact' onClick = { () => window.open("mailto:soportec@cinia.net?subject=Asunto&body=Escribe%20tu%20mensaje") }>  soportec@cinia.net </div>
+                    <div className = 'separate-contact' onClick = { () => window.open("mailto:marketing@cinia.net?subject=Asunto&body=Escribe%20tu%20mensaje") }> marketing@cinia.net </div>
                 </div>
             </div>
 
