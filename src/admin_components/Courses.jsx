@@ -29,6 +29,7 @@ function Courses(props) {
     const [search, setSearch] = useState();
     const [editCourseForm, setEditCourseForm] = useState(false);
     const [prevName, setPrevName] = useState();
+    const [courseFilter, setCourseFilter] = useState();
 
     const getCoursesResource = async () => {
         
@@ -286,9 +287,19 @@ function Courses(props) {
 
             <div className = 'main-page'>
                 
-                <div className = 'search-box'>
+                <div className = 'search-box' id = 'search-filter'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
+                    <select class="select-css" onChange = {(e) => setCourseFilter(e.target.value)}>
+                        <option value = "">Todos</option>
+                        <option value = 'Jardineria'>Jardineria</option>
+                        <option value = "Limpieza">Limpieza</option>
+                        <option value = "Textil">Textil</option>
+                        <option value = "Acondi.">Acondicionamiento</option>
+                        <option value = "Automocion" >Automocion</option>
+                        <option value = "Administra." >Administrativo</option>
+                    </select>
                     <img src = '/search_button.png' className = 'search-button' /> 
+                    
                     <p className = 'add-popup-form' onClick = { () => setAddCourseForm(true) }> Añadir <br /> Curso </p>
                 </div>
 
@@ -311,7 +322,7 @@ function Courses(props) {
 
                         : courses.map(course => {
                             
-                            if (!search || course.name.toLowerCase().includes(search.toLowerCase())) {
+                            if ((!search || course.name.toLowerCase().includes(search.toLowerCase())) && ((!courseFilter) || (courseFilter == course.area))) {
                                 return (
                                     <div key = { course._id.$oid } className = 'course-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => navigate('/curso/'.concat(course.name)) }> { course.name } </p>

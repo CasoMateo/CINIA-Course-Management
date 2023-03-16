@@ -23,6 +23,7 @@ function Users(props) {
     const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
     const [search, setSearch] = useState();
     const [editUserForm, setEditUserForm] = useState(false);
+    const [userFilter, setUserFilter] = useState();
 
     const getUsersResource = async () => {
         
@@ -285,8 +286,19 @@ function Users(props) {
                 </button>
 
 
-                <div className = 'search-box'>
+                <div className = 'search-box' id = 'search-filter'>
+                    
                     <input type = 'text' placeholder = 'Escriba el nombre del usuario' onChange = { (e) => setSearch(e.target.value) } />
+            
+                    <select class="select-css" onChange = {(e) => setUserFilter(e.target.value)}>
+                        <option value = "">Todos</option>
+                        <option value = 'Jardineria'>Jardineria</option>
+                        <option value = "Limpieza">Limpieza</option>
+                        <option value = "Textil">Textil</option>
+                        <option value = "Acondi.">Acondicionamiento</option>
+                        <option value = "Automocion" >Automocion</option>
+                        <option value = "Administra." >Administrativo</option>
+                    </select>
                     <img src = '/search_button.png' className = 'search-button' /> 
                     <p className = 'add-popup-form' onClick = { () => setAddUserForm(true) }> Añadir <br /> Usuario </p>
                     
@@ -312,7 +324,7 @@ function Users(props) {
                         </div> 
 
                         : users.map(user => {
-                            if (!search || user.username.toLowerCase().includes(search.toLowerCase())) {
+                            if ((!search || user.username.toLowerCase().includes(search.toLowerCase())) && ((!userFilter) || (userFilter == user.area))) {
                                 return (
                                     <div key = { user._id.$oid } className = 'user-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
