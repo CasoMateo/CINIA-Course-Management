@@ -292,11 +292,11 @@ function Users(props) {
             
                     <select class="select-css" onChange = {(e) => setUserFilter(e.target.value)}>
                         <option value = "">Todos</option>
-                        <option value = 'Jardineria'>Jardineria</option>
+                        <option value = 'Jardineria'>Jardinería</option>
                         <option value = "Limpieza">Limpieza</option>
                         <option value = "Textil">Textil</option>
                         <option value = "Acondi.">Acondicionamiento</option>
-                        <option value = "Automocion" >Automocion</option>
+                        <option value = "Automocion" >Automoción</option>
                         <option value = "Administra." >Administrativo</option>
                     </select>
                     <img src = '/search_button.png' className = 'search-button' /> 
@@ -311,7 +311,7 @@ function Users(props) {
                     <p className = 'instance-attribute-header'> Posición </p>
                     <p className = 'instance-attribute-header'> # Empleado </p>
                     <p className = 'instance-attribute-header' id = 'area-header'> Área </p>
-                    <p className = 'instance-attribute-header'> Cursos </p>
+                    <p className = 'instance-attribute-header'> Puesto </p>
 
                 </div>
 
@@ -331,8 +331,8 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
-                                        <p className = 'instance-attribute'> { !user.rank ? Object.keys(user.courses).length : 'NO OPERA'} </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
+                                        <p className = 'instance-attribute'> { user.job } </p>
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
@@ -423,6 +423,11 @@ function Users(props) {
                         </form>
                     </div>
                     <br />
+                    <label className = 'form-label'> Puesto </label>
+                    <br/>
+                    <input className = 'input-field-add' required type="text" placeholder = 'Escriba el puesto' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, job: e.target.value })) }/> 
+                    <br/>
+                    <br />
                     <button type = 'submit' className = 'submit-form'> AÑADIR </button>
                 
                 </form>
@@ -508,6 +513,11 @@ function Users(props) {
                             </div> 
                             </form>
                         </div>
+                        <br />
+                        <label className = 'form-label'> Puesto </label>
+                        <br/>
+                        <input className = 'input-field-add' required type="text" value = { addUserAttributes.job ? addUserAttributes.job : ''} placeholder = 'Escriba el puesto' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, job: e.target.value })) }/> 
+                        <br/>
                         <br />
                         <button type = 'submit' className = 'submit-form'> EDITAR </button>
                     

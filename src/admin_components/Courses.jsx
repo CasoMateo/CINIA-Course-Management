@@ -291,11 +291,11 @@ function Courses(props) {
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
                     <select class="select-css" onChange = {(e) => setCourseFilter(e.target.value)}>
                         <option value = "">Todos</option>
-                        <option value = 'Jardineria'>Jardineria</option>
+                        <option value = 'Jardineria'>Jardinería</option>
                         <option value = "Limpieza">Limpieza</option>
                         <option value = "Textil">Textil</option>
                         <option value = "Acondi.">Acondicionamiento</option>
-                        <option value = "Automocion" >Automocion</option>
+                        <option value = "Automocion" >Automoción</option>
                         <option value = "Administra." >Administrativo</option>
                     </select>
                     <img src = '/search_button.png' className = 'search-button' /> 

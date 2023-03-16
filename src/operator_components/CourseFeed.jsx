@@ -139,7 +139,7 @@ function CourseFeed(props) {
 
                 }
 
-                <div className = 'search-box'>
+                <div className = 'search-box' id = 'search-box-no-filters'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
                     <img src = '/search_button.png' className = 'search-button' /> 
 
@@ -159,7 +159,7 @@ function CourseFeed(props) {
                                 return (
                                     <div className = 'operator-course-instance' id = { course.stage2 && 'completed-course' } onClick = { () => handleExploreCourse(course)}> 
                                         <p className = 'instance-attribute' id = 'course-feed-instance'> <b> { course.name } </b> </p>
-                                        <p className = 'instance-attribute' id = 'course-feed-instance'> { (course.stage1 && course.stage2) ? 'Completado' : 'En progreso...' }</p>
+                                        <p className = 'instance-attribute' id = 'course-feed-instance'> { (course.stage1 && course.stage2) ? 'Completado' : (course.stage1 ? '1 de 2 etapas completadas' : 'Sin progreso') }</p>
                                     </div>
                                 );
                             }

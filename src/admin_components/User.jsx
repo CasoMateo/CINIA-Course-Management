@@ -15,7 +15,7 @@ function User(props) {
     const [retrievedUser, setRetrievedUser] = useState(false); 
     const [changedPassword, setChangedPassword] = useState();
     const [hiddenMenu, setHiddenMenu] = useState(false);
-    const [user, setUser] = useState({ 'name': '', 'rank': false, 'area': '', 'courses': [] });
+    const [user, setUser] = useState({ 'name': '', 'job': '', 'rank': false, 'area': '', 'courses': [] });
     const [verifyRef, setVerifyRef] = useState(false); 
 
     const getUserResource = async () => {
@@ -114,7 +114,7 @@ function User(props) {
             </div>
 
             <div className = 'main-page'>
-              <h5 className = 'course-header'> { user.username } </h5> 
+              <h5 className = 'course-header' id = 'user-header-job'> { user.username + " - " + user.job} </h5> 
 
               <form className = 'change-phone-form' onSubmit = { (event) => handleChangePassword(event) }>
                 <label className = 'change-phone-label'> <b> Cambiar contraseña </b> </label> 

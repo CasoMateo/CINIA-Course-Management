@@ -19,6 +19,7 @@ function ExploreCourse(props) {
     const [hiddenMenu, setHiddenMenu] = useState(false);
     const [answers, setAnswers] = useState();
     const [verifyRef, setVerifyRef] = useState(false);
+    const [stage1Page, setStage1Page] = useState(0);
     
     const getUserResource = async () => {
         
@@ -47,6 +48,7 @@ function ExploreCourse(props) {
         response.user.courses.forEach(course => {
             if (course.name == params.cur_operator_course) {
                 setUserCourseInfo(course);
+                setStage1Page(course.stage1);
             } 
         });
     };
@@ -141,7 +143,7 @@ function ExploreCourse(props) {
             const response = await promise.json();
             
             if ((!response.completedStage) || (promise.status != 200)) {
-                alert('Uy reprobaste este curso :(, si tienes dudas habla con tu supervisor para que te diga qué puedes hacer');
+                alert('Uy reprobaste este curso :(. Lo tienes que hacer otra vez. Si tienes dudas habla con tu supervisor para que te diga qué puedes hacer');
             } else {
                 alert('¡Felicidades! tienes todo lo que se necesita ;)');
             }  
@@ -189,7 +191,7 @@ function ExploreCourse(props) {
             <div className = 'main-page' id = 'course-explore-page'>
                 
                 {
-                    !userCourseInfo.stage1 
+                    !stage1Page
                     ? 
                     <div className = 'stage1-info'> 
                         <h5 className = 'course-header'> Recursos </h5>
@@ -210,7 +212,7 @@ function ExploreCourse(props) {
                         <div className = { !hiddenMenu ? 'corner-popup-aid' : 'display-false' }>
 
                             <div className = 'corner-popup'> 
-                                <p className = 'stage-button-info' onClick = { (event) => handleCompleteFirstStage(event) }> Hacer evaluación </p>
+                                <p className = 'stage-button-info' onClick = { (event) => { handleCompleteFirstStage(event); setStage1Page(true); }}> Hacer evaluación </p>
                             </div> 
 
                         </div>
@@ -219,6 +221,7 @@ function ExploreCourse(props) {
                     <div className = 'stage2-info'> 
                         <h5 className = 'course-header'> Evaluación </h5>
                         <p className = 'course-description'> { course.descriptionStage2 } </p>
+                        <button className = 'submit-form' id = 'go-back' onClick = { () => setStage1Page(false) }> Regresar</button>
                         <form className = 'course-evaluation' onSubmit = { (event) => handleCompleteSecondStage(event) }>
                             {
                                 course.questions.map(question => {
@@ -252,12 +255,13 @@ function ExploreCourse(props) {
 
                             
                             <button className = 'submit-form' id = 'submit-course' type = 'submit'> Completar curso </button>
-                            
-                        </form>
-                        
-                    </div>
-                }
 
+                        </form>
+                    </div>
+
+                    
+                }
+                
             </div>
 
             <div className = { verifyRef ? 'verify-button' : 'display-false' } >
