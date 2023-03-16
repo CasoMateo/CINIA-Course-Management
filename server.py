@@ -38,6 +38,7 @@ class User(BaseModel):
   phone_number: Optional[int]
   rank: bool
   area: str 
+  job: str
 
 class Course(BaseModel):
   name: str
@@ -96,6 +97,7 @@ class changeUser(BaseModel):
   phone_number: Optional[int]
   rank: bool
   area: str 
+  job: str
   password: Optional[str]
 
 def getCookie(cname, ccookies):
@@ -224,7 +226,7 @@ def addUser(request: Request, user: User):
     
     content = {'addedUser': False}
     password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
-    newUser = { 'username': user.username, 'password': password, 'employee_number': user.employee_number, 'phone_number': user.phone_number, 'area': user.area, 'rank': user.rank, 'courses': [] } 
+    newUser = { 'username': user.username, 'password': password, 'employee_number': user.employee_number, 'phone_number': user.phone_number, 'area': user.area, 'job': user.job, 'rank': user.rank, 'courses': [] } 
     
     if user.username and user.password and user.area and user.employee_number:
         if not users.find_one({ 'username': user.username }): 
