@@ -332,7 +332,7 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
                                         <p className = 'instance-attribute'> { user.job } </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
@@ -469,13 +469,13 @@ function Users(props) {
                         <div>
                             <form> 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" 
+                                <input checked = { addUserAttributes.rank } name = 'level' type="radio" 
                                         required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: true })) } />
                                 <label>Admin.</label>
                             </div>
 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) } />
+                                <input checked = { !addUserAttributes.rank } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, rank: false})) } />
                                 <label >Operador</label>
                             </div>
                             </form>
@@ -486,29 +486,29 @@ function Users(props) {
                         <div>
                             <form>
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" 
+                                <input checked = { addUserAttributes.area == "Jardineria" } name = 'level' type="radio" 
                                         required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Jardineria'})) }/>
                                 <label>Jardinería</label>
                             </div>
 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Limpieza'})) }/>
+                                <input checked = { addUserAttributes.area == "Limpieza" } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Limpieza'})) }/>
                                 <label >Limpieza</label>
                             </div> 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Textil'})) }/>
+                                <input checked = { addUserAttributes.area == "Textil" } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Textil'})) }/>
                                 <label >Textil</label>
                             </div> 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Acondi.'})) }/>
+                                <input checked = { addUserAttributes.area == "Acondi." } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Acondi.'})) }/>
                                 <label >Acondicionamiento</label>
                             </div> 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automocion'})) }/>
+                                <input checked = { addUserAttributes.area == "Automocion" } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Automocion'})) }/>
                                 <label >Automoción</label>
                             </div> 
                             <div className = 'radio-option'>
-                                <input name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Administra.'})) }/>
+                                <input checked = { addUserAttributes.area == "Administra." } name = 'level' type="radio" required onChange = { () => setAddUserAttributes(prevState => ({ ...prevState, area: 'Administra.'})) }/>
                                 <label >Administrativo</label>
                             </div> 
                             </form>
