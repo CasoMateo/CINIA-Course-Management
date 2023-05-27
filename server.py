@@ -555,12 +555,32 @@ async def getCSV(request: Request):
     writer.writerow(headers) 
 
     for user in [user for user in users.find()]: 
-      filtered = [user['username'], user['rank'], user['area'], user.get('phone_number')]
+
+      rank = ""
+
+      if user['rank']: 
+        rank = "Admin."
+      else:
+        rank = "Operador"
+
+      filtered = [user['username'], rank, user['area'], user.get('phone_number')]
 
       for course in user['courses']: 
+        stage1 = ""
+        stage2 = ""
+        if course['stage1']:
+          stage1 = "Capacitado"
+        else:
+          stage1 = "No capacitado"
+
+        if course['stage2']:
+          stage2 = course['stage2'] * 100
+        else:
+          stage2 = "No aprobado"
+
         filtered.append(course['name']) 
-        filtered.append(course['stage1'])
-        filtered.append(course['stage2'] * 100)  
+        filtered.append(stage1)
+        filtered.append(stage2)  
        
       writer.writerow(filtered)
 
