@@ -574,9 +574,9 @@ async def getCSV(request: Request):
           stage1 = "No capacitado"
 
         if course['stage2']:
-          stage2 = course['stage2'] * 100
+          stage2 = "Aprobado con" + (course['stage2'] * 100)
         else:
-          stage2 = "No aprobado"
+          stage2 = "Reprobado"
 
         filtered.append(course['name']) 
         filtered.append(stage1)
