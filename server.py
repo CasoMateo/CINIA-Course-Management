@@ -94,7 +94,7 @@ class changeUser(BaseModel):
   prevUsername: str
   username: str
   employee_number: int
-  phone_number: Optional[int]
+  phone_number: Optional[str]
   rank: bool
   area: str 
   job: str
