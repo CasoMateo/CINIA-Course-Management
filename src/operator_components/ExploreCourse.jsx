@@ -23,7 +23,7 @@ function ExploreCourse(props) {
     
     const getUserResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-user/'.concat(username);
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-user/'.concat(username);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -55,7 +55,7 @@ function ExploreCourse(props) {
 
     const getCourseResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-course/'.concat(params.cur_operator_course);
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-course/'.concat(params.cur_operator_course);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -98,7 +98,7 @@ function ExploreCourse(props) {
 
         const completeFirstStageResource = async () => {
             
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/complete-first-stage', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/complete-first-stage', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -130,7 +130,7 @@ function ExploreCourse(props) {
         event.preventDefault();
         const completeSecondStageResource = async () => {
             
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/complete-second-stage', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/complete-second-stage', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',

@@ -27,7 +27,7 @@ function CourseFeed(props) {
 
     const getUserResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-user/'.concat(username);
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-user/'.concat(username);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -60,7 +60,7 @@ function CourseFeed(props) {
           return;
         }
     
-        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-messages', { 
+        const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-messages', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie

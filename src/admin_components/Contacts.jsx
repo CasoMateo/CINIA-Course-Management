@@ -35,7 +35,7 @@ function Contacts(props) {
           return;
         }
     
-        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-contacts', { 
+        const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-contacts', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -96,7 +96,7 @@ function Contacts(props) {
         event.target.reset();
 
         const addContactResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-contact', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/add-contact', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -137,7 +137,7 @@ function Contacts(props) {
         event.target.reset();
 
         const addMessageResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-message', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/add-message', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -171,7 +171,7 @@ function Contacts(props) {
 
     const handleDeleteContact = () => {
         const deleteContactResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-contact', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/delete-contact', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
@@ -205,7 +205,7 @@ function Contacts(props) {
     const handleDeleteMessage = () => {
 
         const deleteMessageResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-message', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/delete-message', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
@@ -242,7 +242,7 @@ function Contacts(props) {
         console.log(addContactAttributes);
         
         const changeContactResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-contact', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/change-contact', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -278,7 +278,7 @@ function Contacts(props) {
     const handleChangeMessage = (event) => {
 
         const changeContactResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-message', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/change-message', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',

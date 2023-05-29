@@ -20,7 +20,7 @@ function User(props) {
 
     const getUserResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-user/'.concat(params.cur_user);
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-user/'.concat(params.cur_user);
         const promise = await fetch(url, {
           method: 'GET',
           headers: {
@@ -51,7 +51,7 @@ function User(props) {
 
       const changePasswordResource = async () => {
         
-        const url = 'https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-password';
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/change-password';
         const promise = await fetch(url, {
           method: 'POST',
           headers: {

@@ -26,7 +26,7 @@ const AuthContextProvider = (props) => {
 
     if (!retrievedAuth) {
 
-        fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/is-logged-in', {
+        fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/is-logged-in', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -35,7 +35,7 @@ const AuthContextProvider = (props) => {
             }
         }).then(response => setStatus(response.status == 200)); 
 
-        fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/is-privileged', {
+        fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/is-privileged', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -59,7 +59,7 @@ const AuthContextProvider = (props) => {
         const loginResource = async (username, password) => {
           
 
-          const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/login', {
+          const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/login', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',

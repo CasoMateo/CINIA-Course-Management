@@ -31,7 +31,7 @@ function Users(props) {
           return;
         }
     
-        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/get-users', { 
+        const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-users', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -56,7 +56,7 @@ function Users(props) {
 
     const getCSVResource = async () => {
         
-        const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/users-csv-file', { 
+        const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/users-csv-file', { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -104,7 +104,7 @@ function Users(props) {
         addUserAttributes.password = addUserAttributes.password.trimEnd();
 
         const addUserResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/add-user', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/add-user', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -144,7 +144,7 @@ function Users(props) {
 
     const handleRemoveUser = (username) => {
         const deleteUserResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/delete-user', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/delete-user', {
               method: 'DELETE',
               headers: {
                 'Accept': 'application/json',
@@ -199,7 +199,7 @@ function Users(props) {
         
         console.log(addUserAttributes);
         const changeUserResource = async () => {
-            const promise = await fetch('https://jt6z2tunnora6oi6u6x37zl3cq0rgqwq.lambda-url.us-west-2.on.aws/change-user', {
+            const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/change-user', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
