@@ -60,6 +60,7 @@ function ContactFeed(props) {
                 
                     <p className = 'sidebar-option' onClick = { () => navigate('/operador') }> Cursos </p>
                     <p className = 'sidebar-option' id = 'selected-page'> Contactos </p>
+                    <p className = 'sidebar-option' onClick = { () => navigate('/preguntasfrecuentes') }> Preguntas frecuentes </p>
                     
                 </div>
 

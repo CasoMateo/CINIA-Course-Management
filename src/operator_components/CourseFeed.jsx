@@ -105,6 +105,7 @@ function CourseFeed(props) {
                 <div className = 'sidebar-options'> 
                     <p className = 'sidebar-option' id = 'selected-page'> Cursos </p>
                     <p className = 'sidebar-option' onClick = { () => navigate('/contactos') }> Contactos </p>
+                    <p className = 'sidebar-option' onClick = { () => navigate('/preguntasfrecuentes') }> Preguntas frecuentes </p>
               
                 </div>
 
