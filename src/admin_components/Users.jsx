@@ -24,6 +24,8 @@ function Users(props) {
     const [search, setSearch] = useState();
     const [editUserForm, setEditUserForm] = useState(false);
     const [userFilter, setUserFilter] = useState();
+    const [file, setFile] = useState();
+
 
     const getUsersResource = async () => {
         
@@ -196,8 +198,6 @@ function Users(props) {
         
         addUserAttributes.prevUsername = editUserForm; 
 
-        
-        console.log(addUserAttributes);
         const changeUserResource = async () => {
             const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/change-user', {
               method: 'POST',
@@ -280,10 +280,15 @@ function Users(props) {
                     los cursos asignados, y los contactos proporcionados aquí...
                 </p>
 
-                
-                <button className = 'download-button' onClick = { () => getCSVResource() }>
-                    Descargar la base de datos 
-                </button>
+                <div className = "download-upload">
+                    <button className = 'download-button' onClick = { () => getCSVResource() }>
+                        Descargar la base de datos 
+                    </button>
+                    <div className = 'carga-masiva'>
+                    <a id = "massive-upload" href = "https://docs.google.com/presentation/d/1DomHlusf2Hewl-ekZSPU6TAuKu8C2JYsLFWTSiiSb3U/edit?usp=sharing" target = "new" for = "file-upload"> Carga masiva tutorial </a>
+                    <a id = "massive-upload" href = "https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/docs" target = "new" for = "file-upload"> Listo </a>
+                    </div>
+                </div>
 
 
                 <div className = 'search-box' id = 'search-filter'>
@@ -301,8 +306,7 @@ function Users(props) {
                     </select>
                     <img src = '/search_button.png' className = 'search-button' /> 
                     <p className = 'add-popup-form' onClick = { () => setAddUserForm(true) }> Añadir <br /> Usuario </p>
-                    
-                    
+                                        
 
                 </div>
 
@@ -323,8 +327,10 @@ function Users(props) {
                             No hay usuarios disponibles
                         </div> 
 
-                        : users.map(user => {
-                            if ((!search || user.username.toLowerCase().includes(search.toLowerCase())) && ((!userFilter) || (userFilter == user.area))) {
+                        : users.slice(0)
+                        .reverse()
+                        .map((user, index) => {
+                            if ((index < 3 && (!search || user.username.toLowerCase().includes(search.toLowerCase())) && ((!userFilter) || (userFilter == user.area))) || (search && user.username.toLowerCase().includes(search.toLowerCase()))) {
                                 return (
                                     <div key = { user._id.$oid } className = 'user-instance'> 
                                         <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
@@ -336,9 +342,13 @@ function Users(props) {
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
-                            }
+                            } 
                         })
                     }
+                </div>
+
+                <div className = "find-more-users">
+                    Para encontrar a más usuarios, usa la barra de busqueda...
                 </div>
 
             </div>
