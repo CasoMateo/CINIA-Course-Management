@@ -1,5 +1,5 @@
 from typing import Optional
-from fastapi import Cookie, FastAPI, HTTPException, Request
+from fastapi import Cookie, FastAPI, HTTPException, Request, File, UploadFile
 from fastapi.testclient import TestClient
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,10 +17,10 @@ from mangum import Mangum
 
 app = FastAPI()
 handler = Mangum(app)
-app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'minute': datetime.now() } 
+app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'uploadFile': 0, 'minute': datetime.now() } 
 
 
-cluster = MongoClient(os.environ.get("CONNECTION_TO_DB"))
+cluster = MongoClient("mongodb+srv://InventoryManager:CasMat2*<>@proyectogabrielpastor.hfvj9.mongodb.net/?retryWrites=true&w=majority")
 db = cluster['InventoryManagement']
 users = db['operators']
 courses = db['courses']
@@ -34,8 +34,8 @@ class Payload(BaseModel):
 class User(BaseModel):
   username: str
   password: str 
-  employee_number: int
-  phone_number: Optional[int]
+  employee_number: str
+  phone_number: Optional[str]
   rank: bool
   area: str 
   job: str
@@ -93,7 +93,7 @@ class changeContact(BaseModel):
 class changeUser(BaseModel): 
   prevUsername: str
   username: str
-  employee_number: int
+  employee_number: str
   phone_number: Optional[str]
   rank: bool
   area: str 
@@ -131,11 +131,32 @@ def checkRateLimit(name, limit):
     current_time = datetime.now()
     
     if (current_time - app.rates['minute']).total_seconds() / 60 > 1: 
-      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'minute': current_time } 
+      app.rates = { 'login': 0, 'getUsers': 0, 'getUser': 0, 'addUser': 0, 'deleteUser': 0, 'getCourses': 0, 'getCourse': 0, 'addCourse': 0, 'deleteCourse': 0, 'reassignCourse': 0, 'completeFirst': 0, 'completeSecond': 0, 'summaryFirst': 0, 'summarySecond': 0, 'changePhone': 0, 'getContacts': 0, 'addContact': 0, 'deleteContact': 0, 'getCSV': 0, 'addMessage': 0, 'getMessages': 0, 'deleteMessage': 0, 'changeMessage': 0, 'changeContact': 0, 'changeUser': 0, 'changePassword': 0, 'changeCourse': 0, 'uploadFile': 0, 'minute': current_time } 
     else: 
       return True
   
   return False
+
+def add_User(username, password, employee_number, phone_number, area, job, rank):
+    
+    content = {'addedUser': False}
+    password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
+    newUser = { 'username': username, 'password': password, 'employee_number': employee_number, 'phone_number': phone_number, 'area': area, 'job': job, 'rank': rank, 'courses': [] } 
+    
+    if not users.find_one({ 'username': username }): 
+        
+        users.insert_one(newUser)
+        content['addedUser'] = True 
+        
+        if not newUser['rank']:
+          needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': area }, { 'area': 'General' } ] })]
+          for course in needed_courses: 
+            users.update_one({ 'username': username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
+
+    if not content['addedUser']: 
+        return False
+    
+    return True
 
 @app.post("/login", status_code = 200) 
 def login(request: Request, user: Payload): 
@@ -225,19 +246,7 @@ def addUser(request: Request, user: User):
       raise HTTPException(status_code=401, detail="Unauthorized") 
     
     content = {'addedUser': False}
-    password = bcrypt.hashpw(user.password.encode('utf8'), bcrypt.gensalt())
-    newUser = { 'username': user.username, 'password': password, 'employee_number': user.employee_number, 'phone_number': user.phone_number, 'area': user.area, 'job': user.job, 'rank': user.rank, 'courses': [] } 
-    
-    if user.username and user.password and user.area and user.employee_number:
-        if not users.find_one({ 'username': user.username }): 
-            users.insert_one(newUser)
-            content['addedUser'] = True 
-
-            if not newUser['rank']:
-              needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': user.area }, { 'area': 'General' } ] })]
-              for course in needed_courses: 
-                users.update_one({ 'username': user.username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
-
+    content['addedUser'] = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.job, user.rank)
     if not content['addedUser']: 
         raise HTTPException(status_code=400, detail="Invalid request")
     
@@ -773,3 +782,38 @@ def changeCourse(request: Request, course: Course):
         users.insert_one(actual)
 
   return JSONResponse(content = { 'changedCourse': True })
+
+@app.post('/carga-masiva', status_code = 200)
+async def uploadFile(request: Request, file: UploadFile = File(...)): 
+
+  if checkRateLimit('uploadFile', 2): 
+    raise HTTPException(status_code=429, detail="Acabas de subir un archivo, espera un poco")
+
+  if not file.filename.lower().endswith('.csv'):
+    raise HTTPException(status_code=400, detail="Sube un archivo csv")
+
+  contents = await file.read()
+  decoded = contents.decode()
+  csv_reader = csv.reader(decoded.splitlines(), delimiter=',')
+
+  for row in csv_reader: 
+    if len(row) != 7:
+      raise HTTPException(status_code=400, detail="Todas las lineas deben de tener 7 elementos") 
+      
+    username, password, rank, employee_number, phone_number, area, job = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+    
+    if area not in ["Jardineria", "Limpieza", "Textil", "Acondi.", "Automocion", "Administra."]:
+      raise HTTPException(status_code=400, detail="Una de las areas es incorrecta") 
+
+    if rank == "TRUE" or rank == "VERDADERO": 
+      rank = True
+    else: 
+      rank = False
+    
+    res = add_User(username, password, employee_number, phone_number, area, job, rank)
+    
+    if not res: 
+      raise HTTPException(status_code=400, detail="Error - Es probable que algunos usuarios ya estuvieran cargados") 
+
+  return JSONResponse(content = {'uploadedFile': True})
+  
