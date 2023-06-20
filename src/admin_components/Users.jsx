@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import '../index.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext'; 
-import fileDownload from 'js-file-download'
+import fileDownload from 'js-file-download';
+import Papa from 'papaparse';
 
 function Users(props) {
 
@@ -25,6 +26,7 @@ function Users(props) {
     const [editUserForm, setEditUserForm] = useState(false);
     const [userFilter, setUserFilter] = useState();
     const [file, setFile] = useState();
+    const [massiveUpload, setMassiveUpload] = useState([]);
 
 
     const getUsersResource = async () => {
@@ -248,6 +250,73 @@ function Users(props) {
         setVerifyRef(false);
     }
 
+    const handleFileChange = (event) => {
+        if (event.target.files) {
+            setFile(event.target.files[0]);
+        }
+    };
+    const handleUploadFile = (event) => {
+        event.preventDefault();
+        
+        Papa.parse(file, {
+            complete: (parsedData) => {
+              const rows = parsedData.data;
+              const parsedRows = rows.map((row) => {
+                
+                if (row.length != 7) {
+                    alert("Todas las lineas deben de tener 7 elementos");
+                    return;
+                }
+
+                if (!(["Jardineria", "Limpieza", "Textil", "Acondi.", "Automocion", "Administra."]).includes(row[5])) {
+                    alert("Una de las areas es incorrecta");
+                    return;
+                }
+      
+                var rank_;
+
+                if (row[2] == "TRUE" || row[2] == "VERDADERO") {
+                    rank_ = true;
+                }
+                else {
+                    rank_ = false;
+                }
+
+                
+                const rowData = { 'username': row[0], 'password': row[1], 'rank': rank_, 'employee_number': row[3], 'phone_number': row[4], 'area': row[5], 'job': row[6] };
+                return rowData;
+              });
+
+              fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/upload-file', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': "application/json",
+                    'Cookies': document.cookie,
+                },
+                body: JSON.stringify(parsedRows),
+              })
+                .then((response) => response.json())
+                .then((responseData) => {
+                    
+                    if (!responseData.uploadedFile) {
+                        alert('El archivo contiene un error.');
+                    return;
+                    } else {
+                        setRetrievedUsers(false);
+                    }
+                  
+                })
+            },
+            header: false, 
+          });
+           
+        }
+            
+        
+        
+        
+
     return (
         <div> 
             <div className = 'sidebar'>
@@ -284,10 +353,12 @@ function Users(props) {
                     <button className = 'download-button' onClick = { () => getCSVResource() }>
                         Descargar la base de datos 
                     </button>
-                    <div className = 'carga-masiva'>
-                    <a id = "massive-upload" href = "https://docs.google.com/presentation/d/1DomHlusf2Hewl-ekZSPU6TAuKu8C2JYsLFWTSiiSb3U/edit?usp=sharing" target = "new" for = "file-upload"> Carga masiva tutorial </a>
-                    <a id = "massive-upload" href = "https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/docs" target = "new" for = "file-upload"> Listo </a>
-                    </div>
+                    <form id = "massive-upload" onSubmit = { (event) => handleUploadFile(event) }>
+                        <a id = 'massive-upload' href = "https://docs.google.com/presentation/d/1DomHlusf2Hewl-ekZSPU6TAuKu8C2JYsLFWTSiiSb3U/edit?usp=sharing" target = "new" for = "file-upload"> Carga masiva tutorial </a>
+                        <input required id = "file-upload" type = "file" accept = ".csv" onChange = { (event) => handleFileChange(event) } />
+                        <button type = 'submit' className = 'submit-form' id = "upload-file-button"> SUBIR </button>
+                    </form>
+
                 </div>
 
 
@@ -338,7 +409,7 @@ function Users(props) {
                                         <p className = 'instance-attribute'> { user.employee_number } </p>
                                         <p className = 'instance-attribute'> { user.area } </p>
                                         <p className = 'instance-attribute'> { user.job } </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); console.log(addUserAttributes); }}/> 
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); }}/> 
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                     </div>
                                 )
