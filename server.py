@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import Cookie, FastAPI, HTTPException, Request, File, UploadFile
 from fastapi.testclient import TestClient
 from fastapi.responses import JSONResponse, FileResponse
@@ -816,4 +816,17 @@ async def uploadFile(request: Request, file: UploadFile = File(...)):
       raise HTTPException(status_code=400, detail="Error - Es probable que algunos usuarios ya estuvieran cargados") 
 
   return JSONResponse(content = {'uploadedFile': True})
+
+@app.post('/upload-file', status_code = 200)
+async def uploadFile(request: Request, users: List[User]): 
+
+  if checkRateLimit('uploadFile', 2): 
+    raise HTTPException(status_code=429, detail="Acabas de subir un archivo, espera un poco")
+
+  for user in users: 
+    res = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.job, user.rank)
+    
+    if not res: 
+      raise HTTPException(status_code=400, detail="Error - Es probable que algunos usuarios ya estuvieran cargados") 
   
+  return JSONResponse(content = {'uploadedFile': True})
