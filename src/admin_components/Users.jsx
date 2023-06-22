@@ -300,7 +300,7 @@ function Users(props) {
                 .then((responseData) => {
                     
                     if (!responseData.uploadedFile) {
-                        alert('El archivo contiene un error.');
+                        alert('El archivo contiene un error. Es probable que haya usuarios duplicados o que ya se hayan añadido.');
                     return;
                     } else {
                         setRetrievedUsers(false);
@@ -353,7 +353,7 @@ function Users(props) {
                     <button className = 'download-button' onClick = { () => getCSVResource() }>
                         Descargar la base de datos 
                     </button>
-                    
+
                     <form id = "massive-upload" onSubmit = { (event) => handleUploadFile(event) }>
                         <a id = 'massive-upload' href = "https://docs.google.com/presentation/d/1DomHlusf2Hewl-ekZSPU6TAuKu8C2JYsLFWTSiiSb3U/edit?usp=sharing" target = "new" for = "file-upload"> Carga masiva tutorial </a>
                         <input required id = "file-upload" type = "file" accept = ".csv" onChange = { (event) => handleFileChange(event) } />

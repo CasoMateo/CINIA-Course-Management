@@ -78,7 +78,7 @@ function ContactFeed(props) {
             <div className = 'main-page'>
 
                 <p className = 'welcome-contacts'>
-                    ¡<b> Haz click </b> en la gerencia que quieras contactar!
+                    ¡<b> Haz click </b> en el área que quieras contactar!
                 </p>
 
                 <div className = 'contact-list'>
