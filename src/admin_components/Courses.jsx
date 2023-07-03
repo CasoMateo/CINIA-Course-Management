@@ -22,6 +22,7 @@ function Courses(props) {
     const [threshold, setThreshold] = useState();
     const [descriptionStage1, setDescriptionStage1] = useState();
     const [descriptionStage2, setDescriptionStage2] = useState();
+    const [job, setJob] = useState();
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState(); 
     const [reassignedCourse, setReassignedCourse] = useState();
@@ -95,7 +96,7 @@ function Courses(props) {
             alert('La calificación tiene que estar entre 1 y 10');
         }
 
-        const properties = { 'name': name.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
+        const properties = { 'name': name.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold, 'job': job};
         const addCourseResource = async () => {
             const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/add-course', {
               method: 'POST',
@@ -169,7 +170,7 @@ function Courses(props) {
 
     const handleEditCourse = (event) => {
         event.preventDefault(); 
-        const properties = { 'name': name.trimEnd(), 'prevName': prevName.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold};
+        const properties = { 'name': name.trimEnd(), 'prevName': prevName.trimEnd(), 'area': area, 'descriptionStage1': descriptionStage1, 'descriptionStage2': descriptionStage2, 'resources': resources, 'questions': questions, 'threshold': threshold, 'job': job};
         console.log(properties);
 
         if (threshold <= 0 || threshold > 10) {
@@ -330,8 +331,8 @@ function Courses(props) {
                                         <p className = 'instance-attribute' id = 'threshold-attribute'> { course.threshold } </p>
                                         <p className = 'instance-attribute'> { course.date } </p>
                                         <img id = 'trash-button-courses' className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditCourseForm(true); setPrevName(course.name); setName(course.name); setArea(course.area); setThreshold(course.threshold); setDescriptionStage1(course.descriptionStage1); setDescriptionStage2(course.descriptionStage2); setResources(course.resources); setQuestions(course.questions); } }/>
-                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area })) } } /> 
+                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditCourseForm(true); setPrevName(course.name); setName(course.name); setArea(course.area); setThreshold(course.threshold); setDescriptionStage1(course.descriptionStage1); setDescriptionStage2(course.descriptionStage2); setResources(course.resources); setQuestions(course.questions); setJob(course.job); } }/>
+                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area, job: course.job })) } } /> 
                                     </div>
                                 )
                             }
@@ -396,7 +397,12 @@ function Courses(props) {
                             <label >General</label>
                         </div> 
                     </div>
+                    
                     <br />
+                    <label className = 'form-label'> Puesto </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba la descripción' onChange = { (e) => setJob(e.target.value) }/> 
+                    <br/>
                     <br />
                     <label className = 'form-label'> Instrucciones de Capacitación </label>
                     <br/>
@@ -538,6 +544,10 @@ function Courses(props) {
                         </div> 
                     </div>
                     <br />
+                    <label className = 'form-label'> Puesto </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" value = { job } placeholder = 'Escriba la descripción' onChange = { (e) => setJob(e.target.value) }/> 
+                    <br/>
                     <br />
                     <label className = 'form-label'> Instrucciones de Capacitación </label>
                     <br/>
