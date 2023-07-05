@@ -399,23 +399,31 @@ function Users(props) {
                             No hay usuarios disponibles
                         </div> 
 
-                        : users.slice(0)
+                        : 
+                        
+                        users.slice(0)
                         .reverse()
-                        .map((user, index) => {
-                            if ((index < 3 && (!search || user.username.toLowerCase().includes(search.toLowerCase())) && ((!userFilter) || (userFilter == user.area))) || (search && user.username.toLowerCase().includes(search.toLowerCase()))) {
-                                return (
-                                    <div key = { user._id.$oid } className = 'user-instance'> 
-                                        <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
-                                        <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
-                                        <p className = 'instance-attribute'> { user.employee_number } </p>
-                                        <p className = 'instance-attribute'> { user.area } </p>
-                                        <p className = 'instance-attribute'> { user.job } </p>
-                                        <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); }}/> 
-                                        <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
-                                    </div>
-                                )
-                            } 
+                        .filter((user) => {
+                            return (
+                            (!search || user.username.toLowerCase().includes(search.toLowerCase())) &&
+                            (!userFilter || userFilter === user.area)
+                            );
                         })
+                        .slice(0, 3)
+                        .map((user) => {
+                            return (
+                                <div key = { user._id.$oid } className = 'user-instance'> 
+                                    <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
+                                    <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
+                                    <p className = 'instance-attribute'> { user.employee_number } </p>
+                                    <p className = 'instance-attribute'> { user.area } </p>
+                                    <p className = 'instance-attribute'> { user.job } </p>
+                                    <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); }}/> 
+                                    <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
+                                </div>
+                        )})
+
+                        
                     }
                 </div>
 

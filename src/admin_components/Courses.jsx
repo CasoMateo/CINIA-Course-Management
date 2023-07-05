@@ -330,7 +330,7 @@ function Courses(props) {
                                         <p className = 'instance-attribute'> { course.area } </p>
                                         <p className = 'instance-attribute' id = 'threshold-attribute'> { course.threshold } </p>
                                         <p className = 'instance-attribute'> { course.date } </p>
-                                        <img id = 'trash-button-courses' className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name })) } } />
+                                        <img id = 'trash-button-courses' className = 'trash-button-user' src = '/refresh_button.png' alt = 'Refresh button' onClick = { () => { setVerifyRef(true); setReassignedCourse(prevState => ({ ...prevState, name : course.name, area: course.area, job: course.job })) } } />
                                         <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditCourseForm(true); setPrevName(course.name); setName(course.name); setArea(course.area); setThreshold(course.threshold); setDescriptionStage1(course.descriptionStage1); setDescriptionStage2(course.descriptionStage2); setResources(course.resources); setQuestions(course.questions); setJob(course.job); } }/>
                                         <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setVerifyRef(true); setDeletedCourse(prevState => ({ ...prevState, name : course.name, area: course.area, job: course.job })) } } /> 
                                     </div>
@@ -513,33 +513,33 @@ function Courses(props) {
                     <br/>
                     <div>
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" 
+                            <input checked = { area == "Jardineria" } name = 'level' type="radio" 
                                     required onChange = { () => setArea('Jardineria') }/>
                             <label>Jardinería</label>
                         </div>
 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Limpieza') }/>
+                            <input checked = { area == "Limpieza" } name = 'level' type="radio" required onChange = { () => setArea('Limpieza') }/>
                             <label >Limpieza</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Textil') }/>
+                            <input checked = { area == "Textil" } name = 'level' type="radio" required onChange = { () => setArea('Textil') }/>
                             <label >Textil</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Acondi.') }/>
+                            <input checked = { area == "Acondi." } name = 'level' type="radio" required onChange = { () => setArea('Acondi.') }/>
                             <label >Acondicionamiento</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Automocion') }/>
+                            <input checked = { area == "Automocion" } name = 'level' type="radio" required onChange = { () => setArea('Automocion') }/>
                             <label >Automoción</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('Administra.') }/>
+                            <input checked = { area == "Administra." } name = 'level' type="radio" required onChange = { () => setArea('Administra.') }/>
                             <label >Administrativo</label>
                         </div> 
                         <div className = 'radio-option'>
-                            <input name = 'level' type="radio" required onChange = { () => setArea('General') }/>
+                            <input checked = { area == "General" } name = 'level' type="radio" required onChange = { () => setArea('General') }/>
                             <label >General</label>
                         </div> 
                     </div>
