@@ -696,25 +696,17 @@ def changeUser(request: Request, user: changeUser):
   else:
     cur_courses = []
 
-    if target['rank']: 
-      for course in courses.find():
-        actual = dict(course)
-        if actual['area'] == prototype['area'] or actual['area'] == 'General' or actual['job'] == prototype['job']:
-          cur_courses.append({ 'name': actual['name'], 'stage1': False, 'stage2': False })
-
-    else: 
-      
-      for course in target['courses']:
+    for course in target['courses']:
         actual = dict(courses.find_one({'name': course['name']}))
         if actual['area'] == prototype['area'] or actual['area'] == 'General' or actual['job'] == prototype['job']:
           cur_courses.append(course)
-    
-      if prototype['area'] != target['area'] or prototype['job'] != target['job']: 
-        for course in courses.find():
-          actual = dict(course)
-          if actual['area'] == prototype['area'] or actual['job'] == prototype['job']:
+
+    for course in courses.find():
+        actual = dict(course)
+        if (actual['area'] == prototype['area'] or actual['job'] == prototype['job']): 
+          if (actual['area'] != target['area'] and actual['job'] != target['job']):
             cur_courses.append({ 'name': actual['name'], 'stage1': False, 'stage2': False })
-      
+  
     prototype['courses'] = cur_courses
 
 
@@ -760,17 +752,19 @@ def changeCourse(request: Request, course: Course):
     for user in newUsers: 
       actual = dict(user)
       done = False
+
+      if (prototype['area'] == 'General' or actual['area'] == prototype['area'] or actual['job'] == prototype['job']):
+        if (target['area'] != 'General' and actual['area'] != target['area'] and actual['job'] != target['job']): 
+          done = actual['username']
+          actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
       
-      if (prototype['area'] == 'General' and actual['area'] != target['area']) or (actual['area'] == prototype['area'] and target['area'] != 'General') or (actual['job'] == prototype['job'] and actual['job'] != target['job']): 
-        done = actual['username']
-        actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
-        
-      elif actual['area'] != prototype['area'] and (target['area'] == 'General' or actual['area'] == target['area']) or (actual['job'] == target['job'] and actual['job'] != prototype['job']): 
-        done = actual['username']
-        for i in range(len(actual['courses'])): 
-          if actual['courses'][i]['name'] == target['name']: 
-            actual['courses'] = actual['courses'][: i] + actual['courses'][i + 1: ]
-            break
+      elif (actual['area'] != prototype['area'] and actual['job'] != prototype['job'] and prototype['area'] != 'General'):
+        if (actual['area'] == target['area'] or actual['job'] == target['job'] or target['area'] == 'General'):
+          done = actual['username']
+          for i in range(len(actual['courses'])): 
+            if actual['courses'][i]['name'] == target['name']: 
+              actual['courses'] = actual['courses'][: i] + actual['courses'][i + 1: ]
+              break
       
       if done: 
         users.delete_one({'username': done})
