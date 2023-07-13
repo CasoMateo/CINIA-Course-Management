@@ -38,12 +38,14 @@ class User(BaseModel):
   phone_number: Optional[str]
   rank: bool
   area: str 
+  group: Optional[str]
   job: str
 
 class Course(BaseModel):
   name: str
   prevName: Optional[str]
   area: str 
+  group: Optional[str]
   resources: list
   questions: list 
   descriptionStage1: str
@@ -58,6 +60,7 @@ class findCourse(BaseModel):
   name: str
   area: Optional[str]
   job: Optional[str]
+  group: Optional[str]
 
 class Stage(BaseModel): 
   username: str
@@ -101,6 +104,7 @@ class changeUser(BaseModel):
   area: str 
   job: str
   password: Optional[str]
+  group: str
 
 def getCookie(cname, ccookies):
     cookies = ccookies.split('; ')
@@ -139,11 +143,11 @@ def checkRateLimit(name, limit):
   
   return False
 
-def add_User(username, password, employee_number, phone_number, area, job, rank):
+def add_User(username, password, employee_number, phone_number, area, group, job, rank):
     
     content = {'addedUser': False}
     password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt())
-    newUser = { 'username': username, 'password': password, 'employee_number': employee_number, 'phone_number': phone_number, 'area': area, 'job': job, 'rank': rank, 'courses': [] } 
+    newUser = { 'username': username, 'password': password, 'employee_number': employee_number, 'phone_number': phone_number, 'area': area, 'group': group, 'job': job, 'rank': rank, 'courses': [] } 
     
     if not users.find_one({ 'username': username }): 
         
@@ -151,7 +155,7 @@ def add_User(username, password, employee_number, phone_number, area, job, rank)
         content['addedUser'] = True 
         
         if not newUser['rank']:
-          needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': area }, { 'area': 'General' }, {'job': job} ] })]
+          needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': area }, { 'area': 'General' }, {'group': group}, {'job': job} ] })]
           for course in needed_courses: 
             users.update_one({ 'username': username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
 
@@ -248,7 +252,7 @@ def addUser(request: Request, user: User):
       raise HTTPException(status_code=401, detail="Unauthorized") 
     
     content = {'addedUser': False}
-    content['addedUser'] = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.job, user.rank)
+    content['addedUser'] = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.group, user.job, user.rank)
     if not content['addedUser']: 
         raise HTTPException(status_code=400, detail="Invalid request")
     
@@ -328,7 +332,7 @@ def addCourse(request: Request, course: Course):
       content['addedCourse'] = True 
 
       if course.area != 'General':
-        users.update_many({ '$or': [ { 'area': course.area }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
+        users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
 
       else: 
         users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
@@ -350,7 +354,7 @@ def deleteCourse(request: Request, course: findCourse):
       content['deletedCourse'] = True 
     
     if course.area != 'General':
-      users.update_many({ '$or': [ { 'area': course.area }, { 'job': course.job }] }, { '$pull': { 'courses': { 'name': course.name } } })
+      users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$pull': { 'courses': { 'name': course.name } } })
     
     else: 
       users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
@@ -477,7 +481,12 @@ def reassignCourse(request: Request, course: findCourse):
     raise HTTPException(status_code=401, detail="Unauthorized")  
 
   users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
-  users.update_many({ '$or': [ { 'area': course.area }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+
+  if course.area != 'General':
+    users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+
+  else: 
+    users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
   return JSONResponse(content = { 'reassignedCourse': True })
 
@@ -698,13 +707,13 @@ def changeUser(request: Request, user: changeUser):
 
     for course in target['courses']:
         actual = dict(courses.find_one({'name': course['name']}))
-        if actual['area'] == prototype['area'] or actual['area'] == 'General' or actual['job'] == prototype['job']:
+        if actual['area'] == prototype['area'] or actual['area'] == 'General' or actual['group'] == prototype['group'] or actual['job'] == prototype['job']:
           cur_courses.append(course)
 
     for course in courses.find():
         actual = dict(course)
-        if (actual['area'] == prototype['area'] or actual['job'] == prototype['job']): 
-          if (actual['area'] != target['area'] and actual['job'] != target['job']):
+        if (actual['area'] == prototype['area'] or actual['group'] == prototype['group'] or actual['job'] == prototype['job']): 
+          if (actual['area'] != target['area'] and actual['group'] != target['group'] and actual['job'] != target['job']):
             cur_courses.append({ 'name': actual['name'], 'stage1': False, 'stage2': False })
   
     prototype['courses'] = cur_courses
@@ -746,20 +755,20 @@ def changeCourse(request: Request, course: Course):
   prototype['date'] = date.today().strftime("%d/%m/%Y") 
   courses.insert_one(prototype)
 
-  if target['area'] != prototype['area'] or target['job'] != prototype['job']: 
+  if target['area'] != prototype['area'] or target['group'] != prototype['group'] or target['job'] != prototype['job']: 
     newUsers = users.find()
 
     for user in newUsers: 
       actual = dict(user)
       done = False
 
-      if (prototype['area'] == 'General' or actual['area'] == prototype['area'] or actual['job'] == prototype['job']):
-        if (target['area'] != 'General' and actual['area'] != target['area'] and actual['job'] != target['job']): 
+      if (prototype['area'] == 'General' or actual['area'] == prototype['area'] or actual['group'] == prototype['group'] or actual['job'] == prototype['job']):
+        if (target['area'] != 'General' and actual['area'] != target['area'] and actual['group'] != target['group'] and actual['job'] != target['job']): 
           done = actual['username']
           actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
       
-      elif (actual['area'] != prototype['area'] and actual['job'] != prototype['job'] and prototype['area'] != 'General'):
-        if (actual['area'] == target['area'] or actual['job'] == target['job'] or target['area'] == 'General'):
+      elif (actual['area'] != prototype['area'] and actual['group'] != prototype['group'] and actual['job'] != prototype['job'] and prototype['area'] != 'General'):
+        if (actual['area'] == target['area'] or actual['group'] == target['group'] or actual['job'] == target['job'] or target['area'] == 'General'):
           done = actual['username']
           for i in range(len(actual['courses'])): 
             if actual['courses'][i]['name'] == target['name']: 
@@ -789,7 +798,7 @@ async def uploadFile(request: Request, file: UploadFile = File(...)):
     if len(row) != 7:
       raise HTTPException(status_code=400, detail="Todas las lineas deben de tener 7 elementos") 
       
-    username, password, rank, employee_number, phone_number, area, job = row[0], row[1], row[2], row[3], row[4], row[5], row[6]
+    username, password, rank, employee_number, phone_number, area, group, job = row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]
     
     if area not in ["Jardineria", "Limpieza", "Textil", "Acondi.", "Automocion", "Administra."]:
       raise HTTPException(status_code=400, detail="Una de las areas es incorrecta") 
@@ -799,7 +808,7 @@ async def uploadFile(request: Request, file: UploadFile = File(...)):
     else: 
       rank = False
     
-    res = add_User(username, password, employee_number, phone_number, area, job, rank)
+    res = add_User(username, password, employee_number, phone_number, area, group, job, rank)
     
     if not res: 
       raise HTTPException(status_code=400, detail="Error - Es probable que algunos usuarios ya estuvieran cargados") 
@@ -813,7 +822,7 @@ async def uploadFile(request: Request, users: List[User]):
     raise HTTPException(status_code=429, detail="Acabas de subir un archivo, espera un poco")
 
   for user in users: 
-    res = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.job, user.rank)
+    res = add_User(user.username, user.password, user.employee_number, user.phone_number, user.area, user.group, user.job, user.rank)
     
     if not res: 
       raise HTTPException(status_code=400, detail="Error - Es probable que algunos usuarios ya estuvieran cargados") 
