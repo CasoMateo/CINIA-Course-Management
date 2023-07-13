@@ -263,8 +263,8 @@ function Users(props) {
               const rows = parsedData.data;
               const parsedRows = rows.map((row) => {
                 
-                if (row.length != 7) {
-                    alert("Todas las lineas deben de tener 7 elementos");
+                if (row.length != 8) {
+                    alert("Todas las lineas deben de tener 8 elementos");
                     return;
                 }
 
@@ -283,7 +283,7 @@ function Users(props) {
                 }
 
                 
-                const rowData = { 'username': row[0], 'password': row[1], 'rank': rank_, 'employee_number': row[3], 'phone_number': row[4], 'area': row[5], 'job': row[6] };
+                const rowData = { 'username': row[0], 'password': row[1], 'rank': rank_, 'employee_number': row[3], 'phone_number': row[4], 'area': row[5], 'group': row[6], 'job': row[7] };
                 return rowData;
               });
 
@@ -418,7 +418,7 @@ function Users(props) {
                                     <p className = 'instance-attribute'> { user.employee_number } </p>
                                     <p className = 'instance-attribute'> { user.area } </p>
                                     <p className = 'instance-attribute'> { user.job } </p>
-                                    <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, job: user.job, phone_number: user.phone_number } )); }}/> 
+                                    <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, group: user.group, job: user.job, phone_number: user.phone_number } )); }}/> 
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                 </div>
                         )})
@@ -513,11 +513,15 @@ function Users(props) {
                         </form>
                     </div>
                     <br />
+                    <label className = 'form-label'> Grupo </label>
+                    <br/>
+                    <input className = 'input-field-add' type="text" placeholder = 'Escriba el puesto' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, group: e.target.value })) }/> 
+                    <br/>
+                    <br />
                     <label className = 'form-label'> Puesto </label>
                     <br/>
                     <input className = 'input-field-add' required type="text" placeholder = 'Escriba el puesto' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, job: e.target.value })) }/> 
                     <br/>
-                    <br />
                     <button type = 'submit' className = 'submit-form'> AÑADIR </button>
                 
                 </form>
@@ -603,6 +607,11 @@ function Users(props) {
                             </div> 
                             </form>
                         </div>
+                        <br />
+                        <label className = 'form-label'> Grupo </label>
+                        <br/>
+                        <input className = 'input-field-add' type="text" value = { addUserAttributes.group ? addUserAttributes.group : ''} placeholder = 'Escriba el grupo' onChange = { e => setAddUserAttributes(prevState => ({ ...prevState, group: e.target.value })) }/> 
+                        <br/>
                         <br />
                         <label className = 'form-label'> Puesto </label>
                         <br/>
