@@ -155,7 +155,7 @@ def add_User(username, password, employee_number, phone_number, area, group, job
         content['addedUser'] = True 
         
         if not newUser['rank']:
-          needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': area }, { 'area': 'General' }, {'group': group}, {'job': job} ] })]
+          needed_courses = [json.loads(json_util.dumps(course)) for course in courses.find({ '$or': [ { 'area': area }, { 'area': 'General' }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': group } ] }, {'job': job} ] })]
           for course in needed_courses: 
             users.update_one({ 'username': username }, { '$push': { 'courses': { 'name': course['name'], 'stage1': False, 'stage2': False } } })
 
@@ -332,7 +332,7 @@ def addCourse(request: Request, course: Course):
       content['addedCourse'] = True 
 
       if course.area != 'General':
-        users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
+        users.update_many({ '$or': [ { 'area': course.area }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': course.group } ] }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } }) 
 
       else: 
         users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
@@ -354,7 +354,7 @@ def deleteCourse(request: Request, course: findCourse):
       content['deletedCourse'] = True 
     
     if course.area != 'General':
-      users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$pull': { 'courses': { 'name': course.name } } })
+      users.update_many({ '$or': [ { 'area': course.area }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': course.group } ] }, { 'job': course.job }] }, { '$pull': { 'courses': { 'name': course.name } } })
     
     else: 
       users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
@@ -483,7 +483,7 @@ def reassignCourse(request: Request, course: findCourse):
   users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
 
   if course.area != 'General':
-    users.update_many({ '$or': [ { 'area': course.area }, {'group': course.group}, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+    users.update_many({ '$or': [ { 'area': course.area }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': group } ] }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
   else: 
     users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
@@ -707,13 +707,13 @@ def changeUser(request: Request, user: changeUser):
 
     for course in target['courses']:
         actual = dict(courses.find_one({'name': course['name']}))
-        if actual['area'] == prototype['area'] or actual['area'] == 'General' or actual['group'] == prototype['group'] or actual['job'] == prototype['job']:
+        if actual['area'] == prototype['area'] or actual['area'] == 'General' or (actual['group'] == prototype['group'] and prototype['group'] != '') or actual['job'] == prototype['job']:
           cur_courses.append(course)
 
     for course in courses.find():
         actual = dict(course)
-        if (actual['area'] == prototype['area'] or actual['group'] == prototype['group'] or actual['job'] == prototype['job']): 
-          if (actual['area'] != target['area'] and actual['group'] != target['group'] and actual['job'] != target['job']):
+        if (actual['area'] == prototype['area'] or (actual['group'] == prototype['group'] and prototype['group'] != '') or actual['job'] == prototype['job']): 
+          if (actual['area'] != target['area'] and (actual['group'] != target['group'] or target['group'] == '') and actual['job'] != target['job']):
             cur_courses.append({ 'name': actual['name'], 'stage1': False, 'stage2': False })
   
     prototype['courses'] = cur_courses
@@ -762,13 +762,13 @@ def changeCourse(request: Request, course: Course):
       actual = dict(user)
       done = False
 
-      if (prototype['area'] == 'General' or actual['area'] == prototype['area'] or actual['group'] == prototype['group'] or actual['job'] == prototype['job']):
-        if (target['area'] != 'General' and actual['area'] != target['area'] and actual['group'] != target['group'] and actual['job'] != target['job']): 
+      if (prototype['area'] == 'General' or actual['area'] == prototype['area'] or (actual['group'] == prototype['group'] and actual['group'] != '') or actual['job'] == prototype['job']):
+        if (target['area'] != 'General' and actual['area'] != target['area'] and (actual['group'] != target['group'] or actual['group'] == '') and actual['job'] != target['job']): 
           done = actual['username']
           actual['courses'].append({'name': prototype['name'], 'stage1': False, 'stage2': False})
       
-      elif (actual['area'] != prototype['area'] and actual['group'] != prototype['group'] and actual['job'] != prototype['job'] and prototype['area'] != 'General'):
-        if (actual['area'] == target['area'] or actual['group'] == target['group'] or actual['job'] == target['job'] or target['area'] == 'General'):
+      elif (actual['area'] != prototype['area'] and (actual['group'] != prototype['group'] or actual['group'] == '') and actual['job'] != prototype['job'] and prototype['area'] != 'General'):
+        if (actual['area'] == target['area'] or (actual['group'] == target['group'] and actual['group'] != '') or actual['job'] == target['job'] or target['area'] == 'General'):
           done = actual['username']
           for i in range(len(actual['courses'])): 
             if actual['courses'][i]['name'] == target['name']: 
