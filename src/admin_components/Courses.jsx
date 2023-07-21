@@ -22,15 +22,15 @@ function Courses(props) {
     const [threshold, setThreshold] = useState();
     const [descriptionStage1, setDescriptionStage1] = useState();
     const [descriptionStage2, setDescriptionStage2] = useState();
-    const [job, setJob] = useState();
-    const [group, setGroup] = useState();
+    const [job, setJob] = useState('');
+    const [group, setGroup] = useState('');
     const [verifyRef, setVerifyRef] = useState(false); 
     const [deletedCourse, setDeletedCourse] = useState(); 
     const [reassignedCourse, setReassignedCourse] = useState();
     const [clickedLogout, setClickedLogout] = useState(false);
     const [search, setSearch] = useState();
     const [editCourseForm, setEditCourseForm] = useState(false);
-    const [prevName, setPrevName] = useState();
+    const [prevName, setPrevName] = useState('');
     const [courseFilter, setCourseFilter] = useState();
 
     const getCoursesResource = async () => {

@@ -21,7 +21,7 @@ function Users(props) {
     const [clickedLogout, setClickedLogout] = useState(false); 
     const [retrievedUsers, setRetrievedUsers] = useState(false);
     const [addUserForm, setAddUserForm] = useState(false);
-    const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '' })
+    const [addUserAttributes, setAddUserAttributes] = useState({ 'username': '', 'password': '', 'employee_number': '', 'rank': false, 'area': '', group: '' })
     const [search, setSearch] = useState();
     const [editUserForm, setEditUserForm] = useState(false);
     const [userFilter, setUserFilter] = useState();
