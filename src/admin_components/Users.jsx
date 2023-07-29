@@ -262,7 +262,12 @@ function Users(props) {
             complete: (parsedData) => {
               const rows = parsedData.data;
               const parsedRows = rows.map((row) => {
+                console.log(row);
                 
+                if (row.length == 1 && row[0] == '') {
+                    return;
+                }
+
                 if (row.length != 8) {
                     alert("Todas las lineas deben de tener 8 elementos");
                     return;
@@ -286,6 +291,11 @@ function Users(props) {
                 const rowData = { 'username': row[0], 'password': row[1], 'rank': rank_, 'employee_number': row[3], 'phone_number': row[4], 'area': row[5], 'group': row[6], 'job': row[7] };
                 return rowData;
               });
+            
+            const filteredRows = parsedRows.filter((item) => {
+                // Use Array.prototype.some() to check if any property of the object has a value
+                return item !== undefined;
+              });
 
               fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/upload-file', {
                 method: 'POST',
@@ -294,7 +304,7 @@ function Users(props) {
                     'Content-Type': "application/json",
                     'Cookies': document.cookie,
                 },
-                body: JSON.stringify(parsedRows),
+                body: JSON.stringify(filteredRows),
               })
                 .then((response) => response.json())
                 .then((responseData) => {
