@@ -483,7 +483,7 @@ def reassignCourse(request: Request, course: findCourse):
   users.update_many({ 'rank': { '$ne': True } }, { '$pull': { 'courses': { 'name': course.name } } })
 
   if course.area != 'General':
-    users.update_many({ '$or': [ { 'area': course.area }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': group } ] }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
+    users.update_many({ '$or': [ { 'area': course.area }, { '$and': [ { 'group': { '$ne': '' } }, { 'group': course.group } ] }, { 'job': course.job }] }, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
 
   else: 
     users.update_many({ 'rank': { '$ne': True }}, { '$push': { 'courses' : { 'name': course.name, 'stage1': False, 'stage2': False } } })
