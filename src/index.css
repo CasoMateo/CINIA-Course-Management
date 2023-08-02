@@ -36,7 +36,7 @@
 
 }
 #search-filter {
-  grid-template-columns: 60% 11% 15% 5%;
+  grid-template-columns: 60% 13% 10% 15%;
 }
 
 .download-upload {
@@ -706,7 +706,6 @@
 
 .search-button {
   width: 20%;
-  margin-left: 3em;
 }
 
 .login-box {
@@ -838,9 +837,8 @@
 }
 
 .find-more-users {
-  padding-top: 0.6em;
+  padding-top: 2em;
   font-size: 1.3rem;
-  margin-left: 8em;
   width: 50%;
   font-weight: bold;
   margin: auto;
@@ -867,11 +865,7 @@
   }
 
   #search-filter {
-    grid-template-columns: 56% 10% 20% 5%;
-  }
-
-  .search-button {
-    margin-left: 1.5em;
+    grid-template-columns: 56% 16% 10% 20%;
   }
 
   #area-header {
@@ -1217,7 +1211,6 @@
 
   .search-button {
     width: 30%;
-    margin-left: 1.6em;
   }
 
   .search-box {
@@ -1263,18 +1256,14 @@
   }
 
   #search-filter {
-    grid-template-columns: 53% 16% 20% 5%;
+    grid-template-columns: 53% 16% 15% 18%;
   }
 
   .search-box input {
     font-size: 0.7rem;
     padding-left: 3%;
   }
-  .search-button {
-    margin-left: 1em;
-  }
-
-  .select-css {
+    .select-css {
     font-size: 0.7rem;
   }
 

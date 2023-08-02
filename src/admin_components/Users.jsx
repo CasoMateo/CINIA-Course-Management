@@ -15,7 +15,7 @@ function Users(props) {
     const username = getCookie('username');
     const rank = 'Admin.';
 
-    const [users, setUsers] = useState([]); 
+    const [user, setUser] = useState(); 
     const [verifyRef, setVerifyRef] = useState(false);
     const [deletedUser, setDeletedUser] = useState();
     const [clickedLogout, setClickedLogout] = useState(false); 
@@ -34,8 +34,8 @@ function Users(props) {
         if (retrievedUsers) {  
           return;
         }
-    
-        const promise = await fetch('https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-users', { 
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-certain-users/'.concat(search);
+        const promise = await fetch(url, { 
           method: 'GET',
           headers: {
             'Cookies': document.cookie
@@ -46,16 +46,21 @@ function Users(props) {
             alert('Demasiadas solicitudes, espera un poco');
             return;
         }
+
+        if (promise.status == 404) {
+            alert("No existe el usuario que buscaste");
+            return;
+        }
         
         if (promise.status !== 200) {
-          alert('Failed to retrieve users');
+          alert('Hubo un error al obtener el usuario');
           return;
         } 
     
         const response = await promise.json();
       
         
-        setUsers(response.users);
+        setUser(response.user);
     };  
 
     const getCSVResource = async () => {
@@ -83,12 +88,6 @@ function Users(props) {
         fileDownload(response, "usuarios_exporte.csv");
         
     };  
-
-
-    if (!retrievedUsers) {
-        getUsersResource();
-        setRetrievedUsers(true);
-    }
 
     const handleAddUser = (event) => {
         event.preventDefault();
@@ -376,7 +375,9 @@ function Users(props) {
                 <div className = 'search-box' id = 'search-filter'>
                     
                     <input type = 'text' placeholder = 'Escriba el nombre del usuario' onChange = { (e) => setSearch(e.target.value) } />
-            
+                    
+                    <img src = '/search_button.png' className = 'search-button' onClick = { () => getUsersResource() }/> 
+
                     <select class="select-css" onChange = {(e) => setUserFilter(e.target.value)}>
                         <option value = "">Todos</option>
                         <option value = 'Jardineria'>Jardinería</option>
@@ -386,7 +387,7 @@ function Users(props) {
                         <option value = "Automocion" >Automoción</option>
                         <option value = "Administra." >Administrativo</option>
                     </select>
-                    <img src = '/search_button.png' className = 'search-button' /> 
+                    
                     <p className = 'add-popup-form' onClick = { () => setAddUserForm(true) }> Añadir <br /> Usuario </p>
                                         
 
@@ -403,7 +404,7 @@ function Users(props) {
 
                 <div className = 'access-retrieval'> 
                     {
-                        users.length === 0 
+                        !user 
                         ?
                         <div className = 'message-no-data'> 
                             No hay usuarios disponibles
@@ -411,17 +412,7 @@ function Users(props) {
 
                         : 
                         
-                        users.slice(0)
-                        .reverse()
-                        .filter((user) => {
-                            return (
-                            (!search || user.username.toLowerCase().includes(search.toLowerCase())) &&
-                            (!userFilter || userFilter === user.area)
-                            );
-                        })
-                        .slice(0, 3)
-                        .map((user) => {
-                            return (
+                        
                                 <div key = { user._id.$oid } className = 'user-instance'> 
                                     <p className = 'instance-attribute' id = 'name-attribute' onClick = { () => { !user.rank ? navigate('/usuario/'.concat(user.username)) : alert('Este usuario no completa cursos, es administrador') } }> { user.username } </p>
                                     <p className = 'instance-attribute'> { user.rank ? 'Admin.' : 'Operador'} </p>
@@ -431,7 +422,7 @@ function Users(props) {
                                     <img className = 'edit-button-message-1' src = '/edit_button.png' onClick = { () => { setEditUserForm(user.username); setAddUserAttributes(prevState => ({ ...prevState, username : user.username, password: '', rank: user.rank, area: user.area, employee_number: user.employee_number, area: user.area, group: user.group, job: user.job, phone_number: user.phone_number } )); }}/> 
                                     <img className = 'trash-button-user' src = '/trash_button.png' alt = 'Trash button' onClick = { () => { setDeletedUser(user.username); setVerifyRef(true) } }/> 
                                 </div>
-                        )})
+                        
 
                         
                     }
