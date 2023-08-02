@@ -221,6 +221,24 @@ def getUsers(request: Request):
 
   return response 
 
+@app.get("/get-certain-users/{search_username}", status_code = 200)
+def getCertainUsers(request: Request, search_username: str):
+  
+  if checkRateLimit('getUsers', 30): 
+    raise HTTPException(status_code=429, detail="Too many requests")
+
+  if not authenticatedUser(getCookie('username', request.headers['cookies']), getCookie('token', request.headers['cookies'])) or not authorizedAdmin(getCookie('username', request.headers['cookies'])): 
+      raise HTTPException(status_code=401, detail="Unauthorized") 
+  
+  content = {}
+  content['user'] = users.find_one({"username": {"$regex": f"^{search_username}$", "$options": "i"}})
+
+  if not content['user']:
+    raise HTTPException(status_code=404, detail="Not found")
+
+  content['user'] = json.loads(json_util.dumps(content['user']))
+  return JSONResponse(content = content)
+
 @app.get("/get-user/{username}", status_code = 200)
 def getUser(request: Request, username: str):
 
