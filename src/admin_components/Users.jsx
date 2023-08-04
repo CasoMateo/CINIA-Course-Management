@@ -34,7 +34,7 @@ function Users(props) {
         if (retrievedUsers) {  
           return;
         }
-        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-certain-users/'.concat(search);
+        const url = 'https://4n2uwcxavgyd66gnq2ltzvlfne0nusvp.lambda-url.us-west-2.on.aws/get-certain-users/'.concat(search.trim());
         const promise = await fetch(url, { 
           method: 'GET',
           headers: {
@@ -376,7 +376,7 @@ function Users(props) {
                     
                     <input type = 'text' placeholder = 'Escriba el nombre del usuario' onChange = { (e) => setSearch(e.target.value) } />
                     
-                    <img src = '/search_button.png' className = 'search-button' onClick = { () => getUsersResource() }/> 
+                    <img src = '/search_button.png' className = 'search-button' id = "search-button-users-page" onClick = { () => getUsersResource() }/> 
 
                     <select class="select-css" onChange = {(e) => setUserFilter(e.target.value)}>
                         <option value = "">Todos</option>
@@ -406,7 +406,7 @@ function Users(props) {
                     {
                         !user 
                         ?
-                        <div className = 'message-no-data'> 
+                        <div className = 'message-no-data' id = "no-user-searched"> 
                             No hay usuarios disponibles
                         </div> 
 

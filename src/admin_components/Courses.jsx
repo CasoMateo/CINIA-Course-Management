@@ -291,6 +291,8 @@ function Courses(props) {
                 
                 <div className = 'search-box' id = 'search-filter'>
                     <input type = 'text' placeholder = 'Escriba el nombre del curso' onChange = { (e) => setSearch(e.target.value) } />
+                    <img src = '/search_button.png' className = 'search-button' /> 
+                    
                     <select class="select-css" onChange = {(e) => setCourseFilter(e.target.value)}>
                         <option value = "">Todos</option>
                         <option value = 'Jardineria'>Jardinería</option>
@@ -300,7 +302,7 @@ function Courses(props) {
                         <option value = "Automocion" >Automoción</option>
                         <option value = "Administra." >Administrativo</option>
                     </select>
-                    <img src = '/search_button.png' className = 'search-button' /> 
+                    
                     
                     <p className = 'add-popup-form' onClick = { () => setAddCourseForm(true) }> Añadir <br /> Curso </p>
                 </div>
