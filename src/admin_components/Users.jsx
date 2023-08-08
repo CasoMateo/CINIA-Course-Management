@@ -170,6 +170,7 @@ function Users(props) {
                 return;
             } else {
                 setRetrievedUsers(false);
+                setUser();
             }
             
       
